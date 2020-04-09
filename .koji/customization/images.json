@@ -1,0 +1,32 @@
+{
+  "images": {
+    "overlay": "https://www.vippng.com/png/full/218-2185914_happy-birthday-cake-happy-birthday-filter.png",
+    "background": "https://images.koji-cdn.com/45e72c97-3a2e-4762-acaa-757b307c88b9/kd67e-construccion.png"
+  },
+  "@@editor": [
+    {
+      "key": "images",
+      "name": "Images",
+      "icon": "📚",
+      "source": "images.json",
+      "fields": [
+        {
+          "key": "overlay",
+          "name": "Overlay image",
+          "type": "image",
+          "typeOptions": {
+              "defaultSource": "frames-asset-pack"
+          }
+        },
+        {
+          "key": "background",
+          "name": "Background image",
+          "type": "image",
+          "typeOptions": {
+              "defaultSource": "camera"
+          }
+        }
+      ]
+    }
+  ]
+}
