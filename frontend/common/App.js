@@ -6,6 +6,7 @@ const Container = styled.div`
   padding: 0;
   margin: auto;
   width: calc(100vh / 16 * 9);
+  max-width: 100vw;
   height: 100vh;
   position: relative;
 `;
@@ -19,7 +20,7 @@ const OverlayImage = styled.img`
   right: 0;
   bottom: 0;
   z-index: 2;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const BackgroundImage = styled.img`
