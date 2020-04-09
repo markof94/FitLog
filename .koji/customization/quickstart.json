@@ -1,0 +1,8 @@
+{
+    "quickstart": {
+        "items": [
+            "images.background",
+            "images.overlay"
+        ]
+    }
+}

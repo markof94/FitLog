@@ -12,7 +12,9 @@
       "fields": [
         {
           "key": "overlay",
-          "name": "Overlay image",
+          "name": "Change frame",
+          "description": "Choose a frame to overlay on your picture",
+          "icon": "🖼️",
           "type": "image",
           "typeOptions": {
               "defaultSource": "frames-asset-pack"
@@ -20,7 +22,9 @@
         },
         {
           "key": "background",
-          "name": "Background image",
+          "name": "Change photo",
+          "description": "Take a selfie or upload a picture",
+          "icon": "📸",
           "type": "image",
           "typeOptions": {
               "defaultSource": "camera"
