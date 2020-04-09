@@ -5,17 +5,16 @@
   "author": "username",
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./.internals/webpack.production.js --color -p --progress --hide-modules --display-optimization-bailout",
-    "postbuild": "koji-tools pwa",
-    "prestart": "koji-tools watch &",
-    "start": "webpack-dev-server --config ./.internals/webpack.development.js --inline --hot"
+    "start": "npm-run-all -p watch start:server",
+    "watch": "koji-vcc watch",
+    "start:server": "webpack-dev-server --config ./.internals/webpack.development.js --inline --hot"
   },
   "dependencies": {
-    "koji-tools": "^0.5.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "styled-components": "^4.2.0",
-    "whatwg-fetch": "^3.0.0"
+    "@withkoji/vcc": "^1.1.4",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
