@@ -45,6 +45,21 @@ class App extends React.PureComponent {
     }
 
   componentDidMount() {
+    window.addEventListener('message', ({ data }) => {
+        try {
+            const {
+                path,
+                newValue,
+            } = data;
+            const key = path[1];
+            this.setState({
+                [key]: newValue,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
     window.addEventListener('KojiPreview.DidChangeVcc', (e) => {
         try {
             const {
