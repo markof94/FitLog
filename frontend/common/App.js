@@ -37,7 +37,7 @@ const BackgroundImage = styled.img`
 
 const getOverride = (scope, key) => {
     try {
-        return window.KOJI_OVERRIDES[scope][key];
+        return window.KOJI_OVERRIDES.overrides[scope][key];
     } catch (err) {
         //
     }
