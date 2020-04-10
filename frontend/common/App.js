@@ -35,12 +35,21 @@ const BackgroundImage = styled.img`
   object-fit: cover;
 `;
 
+const getOverride = (scope, key) => {
+    try {
+        return window.KOJI_OVERRIDES[scope][key];
+    } catch (err) {
+        //
+    }
+    return undefined;
+};
+
 class App extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            overlay: Koji.config.images.overlay,
-            background: Koji.config.images.background,
+            overlay: getOverride('images', 'overlay') || Koji.config.images.overlay,
+            background: getOverride('images', 'background') || Koji.config.images.background,
         };
     }
 
