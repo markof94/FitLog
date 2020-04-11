@@ -20,7 +20,7 @@ const OverlayImage = styled.img`
   right: 0;
   bottom: 0;
   z-index: 2;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const BackgroundImage = styled.img`
@@ -83,6 +83,13 @@ class App extends React.PureComponent {
             //
         }
     });
+
+    // Post a message that we're ready to accept changes
+    if (window.parent) {
+      window.parent.postMessage({
+        _type: 'KojiPreview.Ready',
+      }, '*');
+    }
   }
 
   render() {
