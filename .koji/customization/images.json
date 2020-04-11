@@ -1,7 +1,7 @@
 {
   "images": {
     "overlay": "https://www.vippng.com/png/full/218-2185914_happy-birthday-cake-happy-birthday-filter.png",
-    "background": "https://images.koji-cdn.com/45e72c97-3a2e-4762-acaa-757b307c88b9/kd67e-construccion.png"
+    "background": "https://images.koji-cdn.com/151903f0-b74a-4065-812c-da0a4cc137c0/32mry-7a6e35800ba74edab0d4387512e3df84.png?defaultSource=camera"
   },
   "@@editor": [
     {
@@ -17,7 +17,7 @@
           "icon": "🖼️",
           "type": "image",
           "typeOptions": {
-              "defaultSource": "frames-asset-pack"
+            "defaultSource": "frames-asset-pack"
           }
         },
         {
@@ -27,7 +27,7 @@
           "icon": "📸",
           "type": "image",
           "typeOptions": {
-              "defaultSource": "camera"
+            "defaultSource": "camera"
           }
         }
       ]
