@@ -11,16 +11,19 @@ const Container = styled.div`
   position: relative;
 `;
 
-const OverlayImage = styled.img`
-  width: 100%;
-  height: 100%;
+const OverlayText = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  object-fit: cover;
+  top: ${({ top }) => top}%;
+  left: ${({ left }) => left}%;
+  font-size: ${({ fontSize }) => fontSize}px;
+  font-weight: bold;
+  color: ${({ foregroundColor }) => foregroundColor};
+  z-index: 3;
+
+  span {
+    background-color: ${({ backgroundColor }) => backgroundColor};
+    padding: 6px 18px;
+  }
 `;
 
 const BackgroundImage = styled.img`
@@ -48,8 +51,8 @@ class App extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            overlay: getOverride('images', 'overlay') || Koji.config.images.overlay,
             background: getOverride('images', 'background') || Koji.config.images.background,
+            text: getOverride('strings', 'text') || Koji.config.strings.text,
         };
     }
 
@@ -71,6 +74,7 @@ class App extends React.PureComponent {
 
     window.addEventListener('KojiPreview.DidChangeVcc', (e) => {
         try {
+            console.log(e.detail);
             const {
                 path,
                 newValue,
@@ -95,7 +99,15 @@ class App extends React.PureComponent {
   render() {
     return (
       <Container>
-        <OverlayImage src={this.state.overlay} />
+        <OverlayText
+            top={this.state.text.top}
+            left={this.state.text.left}
+            fontSize={this.state.text.fontSize}
+            foregroundColor={this.state.text.foregroundColor}
+            backgroundColor={this.state.text.backgroundColor}
+        >
+            <span>{this.state.text.value}</span>
+        </OverlayText>
         <BackgroundImage src={this.state.background} />
       </Container>
     );

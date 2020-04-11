@@ -1,6 +1,5 @@
 {
   "images": {
-    "overlay": "https://images.koji-cdn.com/80125f6a-fc7d-4185-8df3-343ecdf2e1e9/0g51z-12.png",
     "background": "https://images.koji-cdn.com/151903f0-b74a-4065-812c-da0a4cc137c0/32mry-7a6e35800ba74edab0d4387512e3df84.png?defaultSource=camera"
   },
   "@@editor": [
@@ -10,16 +9,6 @@
       "icon": "📚",
       "source": "images.json",
       "fields": [
-        {
-          "key": "overlay",
-          "name": "Change frame",
-          "description": "Choose a frame to overlay on your picture",
-          "icon": "🖼️",
-          "type": "image",
-          "typeOptions": {
-            "defaultSource": "https://frontend-80125f6a-fc7d-4185-8df3-343ecdf2e1e9.koji-apps.com"
-          }
-        },
         {
           "key": "background",
           "name": "Change photo",
