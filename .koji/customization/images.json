@@ -25,10 +25,7 @@
           "name": "Change photo",
           "description": "Take a selfie or upload a picture",
           "icon": "📸",
-          "type": "image",
-          "typeOptions": {
-            "defaultSource": "camera"
-          }
+          "type": "image"
         }
       ]
     }
