@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Koji from '@withkoji/vcc';
+import { InstantRemixing } from '@withkoji/vcc';
 
 const Container = styled.div`
   padding: 0;
@@ -54,50 +54,19 @@ const getOverride = (scope, key) => {
 class App extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.instantRemixing = new InstantRemixing();
         this.state = {
-            background: getOverride('images', 'background') || Koji.config.images.background,
-            text: getOverride('strings', 'text') || Koji.config.strings.text,
+            background: this.instantRemixing.get(['images', 'background']),
+            text: this.instantRemixing.get(['strings', 'text']),
         };
     }
 
   componentDidMount() {
-    window.addEventListener('message', ({ data }) => {
-        try {
-            const {
-                path,
-                newValue,
-            } = data;
-            const key = path[1];
-            this.setState({
-                [key]: newValue,
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    });
-
-    window.addEventListener('KojiPreview.DidChangeVcc', (e) => {
-        try {
-            console.log(e.detail);
-            const {
-                path,
-                newValue,
-            } = e.detail;
-            const key = path[1];
-            this.setState({
-                [key]: newValue,
-            });
-        } catch (err) {
-            //
-        }
-    });
-
-    // Post a message that we're ready to accept changes
-    if (window.parent) {
-      window.parent.postMessage({
-        _type: 'KojiPreview.Ready',
-      }, '*');
-    }
+      this.instantRemixing.addListener((path, newValue) => {
+          const key = path[1];
+          this.setState({ [key]: newValue });
+      });
+      this.instantRemixing.ready();
   }
 
   render() {
