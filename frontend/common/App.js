@@ -108,7 +108,7 @@ class App extends React.PureComponent {
         >
             <span>{this.state.text.value}</span>
         </OverlayText>
-        <BackgroundImage src={this.state.background} />
+        <BackgroundImage src={`${this.state.background}?w=1000`} />
       </Container>
     );
   }
