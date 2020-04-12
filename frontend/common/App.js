@@ -9,6 +9,10 @@ const Container = styled.div`
   max-width: 100vw;
   height: 100vh;
   position: relative;
+
+  @media (max-width: 767px) {
+    width: 100vw;
+  }
 `;
 
 const OverlayText = styled.div`
