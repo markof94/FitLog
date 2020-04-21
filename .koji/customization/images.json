@@ -1,6 +1,7 @@
 {
   "images": {
-    "background": "https://images.koji-cdn.com/151903f0-b74a-4065-812c-da0a4cc137c0/32mry-7a6e35800ba74edab0d4387512e3df84.png?defaultSource=camera"
+    "background": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/tpuga-IMG_1500.mp4",
+    "background2": ""
   },
   "@@editor": [
     {
@@ -11,6 +12,13 @@
       "fields": [
         {
           "key": "background",
+          "name": "Change photo",
+          "description": "Take a selfie or upload a picture",
+          "icon": "📸",
+          "type": "file"
+        },
+        {
+          "key": "background2",
           "name": "Change photo",
           "description": "Take a selfie or upload a picture",
           "icon": "📸",
