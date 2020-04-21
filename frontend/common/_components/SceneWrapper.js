@@ -17,7 +17,7 @@ const Container = styled.div`
   ` : `
     opacity: 0;
   `}
-  transition: opacity 0.1s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 
   @media (max-width: 767px) {
     width: 100vw;
@@ -47,16 +47,17 @@ const Overlay = styled.div`
 `;
 
 class Scene extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.instantRemixing = new InstantRemixing();
-        this.state = {
-            videoWidth: 0,
-            videoHeight: 0,
-        };
+  constructor(props) {
+      super(props);
+      this.instantRemixing = new InstantRemixing();
+      this.state = {
+        isVisible: false,
+        videoWidth: 0,
+        videoHeight: 0,
+      };
 
-        this.videoRef = React.createRef();
-    }
+      this.videoRef = React.createRef();
+  }
 
   componentDidMount() {
       if (this.videoRef && this.videoRef.current) {
@@ -79,34 +80,50 @@ class Scene extends React.PureComponent {
         });
 
         if (this.props.isVisible) {
-          this.videoRef.current.currentTime = 0;
-          this.videoRef.current.play();
+          this.play();
         } else {
-          this.videoRef.current.pause();
+          this.pause();
         }
       }
+  }
+
+  play() {
+    // Play and fade in after delay
+    try {
+      this.videoRef.current.currentTime = 0;
+      this.videoRef.current.play();
+      setTimeout(() => this.setState({ isVisible: true }), 200);
+    } catch (err) {
+      //
+    }
+  }
+
+  pause() {
+    try {
+      this.setState({ isVisible: false });
+      this.videoRef.current.pause();
+
+      setTimeout(() => {
+        this.videoRef.current.currentTime = 0;
+      }, 200);
+    } catch (err) {
+      //
+    }
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.isVisible && this.props.isVisible) {
       // Start
-      if (this.videoRef && this.videoRef.current) {
-        console.log('starting')
-        this.videoRef.current.play();
-      }
+      this.play()
     }
     if (prevProps.isVisible && !this.props.isVisible) {
-      // Pause
-      if (this.videoRef && this.videoRef.current) {
-        this.videoRef.current.currentTime = 0;
-        this.videoRef.current.play();
-      }
+      this.pause();
     }
   }
 
   render() {
     return (
-      <Container isVisible={this.props.isVisible}>
+      <Container isVisible={this.state.isVisible}>
         <Overlay
             width={this.state.videoWidth}
             height={this.state.videoHeight}

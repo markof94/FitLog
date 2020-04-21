@@ -12,8 +12,8 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
     }
 }))`
   position: absolute;
-  left: 15vw;
-  width: 80vw;
+  left: ${({ left }) => left}px;
+  width: ${({ width }) => width}px;
   text-align: center;
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   opacity: 0.97;
 
   will-change: transform, height;
-  transition: all 0.02s linear;
+  transition: all 0.01s linear;
 
   font-size: 48px;
   font-weight: bold;
@@ -38,27 +38,34 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
 class SceneContent extends React.PureComponent {
     constructor(props) {
         super(props);
+        this.instantRemixing = new InstantRemixing();
         this.state = {
-            isVisible: false,
-            leftWrist: null,
-            rightWrist: null,
+          position: this.instantRemixing.get(['result', 'position']),
+          isVisible: false,
+          leftWrist: null,
+          rightWrist: null,
         };
 
         this.videoRef = React.createRef();
 
         this.interval = window.setInterval(() => {
-          if (this.props.videoRef && this.props.videoRef.current) {
-            const { currentTime } = this.props.videoRef.current;
-            const leftWrist = this.getBestFitPose('leftWrist', currentTime);
-            const rightWrist = this.getBestFitPose('rightWrist', currentTime);
-
-            this.setState({
-                isVisible: currentTime > 1.2,
-                leftWrist,
-                rightWrist,
-            });
+          if (!this.props.videoRef || !this.props.videoRef.current) {
+            return;
           }
-        }, 100);
+          if (this.props.videoRef.current.paused) {
+            return;
+          }
+
+          const { currentTime } = this.props.videoRef.current;
+          const leftWrist = this.getBestFitPose('leftWrist', currentTime);
+          const rightWrist = this.getBestFitPose('rightWrist', currentTime);
+
+          this.setState({
+              isVisible: currentTime > this.state.position.appearAfter,
+              leftWrist,
+              rightWrist,
+          });
+        }, 30);
     }
 
   getBestFitPose(keypoint, ts) {
@@ -77,19 +84,39 @@ class SceneContent extends React.PureComponent {
 
   render() {
       const {
+        isVisible,
         leftWrist,
         rightWrist,
+        position,
       } = this.state;
+
+      if (!this.props.value) {
+        return null;
+      }
+
+      const {
+        type,
+        value,
+      } = this.props.value;
+
+      let topAnchor = leftWrist;
+      let bottomAnchor = rightWrist;
+      if (position.topAnchor === 'rightWrist') {
+        topAnchor = rightWrist;
+        bottomAnchor = leftWrist;
+      }
 
       return (
         <React.Fragment>
-          {this.state.isVisible && leftWrist && rightWrist && (
+          {isVisible && leftWrist && rightWrist && (
             <Sheet
-              y={leftWrist.y - 15}
-              height={Math.abs(leftWrist.y - rightWrist.y) + 40}
+              left={position.offset.left}
+              width={position.offset.width}
+              y={topAnchor.y + position.offset.y}
+              height={Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height}
               onClick={() => this.props.onBack()}
             >
-              Hello! {this.props.value}
+              {value}
             </Sheet>
           )}
         </React.Fragment>

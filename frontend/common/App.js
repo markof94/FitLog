@@ -26,6 +26,14 @@ class SceneRouter extends React.PureComponent {
     }
   }
 
+  transition(to, data = {}) {
+    this.setState({
+      currentScene: null,
+    }, () => {
+      setTimeout(() => this.setState({ currentScene: to, ...data }), 500);
+    })
+  }
+
   render() {
     return (
       <Container>

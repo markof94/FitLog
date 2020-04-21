@@ -101,28 +101,34 @@ class SceneContent extends React.PureComponent {
         super(props);
         this.instantRemixing = new InstantRemixing();
         this.state = {
-            background: this.instantRemixing.get(['images', 'background']),
+            prompt: this.instantRemixing.get(['choice', 'prompt']),
+            left: this.instantRemixing.get(['choice', 'left']),
+            right: this.instantRemixing.get(['choice', 'right']),
             currentPose: null,
-            hasVoted: false,
         };
 
         this.videoRef = React.createRef();
 
         this.interval = window.setInterval(() => {
-          if (this.props.videoRef && this.props.videoRef.current) {
-            const { currentTime } = this.props.videoRef.current;
-            const leftWrist = this.getBestFitPose('leftWrist', currentTime);
-            const rightWrist = this.getBestFitPose('rightWrist', currentTime);
-
-            // console.log(currentTime);
-            this.setState({
-                leftVisible: currentTime > 1.4,
-                rightVisible: currentTime > 0.58,
-                leftWrist,
-                rightWrist,
-            });
+          if (!this.props.videoRef || !this.props.videoRef.current) {
+            return;
           }
-        }, 100);
+          if (this.props.videoRef.current.paused) {
+            return;
+          }
+
+          const { currentTime } = this.props.videoRef.current;
+          const leftWrist = this.getBestFitPose('leftWrist', currentTime);
+          const rightWrist = this.getBestFitPose('rightWrist', currentTime);
+
+          // console.log(currentTime);
+          this.setState({
+              leftVisible: currentTime > this.state.left.appearAfter,
+              rightVisible: currentTime > this.state.right.appearAfter,
+              leftWrist,
+              rightWrist,
+          });
+        }, 30);
     }
 
   getBestFitPose(keypoint, ts) {
@@ -139,31 +145,29 @@ class SceneContent extends React.PureComponent {
     return bestFit;
   }
 
-  vote() {
-    this.setState({ hasVoted: !this.state.hasVoted });
-  }
-
   render() {
       const {
         leftWrist,
         rightWrist,
+        left,
+        right,
       } = this.state;
 
       return (
         <React.Fragment>
           <Header>
-            <HeaderText>Who is your favorite?</HeaderText>
+            <HeaderText>{this.state.prompt}</HeaderText>
           </Header>
 
           {leftWrist && (
             <Item
-              x={leftWrist.x + 30}
-              y={leftWrist.y - 140}
-              onClick={() => this.props.onChoose('left')}
+              x={leftWrist.x + left.offset.x}
+              y={leftWrist.y + left.offset.y}
+              onClick={() => this.props.onChoose(left.result)}
             >
               <Inner isVisible={this.state.leftVisible}>
                 <TextInstruction>Tap to choose</TextInstruction>
-                <Image src="https://images.koji-cdn.com/0efd68c5-73ad-48b8-80bf-91cf9c584c20/d4vky-Luhead.png?auto=compress&fit=max&h=174" />
+                <Image src={left.image} />
                 <Glow />
                 <Particles />
               </Inner>
@@ -171,13 +175,13 @@ class SceneContent extends React.PureComponent {
           )}
           {rightWrist && (
             <Item
-              x={rightWrist.x - 40}
-              y={rightWrist.y - 140}
-              onClick={() => this.props.onChoose('right')}
+              x={rightWrist.x + right.offset.x}
+              y={rightWrist.y + right.offset.y}
+              onClick={() => this.props.onChoose(right.result)}
             >
               <Inner isVisible={this.state.rightVisible}>
                 <TextInstruction>Tap to choose</TextInstruction>
-                <Image src="https://images.koji-cdn.com/c821f50e-a6a8-4d78-a65a-89ecd46483dc/3fq2l-Davidexcited.png?auto=compress&fit=max&h=174" />
+                <Image src={right.image} />
                 <Glow />
                 <Particles />
               </Inner>

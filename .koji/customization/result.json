@@ -1,0 +1,85 @@
+{
+    "result": {
+      "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/mbunw-b.mp4",
+      "position": {
+          "appearAfter": 1.2,
+          "offset": {
+              "y": -15,
+              "height": 40,
+              "left": 160,
+              "width": 500
+          },
+          "topAnchor": "leftWrist"
+      }
+    },
+    "@@editor": [
+      {
+        "key": "result",
+        "name": "Result",
+        "icon": "📚",
+        "source": "result.json",
+        "fields": [
+          {
+            "key": "video",
+            "name": "Result video",
+            "description": "Video showing the result of the choice",
+            "icon": "📸",
+            "type": "file"
+          },
+          {
+            "key": "position",
+            "name": "Result position",
+            "description": "Fine-tune the position of the result screen",
+            "icon": "📸",
+            "type": "object<ResultPosition>",
+            "typeOptions": {
+                "ResultPosition": {
+                    "appearAfter": {
+                        "name": "Appear after",
+                        "description": "Timestamp to start revealing the result",
+                        "type": "number"
+                    },
+                    "topAnchor": {
+                        "name": "Top hand",
+                        "description": "Which hand is on top?",
+                        "type": "select",
+                        "typeOptions": {
+                            "options": [
+                                { "value": "leftWrist", "label": "Hand 1" },
+                                { "value": "rightWrist", "label": "Hand 2" }
+                            ]
+                        }
+                    },
+                    "offset": {
+                        "name": "Offsets",
+                        "type": "object<Offset>",
+                        "typeOptions": {
+                            "Offset": {
+                                "y": {
+                                    "name": "Top anchor Y offset",
+                                    "description": "",
+                                    "type": "number"
+                                },
+                                "height": {
+                                    "name": "Bottom anchor Y offset",
+                                    "description": "",
+                                    "type": "number"
+                                },
+                                "left": {
+                                    "name": "Left offset",
+                                    "type": "number"
+                                },
+                                "width": {
+                                    "name": "Width",
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+          }
+        ]
+      }
+    ]
+  }

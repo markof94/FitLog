@@ -9,14 +9,14 @@ class Scene extends React.PureComponent {
     super(props);
     this.instantRemixing = new InstantRemixing();
     this.state = {
-      background: this.instantRemixing.get(['images', 'background']),
+      video: this.instantRemixing.get(['choice', 'video']),
     };
   }
 
   render() {
     return (
       <SceneWrapper
-        video="https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/0vsoy-a.mp4"
+        video={this.state.video}
         isVisible={this.props.isVisible}
       >
         <SceneContent onChoose={(value) => this.props.onChoose(value)} />

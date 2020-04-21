@@ -1,0 +1,104 @@
+{
+  "choice": {
+    "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/0vsoy-a.mp4",
+    "prompt": "Who is your favorite?",
+    "left": {
+      "image": "https://images.koji-cdn.com/0efd68c5-73ad-48b8-80bf-91cf9c584c20/d4vky-Luhead.png?auto=compress&fit=max&h=174",
+      "appearAfter": 1.4,
+      "offset": {
+        "x": 30,
+        "y": -140
+      },
+      "result": {
+        "type": "text",
+        "value": "Luis"
+      }
+    },
+    "right": {
+      "image": "https://images.koji-cdn.com/c821f50e-a6a8-4d78-a65a-89ecd46483dc/3fq2l-Davidexcited.png?auto=compress&fit=max&h=174",
+      "appearAfter": 0.58,
+      "offset": {
+        "x": -40,
+        "y": -140
+      },
+      "result": {
+        "type": "text",
+        "value": "Youtube Dad"
+      }
+    }
+  },
+  "@@editor": [
+    {
+      "key": "choice",
+      "name": "Choice",
+      "icon": "📚",
+      "source": "choice.json",
+      "fields": [
+        {
+          "key": "choice",
+          "name": "Choice video",
+          "description": "Video letting the user make a selection",
+          "icon": "📸",
+          "type": "file"
+        },
+        {
+          "key": "prompt",
+          "name": "Top prompt",
+          "description": "What to ask the user",
+          "icon": "📸",
+          "type": "text"
+        },
+        {
+          "key": "left",
+          "name": "Object 1",
+          "type": "object<ARObject>",
+          "typeOptions": {
+            "ARObject": {
+              "image": {
+                "name": "Image",
+                "type": "image"
+              },
+              "appearAfter": {
+                "name": "Appear after",
+                "description": "Timestamp to start revealing",
+                "type": "number"
+              },
+              "offset": {
+                "name": "Offset",
+                "type": "object<Offset>",
+                "typeOptions": {
+                  "Offset": {
+                    "x": {
+                      "name": "X offset",
+                      "type": "number"
+                    },
+                    "y": {
+                      "name": "Y offset",
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "result": {
+                "name": "Reveal result",
+                "type": "object<Result>",
+                "typeOptions": {
+                  "Result": {
+                    "type": {
+                      "name": "Type",
+                      "type": "text"
+                    },
+                    "value": {
+                      "name": "Value",
+                      "type": "Text"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
