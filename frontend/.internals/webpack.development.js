@@ -1,13 +1,13 @@
 /**
  * webpack.development.js
- * 
+ *
  * What it Does:
  *   Webpack is the system that this project uses to turn react code into
  *   plain javascript. This file tells webpack what to do when you want
  *   a development server to be created. This file sets up automatic reload
  *   as well as putting the configuration options into process.env to be
  *   picked up by the react app.
- * 
+ *
  * Things to Edit:
  *   Be careful when editing webpack configuration as it gets confusing
  *   quickly. If you want to make any changes to how your app is being
@@ -99,7 +99,6 @@ module.exports = {
                 optimizationLevel: 7,
               },
               pngquant: {
-                quality: '65-90',
                 speed: 4,
               },
             },
