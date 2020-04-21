@@ -331,7 +331,6 @@ class App extends React.PureComponent {
           ref={this.videoRef}
           src={this.state.background}
           autoPlay
-          controls
           muted
           loop
           playsInline
