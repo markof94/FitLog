@@ -9,12 +9,9 @@ const Container = styled.div`
   margin: auto;
   max-width: 100vw;
   height: 100vh;
+  width: 100vw;
   position: relative;
   overflow: hidden;
-
-  @media (max-width: 767px) {
-    width: 100vw;
-  }
 `;
 
 class SceneRouter extends React.PureComponent {

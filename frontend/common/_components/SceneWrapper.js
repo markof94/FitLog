@@ -7,6 +7,7 @@ const Container = styled.div`
   margin: auto;
   max-width: 100vw;
   height: 100vh;
+  width: 100vw;
   position: absolute;
   top: 0;
   left: 0;
@@ -18,10 +19,6 @@ const Container = styled.div`
     opacity: 0;
   `}
   transition: opacity 0.2s ease-in-out;
-
-  @media (max-width: 767px) {
-    width: 100vw;
-  }
 `;
 
 const Video = styled.video`

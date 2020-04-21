@@ -35,7 +35,7 @@
       "source": "choice.json",
       "fields": [
         {
-          "key": "choice",
+          "key": "video",
           "name": "Choice video",
           "description": "Video letting the user make a selection",
           "icon": "📸",
