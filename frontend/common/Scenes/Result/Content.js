@@ -69,6 +69,16 @@ class SceneContent extends React.PureComponent {
         }, 30);
     }
 
+  componentDidMount() {
+    this.instantRemixing.addListener(([scope, key], newValue) => {
+      if (scope !== 'result') {
+        return;
+      }
+      this.setState({ [key]: newValue });
+    });
+    this.instantRemixing.ready();
+  }
+
   getBestFitPose(keypoint, ts) {
     if (!this.props.poseData) {
       return null;

@@ -24,6 +24,15 @@ class Scene extends React.PureComponent {
     this.setState({ poseData: body });
   }
 
+  componentDidMount() {
+    this.instantRemixing.addListener(([scope, key], newValue) => {
+      if (scope === 'choice' && key === 'video') {
+        this.setState({ video: newValue }, () => this.loadPoseData());
+      }
+    });
+    this.instantRemixing.ready();
+  }
+
   render() {
     return (
       <SceneWrapper

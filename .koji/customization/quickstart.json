@@ -1,8 +1,12 @@
 {
     "quickstart": {
         "items": [
-            "strings.text",
-            "images.background"
+            "choice.video",
+            "choice.prompt",
+            "choice.left",
+            "choice.right",
+            "result.video",
+            "result.position"
         ]
     }
 }

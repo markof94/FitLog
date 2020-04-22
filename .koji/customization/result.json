@@ -1,7 +1,7 @@
 {
     "result": {
       "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4",
-      "background": "",
+      "background": "https://images.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/x95mt-paper_fibers.png",
       "position": {
           "appearAfter": 1.2,
           "offset": {
