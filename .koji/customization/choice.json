@@ -31,14 +31,14 @@
     {
       "key": "choice",
       "name": "Choice",
-      "icon": "📚",
+      "icon": "🤔",
       "source": "choice.json",
       "fields": [
         {
           "key": "video",
-          "name": "Choice video",
+          "name": "Choice scene",
           "description": "Video letting the user make a selection",
-          "icon": "📸",
+          "icon": "🎥",
           "type": "video",
           "typeOptions": {
             "estimatePoses": true,
@@ -47,14 +47,15 @@
         },
         {
           "key": "prompt",
-          "name": "Top prompt",
+          "name": "Prompt",
           "description": "What to ask the user",
-          "icon": "📸",
+          "icon": "🤔",
           "type": "text"
         },
         {
           "key": "left",
           "name": "Object 1",
+          "icon": "1️⃣",
           "type": "object<ARObject>",
           "typeOptions": {
             "ARObject": {
@@ -105,6 +106,7 @@
         {
           "key": "right",
           "name": "Object 2",
+          "icon": "2️⃣",
           "type": "object<ARObject>",
           "typeOptions": {
             "ARObject": {

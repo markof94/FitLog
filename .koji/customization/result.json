@@ -22,9 +22,9 @@
         "fields": [
           {
             "key": "video",
-            "name": "Result video",
+            "name": "Result scene",
             "description": "Video showing the result of the choice",
-            "icon": "📸",
+            "icon": "🎥",
             "type": "video",
             "typeOptions": {
                 "estimatePoses": true,
@@ -35,14 +35,13 @@
             "key": "background",
             "name": "Result background",
             "description": "Background of the card",
-            "icon": "📸",
             "type": "image"
           },
           {
             "key": "position",
             "name": "Result position",
             "description": "Fine-tune the position of the result screen",
-            "icon": "📸",
+            "icon": "🕹️",
             "type": "object<ResultPosition>",
             "typeOptions": {
                 "ResultPosition": {
