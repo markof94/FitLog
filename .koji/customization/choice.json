@@ -1,9 +1,9 @@
 {
   "choice": {
     "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/0vsoy-a.mp4",
-    "prompt": "Who is your favorite?",
+    "prompt": "who would u rather be",
     "left": {
-      "image": "https://images.koji-cdn.com/0efd68c5-73ad-48b8-80bf-91cf9c584c20/d4vky-Luhead.png?auto=compress&fit=max&h=174",
+      "image": "https://images.koji-cdn.com/73066d22-3357-4258-81fa-a513f4638945/wblkm-SnoopSogg.png",
       "appearAfter": 1.4,
       "offset": {
         "x": 30,
@@ -11,11 +11,11 @@
       },
       "result": {
         "type": "text",
-        "value": "Luis"
+        "value": "snoop"
       }
     },
     "right": {
-      "image": "https://images.koji-cdn.com/c821f50e-a6a8-4d78-a65a-89ecd46483dc/3fq2l-Davidexcited.png?auto=compress&fit=max&h=174",
+      "image": "https://images.koji-cdn.com/afcc39a1-08df-4f49-96cb-3ea31b381244/dak8w-Shrek.png",
       "appearAfter": 0.58,
       "offset": {
         "x": -40,
@@ -23,7 +23,7 @@
       },
       "result": {
         "type": "text",
-        "value": "Youtube Dad"
+        "value": "shrek"
       }
     }
   },
@@ -90,7 +90,57 @@
                     },
                     "value": {
                       "name": "Value",
-                      "type": "Text"
+                      "type": "text"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "key": "right",
+          "name": "Object 2",
+          "type": "object<ARObject>",
+          "typeOptions": {
+            "ARObject": {
+              "image": {
+                "name": "Image",
+                "type": "image"
+              },
+              "appearAfter": {
+                "name": "Appear after",
+                "description": "Timestamp to start revealing",
+                "type": "number"
+              },
+              "offset": {
+                "name": "Offset",
+                "type": "object<Offset>",
+                "typeOptions": {
+                  "Offset": {
+                    "x": {
+                      "name": "X offset",
+                      "type": "number"
+                    },
+                    "y": {
+                      "name": "Y offset",
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              "result": {
+                "name": "Reveal result",
+                "type": "object<Result>",
+                "typeOptions": {
+                  "Result": {
+                    "type": {
+                      "name": "Type",
+                      "type": "text"
+                    },
+                    "value": {
+                      "name": "Value",
+                      "type": "text"
                     }
                   }
                 }
