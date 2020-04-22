@@ -24,7 +24,6 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   opacity: 0.97;
 
   will-change: transform, height;
-  transition: all 0.01s linear;
 
   font-size: 48px;
   font-weight: bold;
