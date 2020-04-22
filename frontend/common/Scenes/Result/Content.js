@@ -34,6 +34,11 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   backface-visibility: hidden;
 `;
 
+const Text = styled.div`
+    opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
+    transition: opacity 0.4s ease-in-out;
+`;
+
 class SceneContent extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -108,6 +113,9 @@ class SceneContent extends React.PureComponent {
       if (!this.props.value) {
         return null;
       }
+      if (!isVisible || !leftWrist || !rightWrist) {
+          return null;
+      }
 
       const {
         type,
@@ -121,21 +129,21 @@ class SceneContent extends React.PureComponent {
         bottomAnchor = leftWrist;
       }
 
+      const height = Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height;
+
       return (
-        <React.Fragment>
-          {isVisible && leftWrist && rightWrist && (
-            <Sheet
-              left={position.offset.left}
-              width={position.offset.width}
-              y={topAnchor.y + position.offset.y}
-              height={Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height}
-              background={this.state.background}
-              onClick={() => this.props.onBack()}
-            >
-              {value}
-            </Sheet>
-          )}
-        </React.Fragment>
+        <Sheet
+            left={position.offset.left}
+            width={position.offset.width}
+            y={topAnchor.y + position.offset.y}
+            height={height}
+            background={this.state.background}
+            onClick={() => this.props.onBack()}
+        >
+            <Text isVisible={height > 300}>
+                {value}
+            </Text>
+        </Sheet>
       );
   }
 }
