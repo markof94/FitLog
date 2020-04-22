@@ -2,9 +2,6 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
 
-import Data from './data.json';
-import BackgroundImage from './bg.png';
-
 const Sheet = styled.div.attrs(({ x, y, height }) => ({
     style: {
         transform: `translate(0px, ${y}px)`,
@@ -19,12 +16,12 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   align-items: center;
   justify-content: center;
 
-  background: url(${BackgroundImage});
+  background-color: white;
+  ${({ background }) => background && `background-image: url(${background});`}
   background-repeat: repeat;
   opacity: 0.97;
 
   will-change: transform, height;
-  transition: all 0.01s linear;
 
   font-size: 48px;
   font-weight: bold;
@@ -33,13 +30,17 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   overflow: hidden;
   box-shadow: 0px 12px 24px 12px rgba(0,0,0,0.2);
   border: 2px solid rgba(0,0,0,0.2);
+
+  backface-visibility: hidden;
 `;
 
 class SceneContent extends React.PureComponent {
     constructor(props) {
         super(props);
         this.instantRemixing = new InstantRemixing();
+
         this.state = {
+          background: this.instantRemixing.get(['result', 'background']),
           position: this.instantRemixing.get(['result', 'position']),
           isVisible: false,
           leftWrist: null,
@@ -69,7 +70,11 @@ class SceneContent extends React.PureComponent {
     }
 
   getBestFitPose(keypoint, ts) {
-    const bestFit = Data[keypoint].reduce((prev, cur) => {
+    if (!this.props.poseData) {
+      return null;
+    }
+
+    const bestFit = this.props.poseData[keypoint].reduce((prev, cur) => {
       if (!prev) {
         return cur;
       }
@@ -114,6 +119,7 @@ class SceneContent extends React.PureComponent {
               width={position.offset.width}
               y={topAnchor.y + position.offset.y}
               height={Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height}
+              background={this.state.background}
               onClick={() => this.props.onBack()}
             >
               {value}

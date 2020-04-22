@@ -2,8 +2,6 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
 
-import Data from './data.json';
-
 import Glow from '../../_components/effects/Glow';
 import Particles from '../../_components/effects/Particles';
 
@@ -52,7 +50,7 @@ const Inner = styled.div.attrs(({ isVisible, scale }) => ({
     }
 }))`
   will-change: transform;
-  transition: transform 0.2s linear;
+  transition: transform 0.1s linear;
   width: 100%;
   height: 100%;
 `;
@@ -132,7 +130,11 @@ class SceneContent extends React.PureComponent {
     }
 
   getBestFitPose(keypoint, ts) {
-    const bestFit = Data[keypoint].reduce((prev, cur) => {
+    if (!this.props.poseData) {
+      return null;
+    }
+
+    const bestFit = this.props.poseData[keypoint].reduce((prev, cur) => {
       if (!prev) {
         return cur;
       }

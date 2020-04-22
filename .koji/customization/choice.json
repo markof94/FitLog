@@ -1,6 +1,6 @@
 {
   "choice": {
-    "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/0vsoy-a.mp4",
+    "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g5grx-a.mp4",
     "prompt": "who would u rather be",
     "left": {
       "image": "https://images.koji-cdn.com/73066d22-3357-4258-81fa-a513f4638945/wblkm-SnoopSogg.png",
@@ -39,7 +39,11 @@
           "name": "Choice video",
           "description": "Video letting the user make a selection",
           "icon": "📸",
-          "type": "file"
+          "type": "video",
+          "typeOptions": {
+            "estimatePoses": true,
+            "template": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g5grx-a.mp4"
+          }
         },
         {
           "key": "prompt",
@@ -61,7 +65,7 @@
               "appearAfter": {
                 "name": "Appear after",
                 "description": "Timestamp to start revealing",
-                "type": "number"
+                "type": "text"
               },
               "offset": {
                 "name": "Offset",
@@ -70,11 +74,11 @@
                   "Offset": {
                     "x": {
                       "name": "X offset",
-                      "type": "number"
+                      "type": "text"
                     },
                     "y": {
                       "name": "Y offset",
-                      "type": "number"
+                      "type": "text"
                     }
                   }
                 }
@@ -111,7 +115,7 @@
               "appearAfter": {
                 "name": "Appear after",
                 "description": "Timestamp to start revealing",
-                "type": "number"
+                "type": "text"
               },
               "offset": {
                 "name": "Offset",
@@ -120,11 +124,11 @@
                   "Offset": {
                     "x": {
                       "name": "X offset",
-                      "type": "number"
+                      "type": "text"
                     },
                     "y": {
                       "name": "Y offset",
-                      "type": "number"
+                      "type": "text"
                     }
                   }
                 }

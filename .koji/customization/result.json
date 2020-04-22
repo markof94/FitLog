@@ -1,6 +1,7 @@
 {
     "result": {
-      "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/mbunw-b.mp4",
+      "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4",
+      "background": "",
       "position": {
           "appearAfter": 1.2,
           "offset": {
@@ -24,7 +25,18 @@
             "name": "Result video",
             "description": "Video showing the result of the choice",
             "icon": "📸",
-            "type": "file"
+            "type": "video",
+            "typeOptions": {
+                "estimatePoses": true,
+                "template": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4"
+            }
+          },
+          {
+            "key": "background",
+            "name": "Result background",
+            "description": "Background of the card",
+            "icon": "📸",
+            "type": "image"
           },
           {
             "key": "position",
@@ -37,7 +49,7 @@
                     "appearAfter": {
                         "name": "Appear after",
                         "description": "Timestamp to start revealing the result",
-                        "type": "number"
+                        "type": "text"
                     },
                     "topAnchor": {
                         "name": "Top hand",
@@ -58,20 +70,20 @@
                                 "y": {
                                     "name": "Top anchor Y offset",
                                     "description": "",
-                                    "type": "number"
+                                    "type": "text"
                                 },
                                 "height": {
                                     "name": "Bottom anchor Y offset",
                                     "description": "",
-                                    "type": "number"
+                                    "type": "text"
                                 },
                                 "left": {
                                     "name": "Left offset",
-                                    "type": "number"
+                                    "type": "text"
                                 },
                                 "width": {
                                     "name": "Width",
-                                    "type": "number"
+                                    "type": "text"
                                 }
                             }
                         }

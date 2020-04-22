@@ -10,7 +10,16 @@ class Scene extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
     this.state = {
       video: this.instantRemixing.get(['result', 'video']),
+      poseData: null,
     };
+
+    this.loadPoseData();
+  }
+
+  async loadPoseData() {
+    const request = await fetch(`${this.state.video}.poses`);
+    const body = await request.json();
+    this.setState({ poseData: body });
   }
 
   render() {
@@ -20,6 +29,7 @@ class Scene extends React.PureComponent {
         isVisible={this.props.isVisible}
       >
         <SceneContent
+          poseData={this.state.poseData}
           onBack={() => this.props.onBack()}
           value={this.props.value}
         />

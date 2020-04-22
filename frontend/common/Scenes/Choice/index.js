@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import React from 'react';
 import { InstantRemixing } from '@withkoji/vcc';
 
@@ -10,7 +12,16 @@ class Scene extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
     this.state = {
       video: this.instantRemixing.get(['choice', 'video']),
+      poseData: null,
     };
+
+    this.loadPoseData();
+  }
+
+  async loadPoseData() {
+    const request = await fetch(`${this.state.video}.poses`);
+    const body = await request.json();
+    this.setState({ poseData: body });
   }
 
   render() {
@@ -19,7 +30,10 @@ class Scene extends React.PureComponent {
         video={this.state.video}
         isVisible={this.props.isVisible}
       >
-        <SceneContent onChoose={(value) => this.props.onChoose(value)} />
+        <SceneContent
+          poseData={this.state.poseData}
+          onChoose={(value) => this.props.onChoose(value)}
+        />
       </SceneWrapper>
     );
   }
