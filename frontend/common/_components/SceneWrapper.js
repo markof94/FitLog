@@ -116,6 +116,12 @@ class Scene extends React.PureComponent {
     if (prevProps.isVisible && !this.props.isVisible) {
       this.pause();
     }
+
+    if (this.props.video !== prevProps.video) {
+      if (this.props.isVisible) {
+        this.play();
+      }
+    }
   }
 
   render() {
