@@ -41,7 +41,7 @@ const Item = styled.div.attrs(({ x, y }) => ({
   justify-content: center;
 
   will-change: transform;
-  transition: transform 0.2s linear;
+  transition: transform 0.1s linear;
 `;
 
 const Inner = styled.div.attrs(({ isVisible, scale }) => ({
