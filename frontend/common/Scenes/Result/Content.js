@@ -2,6 +2,28 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
 
+const Header = styled.div`
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
+  transition: opacity 0.4s ease-in-out;
+`;
+
+const HeaderText = styled.div`
+  background: rgb(21, 122, 251, 0.6);
+  color: white;
+  padding: 12px 32px;
+  border-radius: 100px;
+  font-size: 36px;
+  font-weight: bold;
+`;
+
 const Sheet = styled.div.attrs(({ x, y, height }) => ({
     style: {
         transform: `translate(0px, ${y}px)`,
@@ -132,18 +154,23 @@ class SceneContent extends React.PureComponent {
       const height = Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height;
 
       return (
-        <Sheet
-            left={position.offset.left}
-            width={position.offset.width}
-            y={topAnchor.y + position.offset.y}
-            height={height}
-            background={this.state.background}
-            onClick={() => this.props.onBack()}
-        >
-            <Text isVisible={height > 300}>
-                {value}
-            </Text>
-        </Sheet>
+        <React.Fragment>
+            <Header isVisible={height > 300}>
+                <HeaderText onClick={() => this.props.onBack()}>Start over</HeaderText>
+            </Header>
+            <Sheet
+                left={position.offset.left}
+                width={position.offset.width}
+                y={topAnchor.y + position.offset.y}
+                height={height}
+                background={this.state.background}
+                onClick={() => this.props.onBack()}
+            >
+                <Text isVisible={height > 300}>
+                    {value}
+                </Text>
+            </Sheet>
+        </React.Fragment>
       );
   }
 }
