@@ -32,7 +32,7 @@ const Text = styled.div`
   border-radius: 2px;
 `;
 
-const Prompt = ({ prompt, isRemixing }) => {
+const Prompt = ({ prompt, isRemixing, onClick }) => {
   const {
     position,
     color,
@@ -42,7 +42,7 @@ const Prompt = ({ prompt, isRemixing }) => {
   } = prompt;
 
   return (
-    <Wrapper top={position.y} left={position.x} isRemixing={isRemixing}>
+    <Wrapper top={position.y} left={position.x} isRemixing={isRemixing} onClick={onClick}>
       <Container>
         <Text
           color={color}
