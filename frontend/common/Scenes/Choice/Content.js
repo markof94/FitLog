@@ -2,28 +2,8 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
 
-import Glow from '../../_components/effects/Glow';
-import Particles from '../../_components/effects/Particles';
-
-const Header = styled.div`
-  position: absolute;
-  top: 15%;
-  left: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-`;
-
-const HeaderText = styled.div`
-  background: red;
-  color: white;
-  font-weight: bold;
-  font-size: 4.5rem;
-  padding: 8px 18px;
-  border-radius: 2px;
-`;
+import Prompt from './_components/Prompt';
+import Image from './_components/Image';
 
 const Item = styled.div.attrs(({ x, y }) => ({
     style: {
@@ -44,54 +24,19 @@ const Item = styled.div.attrs(({ x, y }) => ({
   transition: transform 0.1s linear;
 `;
 
-const Inner = styled.div.attrs(({ isVisible, scale }) => ({
-    style: {
-        transform: `scale(${isVisible ? `${scale ? `${scale},${scale}` : '1,1'}`: '0,0'})`,
-    }
+const Anchor = styled.div.attrs(({ x, y }) => ({
+  style: {
+      transform: `translate(${x}px, ${y}px)`,
+  }
 }))`
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 100%;
+
   will-change: transform;
   transition: transform 0.1s linear;
-  width: 100%;
-  height: 100%;
-`;
-
-const BounceAnimation = keyframes`
-  0% {
-    transform: scale(0.9,0.9) translateY(3px);
-  }
-
-  50% {
-    transform: scale(1.0,1.0) translateY(-6px);
-  }
-
-  100% {
-    transform: scale(0.9,0.9) translateY(3px);
-  }
-`;
-
-const Image = styled.img`
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  animation: ${BounceAnimation} 2s ease-in-out infinite;
-`;
-
-const TextInstruction = styled.div`
-  position: absolute;
-  top: -28px;
-  left: 0;
-  width: 100%;
-  height: 28px;
-  font-size: 24px;
-  font-weight: bold;
-  color: rgba(255,255,255,0.7);
-  text-align: center;
-  text-shadow: 0 0 12px black;
-  z-index: 4;
 `;
 
 class SceneContent extends React.PureComponent {
@@ -99,10 +44,12 @@ class SceneContent extends React.PureComponent {
         super(props);
         this.instantRemixing = new InstantRemixing();
         this.state = {
-            prompt: this.instantRemixing.get(['choice', 'prompt']),
-            left: this.instantRemixing.get(['choice', 'left']),
-            right: this.instantRemixing.get(['choice', 'right']),
-            currentPose: null,
+          isRemixing: this.instantRemixing.isRemixing,
+
+          prompt: this.instantRemixing.get(['choice', 'prompt']),
+          left: this.instantRemixing.get(['choice', 'left']),
+          right: this.instantRemixing.get(['choice', 'right']),
+          currentPose: null,
         };
 
         this.videoRef = React.createRef();
@@ -121,10 +68,10 @@ class SceneContent extends React.PureComponent {
 
           // console.log(currentTime);
           this.setState({
-              leftVisible: currentTime > this.state.left.appearAfter,
-              rightVisible: currentTime > this.state.right.appearAfter,
-              leftWrist,
-              rightWrist,
+            leftVisible: currentTime > this.state.left.appearAfter,
+            rightVisible: currentTime > this.state.right.appearAfter,
+            leftWrist,
+            rightWrist,
           });
         }, 30);
     }
@@ -136,6 +83,7 @@ class SceneContent extends React.PureComponent {
       }
       this.setState({ [key]: newValue });
     });
+    this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
     this.instantRemixing.ready();
   }
 
@@ -158,50 +106,70 @@ class SceneContent extends React.PureComponent {
   }
 
   render() {
-      const {
-        leftWrist,
-        rightWrist,
-        left,
-        right,
-      } = this.state;
+    const {
+      prompt,
+      leftWrist,
+      rightWrist,
+      left,
+      right,
+      isRemixing,
+    } = this.state;
 
-      return (
-        <React.Fragment>
-          <Header>
-            <HeaderText>{this.state.prompt}</HeaderText>
-          </Header>
+    return (
+      <React.Fragment>
+        <Prompt
+          prompt={prompt}
+          onClick={() => this.instantRemixing.onPresentControl(['choice', 'prompt'])}
+        />
 
-          {leftWrist && (
-            <Item
-              x={leftWrist.x + left.offset.x}
-              y={leftWrist.y + left.offset.y}
-              onClick={() => this.props.onChoose(left.result)}
-            >
-              <Inner isVisible={this.state.leftVisible}>
-                <TextInstruction>Tap to choose</TextInstruction>
-                <Image src={left.image} />
-                <Glow />
-                <Particles />
-              </Inner>
-            </Item>
-          )}
-          {rightWrist && (
-            <Item
-              x={rightWrist.x + right.offset.x}
-              y={rightWrist.y + right.offset.y}
-              onClick={() => this.props.onChoose(right.result)}
-            >
-              <Inner isVisible={this.state.rightVisible}>
-                <TextInstruction>Tap to choose</TextInstruction>
-                <Image src={right.image} />
-                <Glow />
-                <Particles />
-              </Inner>
-            </Item>
-          )}
+        {leftWrist && (
+          <Item
+            x={leftWrist.x + left.offset.x}
+            y={leftWrist.y + left.offset.y}
+            onClick={() => {
+              if (this.state.isRemixing) {
+                this.instantRemixing.onPresentControl(['choice', 'left']);
+              } else {
+                this.props.onChoose(left.result);
+              }
+            }}
+          >
+            <Image
+              isVisible={this.state.leftVisible}
+              image={left.image}
+              isRemixing={isRemixing}
+            />
+          </Item>
+        )}
+        {leftWrist && isRemixing && (
+          <Anchor x={leftWrist.x} y={leftWrist.y} />
+        )}
 
-        </React.Fragment>
-      );
+        {rightWrist && (
+          <Item
+            x={rightWrist.x + right.offset.x}
+            y={rightWrist.y + right.offset.y}
+            onClick={() => {
+              if (this.state.isRemixing) {
+                this.instantRemixing.onPresentControl(['choice', 'right']);
+              } else {
+                this.props.onChoose(left.result);
+              }
+            }}
+          >
+            <Image
+              isVisible={this.state.rightVisible}
+              image={right.image}
+              isRemixing={isRemixing}
+            />
+          </Item>
+        )}
+        {rightWrist && isRemixing && (
+          <Anchor x={rightWrist.x} y={rightWrist.y} />
+        )}
+
+      </React.Fragment>
+    );
   }
 }
 

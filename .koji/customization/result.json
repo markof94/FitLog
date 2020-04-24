@@ -4,13 +4,15 @@
       "background": "https://images.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/x95mt-paper_fibers.png",
       "position": {
           "appearAfter": 1.2,
-          "offset": {
-              "y": -15,
-              "height": 40,
-              "left": 160,
-              "width": 500
+          "anchorOffset": {
+              "x": 160,
+              "y": -15
           },
-          "topAnchor": "leftWrist"
+          "anchorSize": {
+            "height": 40,
+            "width": 500
+        },
+        "topAnchor": "leftWrist"
       }
     },
     "@@editor": [
@@ -61,31 +63,13 @@
                             ]
                         }
                     },
-                    "offset": {
-                        "name": "Offsets",
-                        "type": "object<Offset>",
-                        "typeOptions": {
-                            "Offset": {
-                                "y": {
-                                    "name": "Top anchor Y offset",
-                                    "description": "",
-                                    "type": "text"
-                                },
-                                "height": {
-                                    "name": "Bottom anchor Y offset",
-                                    "description": "",
-                                    "type": "text"
-                                },
-                                "left": {
-                                    "name": "Left offset",
-                                    "type": "text"
-                                },
-                                "width": {
-                                    "name": "Width",
-                                    "type": "text"
-                                }
-                            }
-                        }
+                    "anchorOffset": {
+                        "name": "Anchor position",
+                        "type": "coordinate"
+                    },
+                    "anchorSize": {
+                        "name": "Anchor size",
+                        "type": "size"
                     }
                 }
             }

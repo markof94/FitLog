@@ -1,5 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import ReplayIcon from '@material-ui/icons/Replay';
+
 import { InstantRemixing } from '@withkoji/vcc';
 
 const Header = styled.div`
@@ -16,12 +18,45 @@ const Header = styled.div`
 `;
 
 const HeaderText = styled.div`
-  background: rgb(21, 122, 251, 0.6);
+  display: flex;
+  align-items: center;
   color: white;
-  padding: 12px 32px;
-  border-radius: 100px;
-  font-size: 36px;
+  border: 1px solid rgba(255, 255, 255, 1);
+  border-radius: 4px;
+  background-color: rgba(50,50,50,0.5);
   font-weight: bold;
+  font-size: 32px;
+  white-space: nowrap;
+  padding: 12px 24px;
+  height: 100%;
+
+  svg {
+    color: white;
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+`;
+
+const SheetContainer = styled.div.attrs(({ x, y, height }) => ({
+  style: {
+    transform: `translate(${x - 18}px, ${y - 18}px)`,
+    height: `${height + 36}px`,
+  }
+}))`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: ${({ width }) => width + 36}px;
+  will-change: transform, height;
+
+  padding: 18px;
+
+  ${({ isRemixing }) => isRemixing && `
+    border: 1px solid rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.4);
+  `}
 `;
 
 const Sheet = styled.div.attrs(({ x, y, height }) => ({
@@ -30,9 +65,8 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
         height: `${height}px`,
     }
 }))`
-  position: absolute;
-  left: ${({ left }) => left}px;
-  width: ${({ width }) => width}px;
+  width: 100%;
+  height: 100%;
   text-align: center;
   display: flex;
   align-items: center;
@@ -43,8 +77,6 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   background-repeat: repeat;
   opacity: 0.97;
 
-  will-change: transform, height;
-
   font-size: 48px;
   font-weight: bold;
 
@@ -52,8 +84,6 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
   overflow: hidden;
   box-shadow: 0px 12px 24px 12px rgba(0,0,0,0.2);
   border: 2px solid rgba(0,0,0,0.2);
-
-  backface-visibility: hidden;
 `;
 
 const Text = styled.div`
@@ -67,6 +97,7 @@ class SceneContent extends React.PureComponent {
         this.instantRemixing = new InstantRemixing();
 
         this.state = {
+          isRemixing: this.instantRemixing.isRemixing,
           background: this.instantRemixing.get(['result', 'background']),
           position: this.instantRemixing.get(['result', 'position']),
           isVisible: false,
@@ -103,6 +134,7 @@ class SceneContent extends React.PureComponent {
       }
       this.setState({ [key]: newValue });
     });
+    this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
     this.instantRemixing.ready();
   }
 
@@ -139,11 +171,6 @@ class SceneContent extends React.PureComponent {
           return null;
       }
 
-      const {
-        type,
-        value,
-      } = this.props.value;
-
       let topAnchor = leftWrist;
       let bottomAnchor = rightWrist;
       if (position.topAnchor === 'rightWrist') {
@@ -151,25 +178,36 @@ class SceneContent extends React.PureComponent {
         bottomAnchor = leftWrist;
       }
 
-      const height = Math.abs(topAnchor.y - bottomAnchor.y) + position.offset.height;
+      const height = Math.abs(topAnchor.y - bottomAnchor.y) + position.anchorSize.height;
 
       return (
         <React.Fragment>
             <Header isVisible={height > 300}>
-                <HeaderText onClick={() => this.props.onBack()}>Start over</HeaderText>
+                <HeaderText onClick={() => this.props.onBack()}>
+                  <ReplayIcon />Start over
+                </HeaderText>
             </Header>
-            <Sheet
-                left={position.offset.left}
-                width={position.offset.width}
-                y={topAnchor.y + position.offset.y}
+            <SheetContainer
+                x={position.anchorOffset.x}
+                y={topAnchor.y + position.anchorOffset.y}
+                width={position.anchorSize.width}
                 height={height}
                 background={this.state.background}
-                onClick={() => this.props.onBack()}
+                onClick={() => {
+                  if (this.state.isRemixing) {
+                    this.instantRemixing.onPresentControl(['result', 'position']);
+                  } else {
+                    this.props.onChoose(left.result);
+                  }
+                }}
+                isRemixing={this.state.isRemixing}
             >
+              <Sheet>
                 <Text isVisible={height > 300}>
-                    {value}
+                    {this.props.value}
                 </Text>
-            </Sheet>
+              </Sheet>
+            </SheetContainer>
         </React.Fragment>
       );
   }

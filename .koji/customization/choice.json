@@ -1,7 +1,16 @@
 {
   "choice": {
     "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g5grx-a.mp4",
-    "prompt": "who would u rather be",
+    "prompt": {
+      "value": "who would u rather be",
+      "color": "#ffffff",
+      "backgroundColor": "#ff0000",
+      "fontSize": 4.5,
+      "position": {
+        "x": 0,
+        "y": 15
+      }
+    },
     "left": {
       "image": "https://images.koji-cdn.com/73066d22-3357-4258-81fa-a513f4638945/wblkm-SnoopSogg.png",
       "appearAfter": 1.4,
@@ -9,10 +18,7 @@
         "x": 30,
         "y": -140
       },
-      "result": {
-        "type": "text",
-        "value": "snoop"
-      }
+      "result": "snoop"
     },
     "right": {
       "image": "https://images.koji-cdn.com/afcc39a1-08df-4f49-96cb-3ea31b381244/dak8w-Shrek.png",
@@ -21,10 +27,7 @@
         "x": -40,
         "y": -140
       },
-      "result": {
-        "type": "text",
-        "value": "shrek"
-      }
+      "result": "shrek"
     }
   },
   "@@editor": [
@@ -50,7 +53,31 @@
           "name": "Prompt",
           "description": "What to ask the user",
           "icon": "🤔",
-          "type": "text"
+          "type": "object<StyledText>",
+          "typeOptions": {
+            "StyledText": {
+              "value": {
+                "name": "Value",
+                "type": "text"
+              },
+              "color": {
+                "name": "Text color",
+                "type": "color"
+              },
+              "backgroundColor": {
+                "name": "Background color",
+                "type": "color"
+              },
+              "fontSize": {
+                "name": "Font size",
+                "type": "range"
+              },
+              "position": {
+                "name": "Position",
+                "type": "coordinate"
+              }
+            }
+          }
         },
         {
           "key": "left",
@@ -70,35 +97,11 @@
               },
               "offset": {
                 "name": "Offset",
-                "type": "object<Offset>",
-                "typeOptions": {
-                  "Offset": {
-                    "x": {
-                      "name": "X offset",
-                      "type": "text"
-                    },
-                    "y": {
-                      "name": "Y offset",
-                      "type": "text"
-                    }
-                  }
-                }
+                "type": "coordinate"
               },
               "result": {
                 "name": "Reveal result",
-                "type": "object<Result>",
-                "typeOptions": {
-                  "Result": {
-                    "type": {
-                      "name": "Type",
-                      "type": "text"
-                    },
-                    "value": {
-                      "name": "Value",
-                      "type": "text"
-                    }
-                  }
-                }
+                "type": "text"
               }
             }
           }
@@ -121,35 +124,11 @@
               },
               "offset": {
                 "name": "Offset",
-                "type": "object<Offset>",
-                "typeOptions": {
-                  "Offset": {
-                    "x": {
-                      "name": "X offset",
-                      "type": "text"
-                    },
-                    "y": {
-                      "name": "Y offset",
-                      "type": "text"
-                    }
-                  }
-                }
+                "type": "coordinate"
               },
               "result": {
                 "name": "Reveal result",
-                "type": "object<Result>",
-                "typeOptions": {
-                  "Result": {
-                    "type": {
-                      "name": "Type",
-                      "type": "text"
-                    },
-                    "value": {
-                      "name": "Value",
-                      "type": "text"
-                    }
-                  }
-                }
+                "type": "text"
               }
             }
           }

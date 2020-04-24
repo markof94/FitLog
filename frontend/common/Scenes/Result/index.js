@@ -36,6 +36,11 @@ class Scene extends React.PureComponent {
       <SceneWrapper
         video={this.state.video}
         isVisible={this.props.isVisible}
+        onChangeVideo={() => {
+          if (this.state.isRemixing) {
+            this.instantRemixing.onPresentControl(['choice', 'video']);
+          }
+        }}
       >
         <SceneContent
           poseData={this.state.poseData}

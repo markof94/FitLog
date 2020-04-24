@@ -15,6 +15,7 @@ import '@babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import 'sanitize.css/sanitize.css';
 import './index.css';
 import App from './App';
 

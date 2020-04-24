@@ -7,6 +7,10 @@
             "choice.right",
             "result.video",
             "result.position"
+        ],
+        "states": [
+            { "key": "scene1", "label": "Choice scene" },
+            { "key": "scene2", "label": "Result scene" }
         ]
     }
 }

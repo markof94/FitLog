@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
 
+import ControlStrip from './_components/ControlStrip';
+
 const Container = styled.div`
   padding: 0;
   margin: auto;
@@ -41,6 +43,13 @@ const Overlay = styled.div`
   left: calc((100% - ${({ width }) => width}px) / 2);
   transform: scale(${({ scaleFactor }) => `${scaleFactor},${scaleFactor}`});
   z-index: 2;
+
+  ${({ isRemixing }) => isRemixing && `
+    background-size: 140px 140px;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.15) 2px, transparent 2px),
+      linear-gradient(to bottom, rgba(255,255,255,0.15) 2px, transparent 2px);
+  `}
 `;
 
 class Scene extends React.PureComponent {
@@ -48,6 +57,7 @@ class Scene extends React.PureComponent {
       super(props);
       this.instantRemixing = new InstantRemixing();
       this.state = {
+        isRemixing: this.instantRemixing.isRemixing,
         isVisible: false,
         videoWidth: 0,
         videoHeight: 0,
@@ -57,6 +67,8 @@ class Scene extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
+
       if (this.videoRef && this.videoRef.current) {
         this.videoRef.current.addEventListener('loadedmetadata', (e) => {
           const {
@@ -77,28 +89,28 @@ class Scene extends React.PureComponent {
         });
 
         if (this.props.isVisible) {
-          this.play();
+          this.onVisible();
         } else {
-          this.pause();
+          this.onHide();
         }
       }
   }
 
-  play() {
+  onVisible() {
     // Play and fade in after delay
     try {
       this.videoRef.current.currentTime = 0;
-      this.videoRef.current.play();
+      this.play();
       setTimeout(() => this.setState({ isVisible: true }), 200);
     } catch (err) {
       //
     }
   }
 
-  pause() {
+  onHide() {
     try {
       this.setState({ isVisible: false });
-      this.videoRef.current.pause();
+      this.pause();
 
       setTimeout(() => {
         this.videoRef.current.currentTime = 0;
@@ -111,16 +123,47 @@ class Scene extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (!prevProps.isVisible && this.props.isVisible) {
       // Start
-      this.play()
+      this.onVisible()
     }
     if (prevProps.isVisible && !this.props.isVisible) {
-      this.pause();
+      this.onHide();
     }
 
     if (this.props.video !== prevProps.video) {
       if (this.props.isVisible) {
-        this.play();
+        this.onVisible();
       }
+    }
+  }
+
+  playPause() {
+    try {
+      const video = this.videoRef.current;
+      if (video.paused) {
+        this.play();
+      } else {
+        this.pause();
+      }
+    } catch (err) {
+      //
+    }
+  }
+
+  play() {
+    this.setState({ playing: true });
+    try {
+      this.videoRef.current.play();
+    } catch (err) {
+      //
+    }
+  }
+
+  pause() {
+    this.setState({ playing: false });
+    try {
+      this.videoRef.current.pause();
+    } catch (err) {
+      //
     }
   }
 
@@ -131,8 +174,16 @@ class Scene extends React.PureComponent {
             width={this.state.videoWidth}
             height={this.state.videoHeight}
             scaleFactor={this.state.scaleFactor}
+            isRemixing={this.state.isRemixing}
         >
             {React.cloneElement(this.props.children, { videoRef: this.videoRef })}
+
+            {this.state.isRemixing && (
+              <ControlStrip
+                isPlaying={this.state.playing}
+                onPlayPause={() => this.playPause()}
+              />
+            )}
         </Overlay>
         <Video
           ref={this.videoRef}
@@ -140,6 +191,7 @@ class Scene extends React.PureComponent {
           muted
           preload
           playsInline
+          loop={this.state.isRemixing}
         />
       </Container>
     );
