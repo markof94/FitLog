@@ -182,6 +182,7 @@ class Scene extends React.PureComponent {
               <ControlStrip
                 isPlaying={this.state.playing}
                 onPlayPause={() => this.playPause()}
+                onChangeVideo={() => this.props.onChangeVideo()}
               />
             )}
         </Overlay>
