@@ -119,6 +119,7 @@ class SceneContent extends React.PureComponent {
       <React.Fragment>
         <Prompt
           prompt={prompt}
+          isRemixing={this.state.isRemixing}
           onClick={() => this.instantRemixing.onPresentControl(['choice', 'prompt'])}
         />
 
