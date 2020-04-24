@@ -42,8 +42,8 @@ const Prompt = ({ prompt, isRemixing, onClick }) => {
   } = prompt;
 
   return (
-    <Wrapper top={position.y} left={position.x} isRemixing={isRemixing} onClick={onClick}>
-      <Container>
+    <Wrapper top={position.y} left={position.x}>
+      <Container isRemixing={isRemixing} onClick={onClick}>
         <Text
           color={color}
           backgroundColor={backgroundColor}
