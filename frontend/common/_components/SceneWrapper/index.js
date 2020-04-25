@@ -110,9 +110,15 @@ class Scene extends React.PureComponent {
         });
       });
 
-      this.videoRef.current.addEventListener('timeupdate', (e) => {
-        this.setState({ currentTime: Math.floor(e.target.currentTime * 100) / 100 });
-      })
+
+      setInterval(() => {
+        try {
+          const { currentTime } = this.videoRef.current;
+          this.setState({ currentTime: Math.floor(currentTime * 10) / 10 });
+        } catch (err) {
+          //
+        }
+      }, 50);
 
       if (this.props.isVisible) {
         this.onVisible();
@@ -204,7 +210,7 @@ class Scene extends React.PureComponent {
         >
             {React.cloneElement(this.props.children, { videoRef: this.videoRef })}
 
-            {this.state.isRemixing && !this.state.remixingIsControlVisible && (
+            {!this.state.isRemixing && !this.state.remixingIsControlVisible && (
               <ControlStrip
                 isPlaying={this.state.playing}
                 currentTime={this.state.currentTime}

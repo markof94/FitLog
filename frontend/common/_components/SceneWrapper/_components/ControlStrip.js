@@ -69,7 +69,7 @@ const ControlStrip = ({ isPlaying, onPlayPause, currentTime, onChangeVideo }) =>
     <PlayPause onClick={() => onPlayPause()}>
       {isPlaying ? <PauseIcon /> : <PlayIcon />}
     </PlayPause>
-    <CurrentTime>{currentTime.toFixed(2)}s</CurrentTime>
+    <CurrentTime>{currentTime.toFixed(1)}s</CurrentTime>
     <ChangeButton onClick={() => onChangeVideo()}>
       <VideoIcon />Change video
     </ChangeButton>
