@@ -19,6 +19,11 @@ const Inner = styled.div.attrs(({ isVisible, scale }) => ({
     border-radius: 4px;
     background-color: rgba(255, 255, 255, 0.4);
   `}
+
+  ${({ isActive }) => isActive && `
+    border: 1px solid #157afb;
+    background: rgba(21, 122, 251, 0.3);
+  `}
 `;
 
 const BounceAnimation = keyframes`
@@ -62,8 +67,8 @@ const TextInstruction = styled.div`
   opacity: 0;
 `;
 
-const ImageComponent = ({ isVisible, image, isRemixing }) => (
-  <Inner isVisible={isVisible} isRemixing={isRemixing}>
+const ImageComponent = ({ isVisible, image, isRemixing, isActive }) => (
+  <Inner isVisible={isVisible} isRemixing={isRemixing} isActive={isActive}>
     <TextInstruction>Tap to choose</TextInstruction>
     <Image src={image} />
     <Glow />

@@ -95,9 +95,15 @@ class SceneContent extends React.PureComponent {
     constructor(props) {
         super(props);
         this.instantRemixing = new InstantRemixing();
+        let activePath = null;
+        if (this.instantRemixing.remixingActivePath) {
+          activePath = this.instantRemixing.remixingActivePath.join('.');
+        }
 
         this.state = {
           isRemixing: this.instantRemixing.isRemixing,
+          remixingActivePath: activePath,
+
           background: this.instantRemixing.get(['result', 'background']),
           position: this.instantRemixing.get(['result', 'position']),
           isVisible: false,
@@ -135,6 +141,13 @@ class SceneContent extends React.PureComponent {
       this.setState({ [key]: newValue });
     });
     this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
+    this.instantRemixing.onSetActivePath((activePath) => {
+      if (activePath) {
+        this.setState({ remixingActivePath: activePath.join('.') });
+      } else {
+        this.setState({ remixingActivePath: null });
+      }
+    });
     this.instantRemixing.ready();
   }
 
@@ -193,18 +206,27 @@ class SceneContent extends React.PureComponent {
                 width={position.anchorSize.width}
                 height={height}
                 background={this.state.background}
-                onClick={() => {
+                onClick={(e) => {
                   if (this.state.isRemixing) {
-                    this.instantRemixing.onPresentControl(['result', 'position']);
+                    const {
+                      x,
+                      y,
+                      width,
+                      height,
+                    } = e.target.getBoundingClientRect();
+                    this.instantRemixing.onPresentControl(['result', 'position'], {
+                      position: { x, y, width, height },
+                    });
                   } else {
-                    this.props.onChoose(left.result);
+                    this.props.onBack();
                   }
                 }}
                 isRemixing={this.state.isRemixing}
+                isActive={this.state.remixingActivePath === 'result.position'}
             >
               <Sheet>
                 <Text isVisible={height > 300}>
-                    {this.props.value}
+                    {this.props.value || 'Result appears here'}
                 </Text>
               </Sheet>
             </SheetContainer>

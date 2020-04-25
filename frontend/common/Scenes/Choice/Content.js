@@ -43,8 +43,14 @@ class SceneContent extends React.PureComponent {
     constructor(props) {
         super(props);
         this.instantRemixing = new InstantRemixing();
+        let activePath = null;
+        if (this.instantRemixing.remixingActivePath) {
+          activePath = this.instantRemixing.remixingActivePath.join('.');
+        }
+
         this.state = {
           isRemixing: this.instantRemixing.isRemixing,
+          remixingActivePath: activePath,
 
           prompt: this.instantRemixing.get(['choice', 'prompt']),
           left: this.instantRemixing.get(['choice', 'left']),
@@ -84,6 +90,13 @@ class SceneContent extends React.PureComponent {
       this.setState({ [key]: newValue });
     });
     this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
+    this.instantRemixing.onSetActivePath((activePath) => {
+      if (activePath) {
+        this.setState({ remixingActivePath: activePath.join('.') });
+      } else {
+        this.setState({ remixingActivePath: null });
+      }
+    });
     this.instantRemixing.ready();
   }
 
@@ -120,16 +133,35 @@ class SceneContent extends React.PureComponent {
         <Prompt
           prompt={prompt}
           isRemixing={this.state.isRemixing}
-          onClick={() => this.instantRemixing.onPresentControl(['choice', 'prompt'])}
+          isActive={this.state.remixingActivePath === 'choice.prompt'}
+          onClick={(e) => {
+            const {
+              x,
+              y,
+              width,
+              height,
+            } = e.target.getBoundingClientRect();
+            this.instantRemixing.onPresentControl(['choice', 'prompt'], {
+              position: { x, y, width, height },
+            });
+          }}
         />
 
         {leftWrist && (
           <Item
             x={leftWrist.x + left.offset.x}
             y={leftWrist.y + left.offset.y}
-            onClick={() => {
+            onClick={(e) => {
               if (this.state.isRemixing) {
-                this.instantRemixing.onPresentControl(['choice', 'left']);
+                const {
+                  x,
+                  y,
+                  width,
+                  height,
+                } = e.target.getBoundingClientRect();
+                this.instantRemixing.onPresentControl(['choice', 'left'], {
+                  position: { x, y, width, height },
+                });
               } else {
                 this.props.onChoose(left.result);
               }
@@ -139,6 +171,7 @@ class SceneContent extends React.PureComponent {
               isVisible={this.state.leftVisible}
               image={left.image}
               isRemixing={isRemixing}
+              isActive={this.state.remixingActivePath === 'choice.left'}
             />
           </Item>
         )}
@@ -152,7 +185,15 @@ class SceneContent extends React.PureComponent {
             y={rightWrist.y + right.offset.y}
             onClick={() => {
               if (this.state.isRemixing) {
-                this.instantRemixing.onPresentControl(['choice', 'right']);
+                const {
+                  x,
+                  y,
+                  width,
+                  height,
+                } = e.target.getBoundingClientRect();
+                this.instantRemixing.onPresentControl(['choice', 'right'], {
+                  position: { x, y, width, height },
+                });
               } else {
                 this.props.onChoose(left.result);
               }
@@ -162,6 +203,7 @@ class SceneContent extends React.PureComponent {
               isVisible={this.state.rightVisible}
               image={right.image}
               isRemixing={isRemixing}
+              isActive={this.state.remixingActivePath === 'choice.right'}
             />
           </Item>
         )}

@@ -21,6 +21,11 @@ const Container = styled.div`
     border-radius: 4px;
     background-color: rgba(255, 255, 255, 0.4);
   `}
+
+  ${({ isActive }) => isActive && `
+    border: 1px solid #157afb;
+    background: rgba(21, 122, 251, 0.3);
+  `}
 `;
 
 const Text = styled.div`
@@ -32,7 +37,7 @@ const Text = styled.div`
   border-radius: 2px;
 `;
 
-const Prompt = ({ prompt, isRemixing, onClick }) => {
+const Prompt = ({ prompt, isRemixing, isActive, onClick }) => {
   const {
     position,
     color,
@@ -43,7 +48,7 @@ const Prompt = ({ prompt, isRemixing, onClick }) => {
 
   return (
     <Wrapper top={position.y} left={position.x}>
-      <Container isRemixing={isRemixing} onClick={onClick}>
+      <Container isRemixing={isRemixing} isActive={isActive} onClick={onClick}>
         <Text
           color={color}
           backgroundColor={backgroundColor}
