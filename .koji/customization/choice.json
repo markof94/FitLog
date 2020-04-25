@@ -14,6 +14,10 @@
     "left": {
       "image": "https://images.koji-cdn.com/73066d22-3357-4258-81fa-a513f4638945/wblkm-SnoopSogg.png",
       "appearAfter": 1.4,
+      "size": {
+        "width": 220,
+        "height": 220
+      },
       "offset": {
         "x": 30,
         "y": -140
@@ -23,6 +27,10 @@
     "right": {
       "image": "https://images.koji-cdn.com/afcc39a1-08df-4f49-96cb-3ea31b381244/dak8w-Shrek.png",
       "appearAfter": 0.58,
+      "size": {
+        "width": 220,
+        "height": 220
+      },
       "offset": {
         "x": -40,
         "y": -140
@@ -96,6 +104,11 @@
                 "icon": "💁‍♀️",
                 "type": "image"
               },
+              "size": {
+                "name": "Size",
+                "icon": "🌱",
+                "type": "size"
+              },
               "result": {
                 "name": "Result",
                 "icon": "🎉",
@@ -126,6 +139,11 @@
                 "name": "Image",
                 "icon": "💁‍♀️",
                 "type": "image"
+              },
+              "size": {
+                "name": "Size",
+                "icon": "🌱",
+                "type": "size"
               },
               "result": {
                 "name": "Result",

@@ -11,10 +11,12 @@ const Item = styled.div.attrs(({ x, y }) => ({
     }
 }))`
   position: absolute;
-  top: -110px;
-  left: -110px;
-  width: 220px;
-  height: 220px;
+
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
+  top: -${({ width }) => width / 2}px;
+  left: -${({ height }) => height / 2}px;
+
   text-align: center;
   display: flex;
   align-items: center;
@@ -151,6 +153,8 @@ class SceneContent extends React.PureComponent {
           <Item
             x={leftWrist.x + left.offset.x}
             y={leftWrist.y + left.offset.y}
+            width={left.size.width}
+            height={left.size.height}
             onClick={(e) => {
               if (this.state.isRemixing) {
                 const {
@@ -183,6 +187,8 @@ class SceneContent extends React.PureComponent {
           <Item
             x={rightWrist.x + right.offset.x}
             y={rightWrist.y + right.offset.y}
+            width={right.size.width}
+            height={right.size.height}
             onClick={(e) => {
               if (this.state.isRemixing) {
                 const {
