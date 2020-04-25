@@ -183,7 +183,7 @@ class SceneContent extends React.PureComponent {
           <Item
             x={rightWrist.x + right.offset.x}
             y={rightWrist.y + right.offset.y}
-            onClick={() => {
+            onClick={(e) => {
               if (this.state.isRemixing) {
                 const {
                   x,
