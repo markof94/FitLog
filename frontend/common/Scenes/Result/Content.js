@@ -177,9 +177,6 @@ class SceneContent extends React.PureComponent {
         position,
       } = this.state;
 
-      if (!this.props.value) {
-        return null;
-      }
       if (!isVisible || !leftWrist || !rightWrist) {
           return null;
       }

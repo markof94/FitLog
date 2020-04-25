@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { InstantRemixing } from '@withkoji/vcc';
 
 import ChoiceScene from './Scenes/Choice';
 import ResultScene from './Scenes/Result';
@@ -17,10 +18,21 @@ const Container = styled.div`
 class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.instantRemixing = new InstantRemixing();
+
     this.state = {
       currentScene: 'choice',
       resultData: null,
     }
+  }
+
+  componentDidMount() {
+    console.log('aaa');
+    this.instantRemixing.onSetCurrentState((state) => {
+      console.log(state);
+      this.transition(state);
+    });
+    this.instantRemixing.ready();
   }
 
   transition(to, data = {}) {
