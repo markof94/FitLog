@@ -57,23 +57,28 @@
           "typeOptions": {
             "StyledText": {
               "value": {
-                "name": "Value",
+                "name": "Text",
+                "icon": "✏️",
                 "type": "text"
               },
               "color": {
-                "name": "Text color",
+                "name": "Color",
+                "icon": "🎨",
                 "type": "color"
               },
               "backgroundColor": {
-                "name": "Background color",
+                "name": "Background",
+                "icon": "🖼️",
                 "type": "color"
               },
               "fontSize": {
-                "name": "Font size",
+                "name": "Size",
+                "icon": "🌱",
                 "type": "range"
               },
               "position": {
                 "name": "Position",
+                "icon": "🕹️",
                 "type": "coordinate"
               }
             }
@@ -88,20 +93,24 @@
             "ARObject": {
               "image": {
                 "name": "Image",
+                "icon": "💁‍♀️",
                 "type": "image"
               },
+              "result": {
+                "name": "Result",
+                "icon": "🎉",
+                "type": "text"
+              },
               "appearAfter": {
-                "name": "Appear after",
+                "name": "Timing",
+                "icon": "⏱️",
                 "description": "Timestamp to start revealing",
                 "type": "text"
               },
               "offset": {
                 "name": "Offset",
+                "icon": "🕹️",
                 "type": "coordinate"
-              },
-              "result": {
-                "name": "Reveal result",
-                "type": "text"
               }
             }
           }
@@ -115,20 +124,24 @@
             "ARObject": {
               "image": {
                 "name": "Image",
+                "icon": "💁‍♀️",
                 "type": "image"
               },
+              "result": {
+                "name": "Result",
+                "icon": "🎉",
+                "type": "text"
+              },
               "appearAfter": {
-                "name": "Appear after",
+                "name": "Timing",
+                "icon": "⏱️",
                 "description": "Timestamp to start revealing",
                 "type": "text"
               },
               "offset": {
                 "name": "Offset",
+                "icon": "🕹️",
                 "type": "coordinate"
-              },
-              "result": {
-                "name": "Reveal result",
-                "type": "text"
               }
             }
           }
