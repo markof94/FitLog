@@ -210,7 +210,7 @@ class Scene extends React.PureComponent {
         >
             {React.cloneElement(this.props.children, { videoRef: this.videoRef })}
 
-            {!this.state.isRemixing && !this.state.remixingIsControlVisible && (
+            {this.state.isRemixing && !this.state.remixingIsControlVisible && (
               <ControlStrip
                 isPlaying={this.state.playing}
                 currentTime={this.state.currentTime}
