@@ -58,9 +58,12 @@ class Scene extends React.PureComponent {
       this.instantRemixing = new InstantRemixing();
       this.state = {
         isRemixing: this.instantRemixing.isRemixing,
+        remixingIsControlVisible: false,
         isVisible: false,
+        playing: false,
         videoWidth: 0,
         videoHeight: 0,
+        currentTime: 0,
       };
 
       this.videoRef = React.createRef();
@@ -68,32 +71,55 @@ class Scene extends React.PureComponent {
 
   componentDidMount() {
     this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
-
-      if (this.videoRef && this.videoRef.current) {
-        this.videoRef.current.addEventListener('loadedmetadata', (e) => {
-          const {
-            videoWidth,
-            videoHeight,
-          } = e.target;
-
-          const {
-            width,
-            height,
-          } = this.videoRef.current.getBoundingClientRect();
-
-          this.setState({
-            videoWidth,
-            videoHeight,
-            scaleFactor: height / videoHeight,
-          });
-        });
-
-        if (this.props.isVisible) {
-          this.onVisible();
-        } else {
-          this.onHide();
+    this.instantRemixing.onSetActivePath((activePath) => {
+      const remixingIsControlVisible = !!activePath;
+      this.setState({ remixingIsControlVisible });
+      if (remixingIsControlVisible) {
+        try {
+          this.videoRef.current.pause();
+        } catch (err) {
+          //
+        }
+      } else {
+        if (this.state.isVisible && this.state.playing) {
+          try {
+            this.videoRef.current.play();
+          } catch (err) {
+            //
+          }
         }
       }
+    });
+
+    if (this.videoRef && this.videoRef.current) {
+      this.videoRef.current.addEventListener('loadedmetadata', (e) => {
+        const {
+          videoWidth,
+          videoHeight,
+        } = e.target;
+
+        const {
+          width,
+          height,
+        } = this.videoRef.current.getBoundingClientRect();
+
+        this.setState({
+          videoWidth,
+          videoHeight,
+          scaleFactor: height / videoHeight,
+        });
+      });
+
+      this.videoRef.current.addEventListener('timeupdate', (e) => {
+        this.setState({ currentTime: Math.floor(e.target.currentTime * 100) / 100 });
+      })
+
+      if (this.props.isVisible) {
+        this.onVisible();
+      } else {
+        this.onHide();
+      }
+    }
   }
 
   onVisible() {
@@ -178,9 +204,10 @@ class Scene extends React.PureComponent {
         >
             {React.cloneElement(this.props.children, { videoRef: this.videoRef })}
 
-            {this.state.isRemixing && (
+            {this.state.isRemixing && !this.state.remixingIsControlVisible && (
               <ControlStrip
                 isPlaying={this.state.playing}
+                currentTime={this.state.currentTime}
                 onPlayPause={() => this.playPause()}
                 onChangeVideo={() => this.props.onChangeVideo()}
               />

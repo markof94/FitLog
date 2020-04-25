@@ -29,6 +29,9 @@ const Container = styled.div`
 `;
 
 const Text = styled.div`
+  user-select: none;
+  pointer-events: none;
+
   background: ${({ backgroundColor }) => backgroundColor};
   color: ${({ color }) => color};
   font-weight: bold;

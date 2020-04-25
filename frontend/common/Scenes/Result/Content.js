@@ -65,6 +65,9 @@ const Sheet = styled.div.attrs(({ x, y, height }) => ({
         height: `${height}px`,
     }
 }))`
+  user-select: none;
+  pointer-events: none;
+
   width: 100%;
   height: 100%;
   text-align: center;

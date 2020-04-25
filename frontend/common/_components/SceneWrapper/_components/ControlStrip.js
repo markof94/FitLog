@@ -36,6 +36,12 @@ const PlayPause = styled.div`
   }
 `;
 
+const CurrentTime = styled.div`
+  color: white;
+  font-size: 28px;
+  margin-left: 12px;
+`;
+
 const ChangeButton = styled.div`
   display: flex;
   align-items: center;
@@ -58,11 +64,12 @@ const ChangeButton = styled.div`
   }
 `;
 
-const ControlStrip = ({ isPlaying, onPlayPause, onChangeVideo }) => (
+const ControlStrip = ({ isPlaying, onPlayPause, currentTime, onChangeVideo }) => (
   <Container>
     <PlayPause onClick={() => onPlayPause()}>
       {isPlaying ? <PauseIcon /> : <PlayIcon />}
     </PlayPause>
+    <CurrentTime>{currentTime.toFixed(2)}s</CurrentTime>
     <ChangeButton onClick={() => onChangeVideo()}>
       <VideoIcon />Change video
     </ChangeButton>

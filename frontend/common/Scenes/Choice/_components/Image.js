@@ -9,6 +9,9 @@ const Inner = styled.div.attrs(({ isVisible, scale }) => ({
         transform: `scale(${isVisible ? `${scale ? `${scale},${scale}` : '1,1'}`: '0,0'})`,
     }
 }))`
+  user-select: none;
+  pointer-events: none;
+
   will-change: transform;
   transition: transform 0.1s linear;
   width: 100%;
@@ -67,8 +70,12 @@ const TextInstruction = styled.div`
   opacity: 0;
 `;
 
-const ImageComponent = ({ isVisible, image, isRemixing, isActive }) => (
-  <Inner isVisible={isVisible} isRemixing={isRemixing} isActive={isActive}>
+const ImageComponent = ({ isVisible, image, isRemixing, isActive, onClick }) => (
+  <Inner
+    isVisible={isVisible}
+    isRemixing={isRemixing}
+    isActive={isActive}
+  >
     <TextInstruction>Tap to choose</TextInstruction>
     <Image src={image} />
     <Glow />
