@@ -65,26 +65,31 @@
           "typeOptions": {
             "StyledText": {
               "value": {
+                "priority": 0,
                 "name": "Text",
                 "icon": "✏️",
                 "type": "text"
               },
               "color": {
+                "priority": 1,
                 "name": "Color",
                 "icon": "🎨",
                 "type": "color"
               },
               "backgroundColor": {
+                "priority": 2,
                 "name": "Background",
                 "icon": "🖼️",
                 "type": "color"
               },
               "fontSize": {
+                "priority": 3,
                 "name": "Size",
                 "icon": "🌱",
                 "type": "range"
               },
               "position": {
+                "priority": 4,
                 "name": "Position",
                 "icon": "🕹️",
                 "type": "coordinate"
@@ -100,27 +105,32 @@
           "typeOptions": {
             "ARObject": {
               "image": {
+                "priority": 0,
                 "name": "Image",
                 "icon": "💁‍♀️",
                 "type": "image"
               },
               "size": {
+                "priority": 4,
                 "name": "Size",
                 "icon": "🌱",
                 "type": "size"
               },
               "result": {
+                "priority": 1,
                 "name": "Result",
                 "icon": "🎉",
                 "type": "text"
               },
               "appearAfter": {
+                "priority": 2,
                 "name": "Timing",
                 "icon": "⏱️",
                 "description": "Timestamp to start revealing",
                 "type": "text"
               },
               "offset": {
+                "priority": 3,
                 "name": "Offset",
                 "icon": "🕹️",
                 "type": "coordinate"
@@ -136,27 +146,32 @@
           "typeOptions": {
             "ARObject": {
               "image": {
+                "priority": 0,
                 "name": "Image",
                 "icon": "💁‍♀️",
                 "type": "image"
               },
               "size": {
+                "priority": 4,
                 "name": "Size",
                 "icon": "🌱",
                 "type": "size"
               },
               "result": {
+                "priority": 1,
                 "name": "Result",
                 "icon": "🎉",
                 "type": "text"
               },
               "appearAfter": {
+                "priority": 2,
                 "name": "Timing",
                 "icon": "⏱️",
                 "description": "Timestamp to start revealing",
                 "type": "text"
               },
               "offset": {
+                "priority": 3,
                 "name": "Offset",
                 "icon": "🕹️",
                 "type": "coordinate"
