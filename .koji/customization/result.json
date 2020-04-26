@@ -71,13 +71,19 @@
                         "priority": 1,
                         "name": "Offset",
                         "icon": "🕹️",
-                        "type": "coordinate"
+                        "type": "coordinate",
+                        "typeOptions": {
+                          "step": 5
+                        }
                     },
                     "anchorSize": {
                         "priority": 3,
                         "name": "Size",
                         "icon": "🌱",
-                        "type": "size"
+                        "type": "size",
+                        "typeOptions": {
+                          "step": 5
+                        }
                     }
                 }
             }
