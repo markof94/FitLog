@@ -51,7 +51,7 @@ class SceneRouter extends React.PureComponent {
         <ResultScene
           isVisible={this.state.currentScene === 'result'}
           value={this.state.resultData}
-          onBack={() => this.setState({ currentScene: 'choice', resultData: null })}
+          onBack={() => this.setState({ currentScene: 'choice' })}
         />
       </Container>
     );

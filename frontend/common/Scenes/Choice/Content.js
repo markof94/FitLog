@@ -201,7 +201,7 @@ class SceneContent extends React.PureComponent {
                   position: { x, y, width, height },
                 });
               } else {
-                this.props.onChoose(left.result);
+                this.props.onChoose(right.result);
               }
             }}
           >
