@@ -121,7 +121,9 @@
                 "icon": "🌱",
                 "type": "size",
                 "typeOptions": {
-                  "step": 5
+                  "step": 1,
+                  "min": 0,
+                  "max": 300
                 }
               },
               "result": {

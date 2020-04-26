@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   position: absolute;
   top: ${({ top }) => top}%;
-  left: ${({ left }) => left};
+  left: ${({ left }) => left}px;
   width: 100%;
   padding: 18px;
   display: flex;
