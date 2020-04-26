@@ -27,9 +27,7 @@ class SceneRouter extends React.PureComponent {
   }
 
   componentDidMount() {
-    console.log('aaa');
     this.instantRemixing.onSetCurrentState((state) => {
-      console.log(state);
       this.transition(state);
     });
     this.instantRemixing.ready();

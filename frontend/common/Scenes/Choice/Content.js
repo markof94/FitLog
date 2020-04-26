@@ -85,7 +85,7 @@ class SceneContent extends React.PureComponent {
     }
 
   componentDidMount() {
-    this.instantRemixing.addListener(([scope, key], newValue) => {
+    this.instantRemixing.onValueChanged(([scope, key], newValue) => {
       if (scope !== 'choice') {
         return;
       }
