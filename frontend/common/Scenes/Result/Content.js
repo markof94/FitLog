@@ -107,8 +107,8 @@ class SceneContent extends React.PureComponent {
           isRemixing: this.instantRemixing.isRemixing,
           remixingActivePath: activePath,
 
-          background: this.instantRemixing.get(['result', 'background']),
-          position: this.instantRemixing.get(['result', 'position']),
+          background: this.instantRemixing.get(['general', 'background']),
+          reveal: this.instantRemixing.get(['general', 'reveal']),
           isVisible: false,
           leftWrist: null,
           rightWrist: null,
@@ -129,7 +129,7 @@ class SceneContent extends React.PureComponent {
           const rightWrist = this.getBestFitPose('rightWrist', currentTime);
 
           this.setState({
-              isVisible: currentTime > this.state.position.appearAfter,
+              isVisible: currentTime > this.state.reveal.appearAfter,
               leftWrist,
               rightWrist,
           });
@@ -138,7 +138,7 @@ class SceneContent extends React.PureComponent {
 
   componentDidMount() {
     this.instantRemixing.onValueChanged(([scope, key], newValue) => {
-      if (scope !== 'result') {
+      if (scope !== 'general') {
         return;
       }
       this.setState({ [key]: newValue });
@@ -177,7 +177,7 @@ class SceneContent extends React.PureComponent {
         isVisible,
         leftWrist,
         rightWrist,
-        position,
+        reveal,
       } = this.state;
 
       if (!isVisible || !leftWrist || !rightWrist) {
@@ -186,24 +186,19 @@ class SceneContent extends React.PureComponent {
 
       let topAnchor = leftWrist;
       let bottomAnchor = rightWrist;
-      if (position.topAnchor === 'rightWrist') {
+      if (reveal.topAnchor === 'rightWrist') {
         topAnchor = rightWrist;
         bottomAnchor = leftWrist;
       }
 
-      const height = Math.abs(topAnchor.y - bottomAnchor.y) + position.anchorSize.height;
+      const height = Math.abs(topAnchor.y - bottomAnchor.y) + reveal.anchorSize.height;
 
       return (
         <React.Fragment>
-            <Header isVisible={height > 300}>
-                <HeaderText onClick={() => this.props.onBack()}>
-                  <ReplayIcon />Start over
-                </HeaderText>
-            </Header>
             <SheetContainer
-                x={position.anchorOffset.x}
-                y={topAnchor.y + position.anchorOffset.y}
-                width={position.anchorSize.width}
+                x={reveal.anchorOffset.x}
+                y={topAnchor.y + reveal.anchorOffset.y}
+                width={reveal.anchorSize.width}
                 height={height}
                 background={this.state.background}
                 onClick={(e) => {
@@ -214,7 +209,7 @@ class SceneContent extends React.PureComponent {
                       width,
                       height,
                     } = e.target.getBoundingClientRect();
-                    this.instantRemixing.onPresentControl(['result', 'position'], {
+                    this.instantRemixing.onPresentControl(['general', 'reveal'], {
                       position: { x, y, width, height },
                     });
                   } else {
@@ -222,11 +217,11 @@ class SceneContent extends React.PureComponent {
                   }
                 }}
                 isRemixing={this.state.isRemixing}
-                isActive={this.state.remixingActivePath === 'result.position'}
+                isActive={this.state.remixingActivePath === 'general.reveal'}
             >
               <Sheet>
                 <Text isVisible={height > 300}>
-                    {this.props.value || 'Result appears here'}
+                    {reveal.value}
                 </Text>
               </Sheet>
             </SheetContainer>

@@ -9,7 +9,7 @@ class Scene extends React.PureComponent {
     super(props);
     this.instantRemixing = new InstantRemixing();
     this.state = {
-      video: this.instantRemixing.get(['result', 'video']),
+      video: this.instantRemixing.get(['general', 'video']),
       poseData: null,
     };
 
@@ -24,7 +24,7 @@ class Scene extends React.PureComponent {
 
   componentDidMount() {
     this.instantRemixing.onValueChanged(([scope, key], newValue) => {
-      if (scope === 'result' && key === 'video') {
+      if (scope === 'general' && key === 'video') {
         this.setState({ video: newValue }, () => this.loadPoseData());
       }
     });
@@ -35,8 +35,7 @@ class Scene extends React.PureComponent {
     return (
       <SceneWrapper
         video={this.state.video}
-        isVisible={this.props.isVisible}
-        onChangeVideo={() => this.instantRemixing.onPresentControl(['result', 'video'])}
+        onChangeVideo={() => this.instantRemixing.onPresentControl(['general', 'video'])}
       >
         <SceneContent
           poseData={this.state.poseData}

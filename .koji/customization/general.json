@@ -1,26 +1,26 @@
 {
-    "result": {
+    "general": {
       "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4",
-      "background": "https://images.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/x95mt-paper_fibers.png",
-      "position": {
-          "appearAfter": 1.2,
-          "anchorOffset": {
-              "x": 160,
-              "y": -15
-          },
-          "anchorSize": {
-            "height": 40,
-            "width": 500
+      "reveal": {
+        "value": "Hello",
+        "appearAfter": 1.2,
+        "anchorOffset": {
+            "x": 160,
+            "y": -15
+        },
+        "anchorSize": {
+          "height": 40,
+          "width": 500
         },
         "topAnchor": "leftWrist"
       }
     },
     "@@editor": [
       {
-        "key": "result",
-        "name": "Result",
+        "key": "general",
+        "name": "General",
         "icon": "📚",
-        "source": "result.json",
+        "source": "general.json",
         "fields": [
           {
             "key": "video",
@@ -40,13 +40,19 @@
             "type": "image"
           },
           {
-            "key": "position",
+            "key": "reveal",
             "name": "Result position",
             "description": "Fine-tune the position of the result screen",
             "icon": "🕹️",
             "type": "object<ResultPosition>",
             "typeOptions": {
                 "ResultPosition": {
+                  "value": {
+                    "priority": 0,
+                    "name": "Text",
+                    "icon": "✏️",
+                    "type": "text"
+                  },
                     "appearAfter": {
                         "priority": 0,
                         "name": "Timing",

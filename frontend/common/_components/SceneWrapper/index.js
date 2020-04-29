@@ -14,13 +14,6 @@ const Container = styled.div`
   top: 0;
   left: 0;
   overflow: hidden;
-
-  ${({ isVisible }) => isVisible ? `
-    opacity: 1;
-  ` : `
-    opacity: 0;
-  `}
-  transition: opacity 0.2s ease-in-out;
 `;
 
 const Video = styled.video`
@@ -59,7 +52,6 @@ class Scene extends React.PureComponent {
       this.state = {
         isRemixing: this.instantRemixing.isRemixing,
         remixingIsControlVisible: false,
-        isVisible: false,
         playing: false,
         videoWidth: 0,
         videoHeight: 0,
@@ -81,7 +73,7 @@ class Scene extends React.PureComponent {
           //
         }
       } else {
-        if (this.state.isVisible && this.state.playing) {
+        if (this.state.playing) {
           try {
             this.videoRef.current.play();
           } catch (err) {
@@ -119,52 +111,6 @@ class Scene extends React.PureComponent {
           //
         }
       }, 50);
-
-      if (this.props.isVisible) {
-        this.onVisible();
-      } else {
-        this.onHide();
-      }
-    }
-  }
-
-  onVisible() {
-    // Play and fade in after delay
-    try {
-      this.videoRef.current.currentTime = 0;
-      this.play();
-      setTimeout(() => this.setState({ isVisible: true }), 200);
-    } catch (err) {
-      //
-    }
-  }
-
-  onHide() {
-    try {
-      this.setState({ isVisible: false });
-      this.pause();
-
-      setTimeout(() => {
-        this.videoRef.current.currentTime = 0;
-      }, 200);
-    } catch (err) {
-      //
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!prevProps.isVisible && this.props.isVisible) {
-      // Start
-      this.onVisible()
-    }
-    if (prevProps.isVisible && !this.props.isVisible) {
-      this.onHide();
-    }
-
-    if (this.props.video !== prevProps.video) {
-      if (this.props.isVisible) {
-        this.onVisible();
-      }
     }
   }
 
@@ -201,7 +147,7 @@ class Scene extends React.PureComponent {
 
   render() {
     return (
-      <Container isVisible={this.state.isVisible}>
+      <Container>
         <Overlay
             width={this.state.videoWidth}
             height={this.state.videoHeight}
@@ -225,6 +171,7 @@ class Scene extends React.PureComponent {
           muted
           preload
           playsInline
+          autoPlay
           loop={this.state.isRemixing}
         />
       </Container>

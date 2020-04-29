@@ -1,16 +1,8 @@
 {
     "quickstart": {
         "items": [
-            "choice.video",
-            "choice.prompt",
-            "choice.left",
-            "choice.right",
-            "result.video",
-            "result.position"
-        ],
-        "states": [
-            { "key": "choice", "label": "Choice scene" },
-            { "key": "result", "label": "Result scene" }
+            "general.video",
+            "general.reveal"
         ]
     }
 }
