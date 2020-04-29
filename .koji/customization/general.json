@@ -1,18 +1,23 @@
 {
     "general": {
-      "video": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4",
+      "video": "https://objects.koji-cdn.com/f936fd1b-393e-449b-9b96-bb5f5d41ac46/pvx33-IMG_1514.mov",
       "reveal": {
-        "value": "Hello",
-        "appearAfter": 1.2,
-        "anchorOffset": {
-            "x": 160,
-            "y": -15
+        "value": "grape is the worst jolly rancher",
+        "fontSize": 36,
+        "appearAfter": 2.2,
+        "leftOffset": {
+            "x": 20,
+            "y": -70
         },
-        "anchorSize": {
-          "height": 40,
-          "width": 500
+        "rightOffset": {
+          "x": 20,
+          "y": -70
         },
-        "topAnchor": "leftWrist"
+        "topOffset": {
+          "x": 20,
+          "y": -120
+        },
+        "anchor": "rightWrist"
       }
     },
     "@@editor": [
@@ -29,15 +34,8 @@
             "icon": "🎥",
             "type": "video",
             "typeOptions": {
-                "estimatePoses": true,
-                "template": "https://objects.koji-cdn.com/d1642c9c-0a8d-46de-b9ee-983f0e74db67/g54jm-b.mp4"
+                "estimatePoses": true
             }
-          },
-          {
-            "key": "background",
-            "name": "Result background",
-            "description": "Background of the card",
-            "type": "image"
           },
           {
             "key": "reveal",
@@ -53,18 +51,28 @@
                     "icon": "✏️",
                     "type": "text"
                   },
+                  "fontSize": {
+                    "priority": 1,
+                    "name": "Font size",
+                    "icon": "🌱",
+                    "type": "range",
+                    "typeOptions": {
+                      "min": 20,
+                      "max": 200
+                    }
+                  },
                     "appearAfter": {
-                        "priority": 0,
+                        "priority": 2,
                         "name": "Timing",
                         "icon": "⏱️",
                         "description": "Timestamp to start revealing the result",
                         "type": "text"
                     },
-                    "topAnchor": {
-                        "priority": 2,
-                        "name": "Top hand",
+                    "anchor": {
+                        "priority": 3,
+                        "name": "Anchor hand",
                         "icon": "👋",
-                        "description": "Which hand is on top?",
+                        "description": "Which hand is the anchor?",
                         "type": "select",
                         "typeOptions": {
                             "options": [
@@ -73,8 +81,8 @@
                             ]
                         }
                     },
-                    "anchorOffset": {
-                        "priority": 1,
+                    "leftOffset": {
+                        "priority": 4,
                         "name": "Offset",
                         "icon": "🕹️",
                         "type": "coordinate",
@@ -82,15 +90,24 @@
                           "step": 5
                         }
                     },
-                    "anchorSize": {
-                        "priority": 3,
-                        "name": "Size",
-                        "icon": "🌱",
-                        "type": "size",
-                        "typeOptions": {
-                          "step": 5
-                        }
+                    "rightOffset": {
+                      "priority": 5,
+                      "name": "Offset",
+                      "icon": "🕹️",
+                      "type": "coordinate",
+                      "typeOptions": {
+                        "step": 5
+                      }
+                  },
+                  "topOffset": {
+                    "priority": 6,
+                    "name": "Offset",
+                    "icon": "🕹️",
+                    "type": "coordinate",
+                    "typeOptions": {
+                      "step": 5
                     }
+                  }
                 }
             }
           }

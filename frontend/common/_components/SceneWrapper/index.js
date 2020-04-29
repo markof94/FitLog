@@ -52,7 +52,7 @@ class Scene extends React.PureComponent {
       this.state = {
         isRemixing: this.instantRemixing.isRemixing,
         remixingIsControlVisible: false,
-        playing: false,
+        playing: true,
         videoWidth: 0,
         videoHeight: 0,
         currentTime: 0,

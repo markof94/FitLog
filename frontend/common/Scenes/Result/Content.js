@@ -4,94 +4,39 @@ import ReplayIcon from '@material-ui/icons/Replay';
 
 import { InstantRemixing } from '@withkoji/vcc';
 
-const Header = styled.div`
-  position: absolute;
-  top: 48px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
-  transition: opacity 0.4s ease-in-out;
-`;
-
-const HeaderText = styled.div`
-  display: flex;
-  align-items: center;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 1);
-  border-radius: 4px;
-  background-color: rgba(50,50,50,0.5);
-  font-weight: bold;
-  font-size: 32px;
-  white-space: nowrap;
-  padding: 12px 24px;
-  height: 100%;
-
+const Container = styled.div`
   svg {
-    color: white;
-    width: 36px;
-    height: 36px;
-    margin-right: 12px;
+    overflow: visible;
+  }
+
+  path {
+    fill: transparent;
+  }
+
+  text {
+    font-size: ${({ fontSize }) => fontSize}px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    fill: rgba(255,255,255,0.9);
+    text-shadow: 0px 0px 64px rgba(0,0,0,0.9);
   }
 `;
 
-const SheetContainer = styled.div.attrs(({ x, y, height }) => ({
+const Anchor = styled.div.attrs(({ x, y }) => ({
   style: {
-    transform: `translate(${x - 18}px, ${y - 18}px)`,
-    height: `${height + 36}px`,
+      transform: `translate(${x}px, ${y}px)`,
   }
 }))`
   position: absolute;
-  left: 0;
   top: 0;
-  width: ${({ width }) => width + 36}px;
-  will-change: transform, height;
-
-  padding: 18px;
-
-  ${({ isRemixing }) => isRemixing && `
-    border: 1px solid rgba(255, 255, 255, 1);
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.4);
-  `}
-`;
-
-const Sheet = styled.div.attrs(({ x, y, height }) => ({
-    style: {
-        transform: `translate(0px, ${y}px)`,
-        height: `${height}px`,
-    }
-}))`
-  user-select: none;
-  pointer-events: none;
-
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  left: 0;
+  width: 24px;
+  height: 24px;
   background-color: white;
-  ${({ background }) => background && `background-image: url(${background});`}
-  background-repeat: repeat;
-  opacity: 0.97;
+  border-radius: 100%;
 
-  font-size: 48px;
-  font-weight: bold;
-
-  border-radius: 2px;
-  overflow: hidden;
-  box-shadow: 0px 12px 24px 12px rgba(0,0,0,0.2);
-  border: 2px solid rgba(0,0,0,0.2);
-`;
-
-const Text = styled.div`
-    opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
-    transition: opacity 0.4s ease-in-out;
+  will-change: transform;
+  transition: transform 0.1s linear;
 `;
 
 class SceneContent extends React.PureComponent {
@@ -178,53 +123,60 @@ class SceneContent extends React.PureComponent {
         leftWrist,
         rightWrist,
         reveal,
+        isRemixing,
       } = this.state;
 
       if (!isVisible || !leftWrist || !rightWrist) {
           return null;
       }
 
-      let topAnchor = leftWrist;
-      let bottomAnchor = rightWrist;
-      if (reveal.topAnchor === 'rightWrist') {
-        topAnchor = rightWrist;
-        bottomAnchor = leftWrist;
+      let leftAnchor = leftWrist;
+      let rightAnchor = rightWrist;
+      if (reveal.anchor === 'rightWrist') {
+        leftAnchor = rightWrist;
+        rightAnchor = leftWrist;
       }
 
-      const height = Math.abs(topAnchor.y - bottomAnchor.y) + reveal.anchorSize.height;
+      const p1 = {
+        x: leftAnchor.x + reveal.leftOffset.x,
+        y: leftAnchor.y + reveal.leftOffset.y
+      };
+
+      const p2 = {
+        x: rightAnchor.x + reveal.rightOffset.x,
+        y: rightAnchor.y + reveal.rightOffset.y
+      };
+
+      const maxLeft = this.getBestFitPose('leftWrist', reveal.appearAfter);
+      const maxRight = this.getBestFitPose('rightWrist', reveal.appearAfter);
+      const c1 = {
+        x: Math.min(maxLeft.x, maxRight.x) + Math.abs((maxRight.x - maxLeft.x) / 2) + reveal.topOffset.x,
+        y: Math.min(maxLeft.y, maxRight.y) + reveal.topOffset.y,
+      };
+      const curve = `M${p1.x} ${p1.y} Q${c1.x} ${c1.y} ${p2.x} ${p2.y}`;
 
       return (
         <React.Fragment>
-            <SheetContainer
-                x={reveal.anchorOffset.x}
-                y={topAnchor.y + reveal.anchorOffset.y}
-                width={reveal.anchorSize.width}
-                height={height}
-                background={this.state.background}
-                onClick={(e) => {
-                  if (this.state.isRemixing) {
-                    const {
-                      x,
-                      y,
-                      width,
-                      height,
-                    } = e.target.getBoundingClientRect();
-                    this.instantRemixing.onPresentControl(['general', 'reveal'], {
-                      position: { x, y, width, height },
-                    });
-                  } else {
-                    this.props.onBack();
-                  }
-                }}
-                isRemixing={this.state.isRemixing}
-                isActive={this.state.remixingActivePath === 'general.reveal'}
-            >
-              <Sheet>
-                <Text isVisible={height > 300}>
-                    {reveal.value}
-                </Text>
-              </Sheet>
-            </SheetContainer>
+          <Container fontSize={reveal.fontSize}>
+            <svg viewBox="0 0 1080 1920">
+              <path id="curve" d={curve} />
+              <text width="1080">
+                <textPath xlinkHref="#curve">
+                  {reveal.value}
+                </textPath>
+              </text>
+            </svg>
+          </Container>
+
+          {leftWrist && isRemixing && (
+            <Anchor x={leftWrist.x} y={leftWrist.y} />
+          )}
+          {rightWrist && isRemixing && (
+            <Anchor x={rightWrist.x} y={rightWrist.y} />
+          )}
+          {c1 && isRemixing && (
+            <Anchor x={c1.x} y={c1.y} />
+          )}
         </React.Fragment>
       );
   }
