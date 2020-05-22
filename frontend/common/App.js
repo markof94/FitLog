@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import ResultScene from './Scenes/Result';
-
 const Container = styled.div`
   padding: 0;
   margin: auto;
@@ -11,13 +9,27 @@ const Container = styled.div`
   width: 100vw;
   position: relative;
   overflow: hidden;
+  background: white;
 `;
 
 class SceneRouter extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasPurchased: false,
+      dynamicData: null,
+    };
+  }
+
+  componentDidMount() {
+    // Get the IAP token and check if we have dynamic content from the server
+    //
+  }
+
   render() {
     return (
       <Container>
-        <ResultScene />
+        Has purchased: {this.state.hasPurchased ? 'true' : 'false'}
       </Container>
     );
   }

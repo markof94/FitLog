@@ -1,24 +1,7 @@
 {
     "general": {
-      "video": "https://objects.koji-cdn.com/f936fd1b-393e-449b-9b96-bb5f5d41ac46/pvx33-IMG_1514.mov",
-      "reveal": {
-        "value": "grape is the worst jolly rancher",
-        "fontSize": 36,
-        "appearAfter": 2.2,
-        "leftOffset": {
-            "x": 20,
-            "y": -70
-        },
-        "rightOffset": {
-          "x": 20,
-          "y": -70
-        },
-        "topOffset": {
-          "x": 20,
-          "y": -120
-        },
-        "anchor": "rightWrist"
-      }
+      "image": "https://objects.koji-cdn.com/164df096-8af7-43ec-8baa-816c2babaab6/1wu0p-IMG_3446.JPG?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5",
+      "price": "0.15"
     },
     "@@editor": [
       {
@@ -28,88 +11,15 @@
         "source": "general.json",
         "fields": [
           {
-            "key": "video",
-            "name": "Result scene",
-            "description": "Video showing the result of the choice",
-            "icon": "🎥",
-            "type": "video",
-            "typeOptions": {
-                "estimatePoses": true
-            }
+            "key": "image",
+            "name": "Reveal image",
+            "description": "Reveal image",
+            "type": "image"
           },
           {
-            "key": "reveal",
-            "name": "Result position",
-            "description": "Fine-tune the position of the result screen",
-            "icon": "🕹️",
-            "type": "object<ResultPosition>",
-            "typeOptions": {
-                "ResultPosition": {
-                  "value": {
-                    "priority": 0,
-                    "name": "Text",
-                    "icon": "✏️",
-                    "type": "text"
-                  },
-                  "fontSize": {
-                    "priority": 1,
-                    "name": "Font size",
-                    "icon": "🌱",
-                    "type": "range",
-                    "typeOptions": {
-                      "min": 20,
-                      "max": 200
-                    }
-                  },
-                    "appearAfter": {
-                        "priority": 2,
-                        "name": "Timing",
-                        "icon": "⏱️",
-                        "description": "Timestamp to start revealing the result",
-                        "type": "text"
-                    },
-                    "anchor": {
-                        "priority": 3,
-                        "name": "Anchor hand",
-                        "icon": "👋",
-                        "description": "Which hand is the anchor?",
-                        "type": "select",
-                        "typeOptions": {
-                            "options": [
-                                { "value": "leftWrist", "label": "Hand 1" },
-                                { "value": "rightWrist", "label": "Hand 2" }
-                            ]
-                        }
-                    },
-                    "leftOffset": {
-                        "priority": 4,
-                        "name": "Offset",
-                        "icon": "🕹️",
-                        "type": "coordinate",
-                        "typeOptions": {
-                          "step": 5
-                        }
-                    },
-                    "rightOffset": {
-                      "priority": 5,
-                      "name": "Offset",
-                      "icon": "🕹️",
-                      "type": "coordinate",
-                      "typeOptions": {
-                        "step": 5
-                      }
-                  },
-                  "topOffset": {
-                    "priority": 6,
-                    "name": "Offset",
-                    "icon": "🕹️",
-                    "type": "coordinate",
-                    "typeOptions": {
-                      "step": 5
-                    }
-                  }
-                }
-            }
+            "key": "price",
+            "name": "Reveal price",
+            "type": "text"
           }
         ]
       }

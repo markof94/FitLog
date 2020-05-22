@@ -1,5 +1,15 @@
 {
   "entitlements": {
-    "InstantRemixing": true
+    "InstantRemixing": true,
+    "InAppPurchases": {
+      "enabled": true,
+      "products": [
+        {
+          "sku": "image",
+          "name": "Image reveal",
+          "price": "{{general.price}}"
+        }
+      ]
+    }
   }
 }
