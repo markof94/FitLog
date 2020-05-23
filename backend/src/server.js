@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 // Import any routes we're going to be using
-import leaderboard from './leaderboard';
+import routes from './routes';
 
 // Create server
 const app = express();
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 // Enable routes we want to use
-leaderboard(app);
+routes(app);
 
 // Start server
 app.listen(process.env.PORT || 3333, null, async err => {
