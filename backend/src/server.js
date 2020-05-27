@@ -10,7 +10,9 @@ import routes from './routes';
 const app = express();
 
 // Specifically enable CORS for pre-flight options requests
-app.options('*', cors())
+app.options('*', cors({
+  exposedHeaders: ['x-koji-payment-required'],
+}))
 
 // Enable body parsers for reading POST data. We set up this app to 
 // accept JSON bodies and x-www-form-urlencoded bodies. If you wanted to
@@ -23,7 +25,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 // CORS allows these API routes to be requested directly by browsers
-app.use(cors());
+app.use(cors({
+  exposedHeaders: ['x-koji-payment-required'],
+}));
 
 // Disable caching
 app.use((req, res, next) => {
