@@ -3,8 +3,8 @@ import fetch from 'node-fetch';
 
 export default function (app) {
   app.get('/image', async (req, res) => {
-    const { image } = Koji.config.general;
-    const blurredImage = `${image}&blur=10`;
+    const { image } = res.locals.koji.general;
+    const blurredImage = `${image}&blur=20`;
 
     let hasPurchased = false;
     try {
@@ -13,8 +13,8 @@ export default function (app) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Koji-App-Id': '94bda106-e284-4ac3-9936-b8fbeea4e827',
-          'X-Koji-App-Token': '',
+          'X-Koji-App-Id': process.env.KOJI_PROJECT_ID,
+          'X-Koji-App-Token': process.env.KOJI_PROJECT_TOKEN,
           'X-Koji-Iap-Callback-Token': token,
         },
       });

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { InstantRemixing } from '@withkoji/vcc';
 
 const Container = styled.div`
   padding: 0;
@@ -75,6 +76,9 @@ class SceneRouter extends React.PureComponent {
       isUnlocked: false,
       imageUrl: null,
     };
+
+    const instantRemixing = new InstantRemixing();
+    instantRemixing.ready();
 
     if (window.parent) {
       window.addEventListener('message', ({ data }) => {

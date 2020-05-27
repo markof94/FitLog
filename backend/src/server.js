@@ -2,6 +2,8 @@ import 'babel-polyfill';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import Koji from '@withkoji/vcc';
+import deepmerge from 'deepmerge';
 
 // Import any routes we're going to be using
 import routes from './routes';
@@ -35,6 +37,18 @@ app.use((req, res, next) => {
   res.header('Expires', '-1');
   res.header('Pragma', 'no-cache');
   next();
+});
+
+app.use((req, res, next) => {
+  const headerOverrides = req.headers['x-trusted-koji-overrides'] || {};
+  const resolvedConfig = deepmerge(
+    Koji.config,
+    headerOverrides,
+    { arrayMerge: (dest, source) => source },
+  );
+  console.log(resolvedConfig);
+  res.locals.koji = resolvedConfig;
+  next(); 
 });
 
 // Enable routes we want to use
