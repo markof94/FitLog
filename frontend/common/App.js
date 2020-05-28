@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
+import Iap from '@withkoji/iap';
 
 const Container = styled.div`
   padding: 0;
@@ -84,6 +85,7 @@ class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.iap = new Iap('app id');
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
@@ -99,43 +101,11 @@ class SceneRouter extends React.PureComponent {
 
     this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
     this.instantRemixing.onValueChanged((path, newValue) => {
-      if (path.join('.') === 'general.reveal.price') {
-        this.setState({ price: newValue });
-      }
-      if (path.join('.') === 'general.reveal.image') {
-        this.setState({ remixingImageUrl: newValue });
-      }
+      const { price, image } = newValue;
+      this.setState({ price, remixingImageUrl: image });
     });
 
     this.instantRemixing.ready();
-
-    if (window.parent) {
-      window.addEventListener('message', ({ data }) => {
-        const { event } = data;
-        if (event === 'KojiIap.TokenCreated') {
-          try {
-            this.fetchRemoteContent(data.userToken);
-          } catch (err) {
-            console.log(err);
-          }
-        }
-
-        if (event === 'KojiIap.PurchaseFinished') {
-          this.setState({ isPurchasing: false });
-          try {
-            if (data.success) {
-              this.setState({
-                isLoading: true,
-                imageUrl: null,
-              });
-              this.fetchRemoteContent(data.userToken);
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      });
-    }
   }
 
   async fetchRemoteContent(token) {
@@ -157,17 +127,23 @@ class SceneRouter extends React.PureComponent {
 
   promptPurchase() {
     this.setState({ isPurchasing: true });
-    window.parent.postMessage({
-      _kojiEventName: '@@koji/iap/promptPurchase',
-      sku: 'image',
-    }, '*');
+    this.iap.promptPurchase('image', (success, token) => {
+      this.setState({ isPurchasing: false });
+      if (success) {
+        this.setState({
+          isLoading: true,
+          imageUrl: null,
+        });
+        this.fetchRemoteContent(token);
+      }
+    });
   }
 
   componentDidMount() {
     // Get the IAP token and check if we have dynamic content from the server
-    window.parent.postMessage({
-      _kojiEventName: '@@koji/iap/getToken',
-    }, '*');
+    this.iap.getToken((token) => {
+      this.fetchRemoteContent(token);
+    });
 
     const feed = new FeedSdk();
     feed.load();

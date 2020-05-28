@@ -1,10 +1,9 @@
 import fetch from 'node-fetch';
+import Iap from '@withkoji/iap';
 
 export default function (app) {
   app.get('/image', async (req, res) => {
     const { image } = res.locals.koji.general.reveal;
-
-    console.log(req.headers);
 
     const revealedImage = `${image}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5`;
     const blurredImage = `${revealedImage}&blur=30`;
@@ -12,21 +11,17 @@ export default function (app) {
     let hasPurchased = false;
     try {
       const token = req.headers['x-koji-iap-callback-token'];
-      const request = await fetch('http://localhost:3125/v1/iap/consumer/resolveReceipts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Koji-App-Id': process.env.KOJI_PROJECT_ID,
-          'X-Koji-App-Token': process.env.KOJI_PROJECT_TOKEN,
-          'X-Koji-Iap-Callback-Token': token,
-        },
-      });
-
-      const { receipts } = await request.json();
+      const iap = new Iap(
+        process.env.KOJI_PROJECT_ID,
+        process.env.KOJI_PROJECT_TOKEN,
+      );
+      const receipts = await iap.resolveReceipts(token);
       hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
     } catch (err) {
-      //
+      console.log(err);
     }
+
+    res.header('Content-Type', 'image/jpeg');
 
     if (hasPurchased) {
       res.header('X-Koji-Payment-Required', 'false');
