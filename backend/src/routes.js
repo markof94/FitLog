@@ -1,9 +1,10 @@
-import Koji from '@withkoji/vcc';
 import fetch from 'node-fetch';
 
 export default function (app) {
   app.get('/image', async (req, res) => {
     const { image } = res.locals.koji.general.reveal;
+
+    console.log(req.headers);
 
     const revealedImage = `${image}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5`;
     const blurredImage = `${revealedImage}&blur=30`;

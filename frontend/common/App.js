@@ -188,7 +188,12 @@ class SceneRouter extends React.PureComponent {
           <RemixingOverlay onClick={() => this.instantRemixing.onPresentControl(['general', 'reveal'])} />
         )}
         {image}
-        {this.state.isLoading && (
+        {this.state.isRemixing && !this.state.remixingImageUrl && (
+          <UnlockOverlay>
+            <LoadingText>Choose an image</LoadingText>
+          </UnlockOverlay>
+        )}
+        {this.state.isLoading && !this.state.isRemixing && (
           <UnlockOverlay>
             <LoadingText>Loading...</LoadingText>
           </UnlockOverlay>
