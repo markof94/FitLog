@@ -6,13 +6,15 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./.internals/webpack.production.js --color -p --progress --hide-modules --display-optimization-bailout",
     "start": "npm-run-all -p watch start:server",
+    "start:local": "npm-run-all -p watch:local start:server",
     "watch": "koji-vcc watch",
+    "watch:local": "cross-env KOJI_SERVICE_URL_backend=http://localhost:3333 koji-vcc watch",
     "start:server": "webpack-dev-server --config ./.internals/webpack.development.js --inline --hot"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.11",
     "@material-ui/icons": "^4.9.1",
-    "@withkoji/vcc": "^1.1.11",
+    "@withkoji/vcc": "^1.1.20",
     "array-smooth": "^1.0.0",
     "image-webpack-loader": "^6.0.0",
     "npm-run-all": "^4.1.5",
@@ -34,6 +36,7 @@
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^8.0.5",
+    "cross-env": "^7.0.2",
     "css-loader": "^2.1.1",
     "exports-loader": "^0.7.0",
     "html-loader": "^0.5.5",

@@ -1,7 +1,9 @@
 {
     "general": {
-      "image": "https://images.koji-cdn.com/fe341471-9599-4104-901a-4f54ec24aefa/8ncod-6632c571dfbb45be968517c3547e673e.png?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5",
-      "price": "0.15"
+      "reveal": {
+        "image": "https://images.koji-cdn.com/fe341471-9599-4104-901a-4f54ec24aefa/8ncod-6632c571dfbb45be968517c3547e673e.png",
+        "price": "5"
+      }
     },
     "@@editor": [
       {
@@ -11,15 +13,24 @@
         "source": "general.json",
         "fields": [
           {
-            "key": "image",
-            "name": "Reveal image",
-            "description": "Reveal image",
-            "type": "image"
-          },
-          {
-            "key": "price",
-            "name": "Reveal price",
-            "type": "text"
+            "key": "reveal",
+            "name": "Reveal item",
+            "type": "object<Reveal>",
+            "typeOptions": {
+              "Reveal": {
+                "image": {
+                  "key": "image",
+                  "name": "Reveal image",
+                  "description": "Reveal image",
+                  "type": "image"
+                },
+                "price": {
+                  "key": "price",
+                  "name": "Reveal price (USD)",
+                  "type": "text"
+                }
+              }
+            }
           }
         ]
       }

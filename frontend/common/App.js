@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { InstantRemixing } from '@withkoji/vcc';
+import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
 
 const Container = styled.div`
   padding: 0;
@@ -13,6 +13,20 @@ const Container = styled.div`
   background: black;
 `;
 
+const RemixingOverlay = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: calc(100% - 24px);
+  height: calc(100% - 24px);
+  z-index: 999;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.6);
+  background-color: rgba(255,255,255,0.1);
+  background-size: 33px 33px;
+  background-image: linear-gradient(to right,rgba(255,255,255,0.15) 2px,transparent 2px), linear-gradient(to bottom,rgba(255,255,255,0.15) 2px,transparent 2px);
+`;
+
 const Image = styled.img`
   position: absolute;
   top: 0;
@@ -21,7 +35,6 @@ const Image = styled.img`
   height: 100%;
   object-fit: contain;
 `;
-
 
 const UnlockOverlay = styled.div`
   position: absolute;
@@ -70,15 +83,31 @@ const PurchaseButton = styled.div`
 class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.instantRemixing = new InstantRemixing();
+
     this.state = {
       isLoading: true,
       isPurchasing: false,
       isUnlocked: false,
       imageUrl: null,
+
+      price: this.instantRemixing.get(['general', 'reveal', 'price']),
+      isRemixing: false,
+      remixingImageUrl: null,
     };
 
-    const instantRemixing = new InstantRemixing();
-    instantRemixing.ready();
+    this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
+    this.instantRemixing.onValueChanged((path, newValue) => {
+      if (path.join('.') === 'general.reveal.price') {
+        this.setState({ price: newValue });
+      }
+      if (path.join('.') === 'general.reveal.image') {
+        this.setState({ remixingImageUrl: newValue });
+      }
+    });
+
+    this.instantRemixing.ready();
 
     if (window.parent) {
       window.addEventListener('message', ({ data }) => {
@@ -110,7 +139,7 @@ class SceneRouter extends React.PureComponent {
   }
 
   async fetchRemoteContent(token) {
-    const request = await fetch('http://localhost:3333/image', {
+    const request = await fetch(`${this.instantRemixing.get(['serviceMap', 'backend'])}/image`, {
       method: 'GET',
       headers: {
         'X-Koji-Iap-Callback-Token': token,
@@ -139,12 +168,26 @@ class SceneRouter extends React.PureComponent {
     window.parent.postMessage({
       _kojiEventName: '@@koji/iap/getToken',
     }, '*');
+
+    const feed = new FeedSdk();
+    feed.load();
   }
 
   render() {
+    let image = null;
+    if (this.state.imageUrl) {
+      image = <Image src={this.state.imageUrl} />;
+    }
+    if (this.state.remixingImageUrl) {
+      image = <Image src={`${this.state.remixingImageUrl}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=30`} />;
+    }
+
     return (
       <Container>
-        {this.state.imageUrl && <Image src={this.state.imageUrl} />}
+        {this.state.isRemixing && (
+          <RemixingOverlay onClick={() => this.instantRemixing.onPresentControl(['general', 'reveal'])} />
+        )}
+        {image}
         {this.state.isLoading && (
           <UnlockOverlay>
             <LoadingText>Loading...</LoadingText>
@@ -158,7 +201,7 @@ class SceneRouter extends React.PureComponent {
         {!this.state.isLoading && !this.state.isUnlocked && !this.state.isPurchasing && (
           <UnlockOverlay>
             <PurchaseButton onClick={() => this.promptPurchase()}>
-              Unlock for $0.15
+              Unlock for ${this.state.price}
             </PurchaseButton>
           </UnlockOverlay>
         )}
