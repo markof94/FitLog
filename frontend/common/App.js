@@ -9,7 +9,7 @@ class SceneRouter extends React.PureComponent {
     super(props);
 
     this.state = {
-      isRemixing: true,
+      isRemixing: false,
     };
 
     this.instantRemixing = new InstantRemixing();
