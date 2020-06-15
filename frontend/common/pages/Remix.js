@@ -78,7 +78,7 @@ const ImageContainer = styled.div`
 
 const Image = styled.img`
   object-fit: contain;
-  width: 100%;
+  width: 50%;
   height: 220px;
   border-radius: 4px;
   border: 1px solid rgba(255,255,255,0.6);
@@ -106,13 +106,11 @@ class SceneRouter extends React.PureComponent {
 
     this.instantRemixing.onValueChanged((path, newValue) => {
       console.log('changed', path, newValue);
-
-    //   const { price, image, unlockText } = newValue;
-    //   this.setState({
-    //     price,
-    //     imageUrl: image,
-    //     unlockText,
-    //   });
+      if (path[1] === 'image') {
+          this.setState({
+              imageUrl: newValue,
+          });
+      }
     });
 
     this.instantRemixing.ready();
