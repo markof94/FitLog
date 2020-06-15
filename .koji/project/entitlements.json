@@ -7,7 +7,7 @@
         {
           "sku": "image",
           "name": "Image reveal",
-          "price": "{{general.reveal.price}}"
+          "price": "{{general.price}}"
         }
       ]
     }
