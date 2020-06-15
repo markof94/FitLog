@@ -2,6 +2,7 @@
     "general": {
       "reveal": {
         "image": "$revealImage",
+        "unlockText": "See my premium image",
         "price": "5"
       }
     },
@@ -27,6 +28,11 @@
                 "price": {
                   "key": "price",
                   "name": "Reveal price (USD)",
+                  "type": "text"
+                },
+                "unlockText": {
+                  "key": "unlockText",
+                  "name": "Image description",
                   "type": "text"
                 }
               }

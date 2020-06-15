@@ -27,3 +27,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.s1__is-centered {
+  margin: 0!important;
+  left: calc(50% - 20px)!important;
+  top: calc(50% - 20px)!important;
+}
