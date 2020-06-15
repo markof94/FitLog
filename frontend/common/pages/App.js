@@ -98,8 +98,7 @@ class SceneRouter extends React.PureComponent {
   // is being returned. There are many ways of accomplishing this, of which
   // using a custom header is only one.
   async fetchRemoteContent(token) {
-    const remoteUrl = 'https://3333-d0fd3ce3-bad2-4d55-84c6-af1cf1524cf7.koji-staging.com/image';
-    // `${this.instantRemixing.get(['serviceMap', 'backend'])}/image`
+    const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/image`;
     const request = await fetch(remoteUrl, {
       method: 'GET',
       headers: {
