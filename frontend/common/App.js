@@ -108,6 +108,11 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing.ready();
   }
 
+  // Make a request to the backend route using our IAP callback
+  // token. This route will either return a blurred image, or an
+  // unlocked image. We can use the result header to understand which image
+  // is being returned. There are many ways of accomplishing this, of which
+  // using a custom header is only one.
   async fetchRemoteContent(token) {
     const request = await fetch(`${this.instantRemixing.get(['serviceMap', 'backend'])}/image`, {
       method: 'GET',
@@ -125,6 +130,10 @@ class SceneRouter extends React.PureComponent {
     });
   }
 
+  // Use the IAP framework to prompt the user to purchase the `image`. See
+  // `.koji/project/entitlements.json` for where products are defined and
+  // registered. Products are currently registered or updated when an app is
+  // published.
   promptPurchase() {
     this.setState({ isPurchasing: true });
     this.iap.promptPurchase('image', (success, token) => {
@@ -140,11 +149,13 @@ class SceneRouter extends React.PureComponent {
   }
 
   componentDidMount() {
-    // Get the IAP token and check if we have dynamic content from the server
+    // Get the IAP callback token and use it to fetch the appropriate
+    // image from this project's backend
     this.iap.getToken((token) => {
       this.fetchRemoteContent(token);
     });
 
+    // Initialize the FeedSdk
     const feed = new FeedSdk();
     feed.load();
   }
@@ -163,22 +174,27 @@ class SceneRouter extends React.PureComponent {
         {this.state.isRemixing && (
           <RemixingOverlay onClick={() => this.instantRemixing.onPresentControl(['general', 'reveal'])} />
         )}
+
         {image}
+
         {this.state.isRemixing && !this.state.remixingImageUrl && (
           <UnlockOverlay>
             <LoadingText>Choose an image</LoadingText>
           </UnlockOverlay>
         )}
+
         {this.state.isLoading && !this.state.isRemixing && (
           <UnlockOverlay>
             <LoadingText>Loading...</LoadingText>
           </UnlockOverlay>
         )}
+
         {this.state.isPurchasing && (
           <UnlockOverlay>
             <LoadingText>Waiting...</LoadingText>
           </UnlockOverlay>
         )}
+
         {!this.state.isLoading && !this.state.isUnlocked && !this.state.isPurchasing && (
           <UnlockOverlay>
             <PurchaseButton onClick={() => this.promptPurchase()}>
