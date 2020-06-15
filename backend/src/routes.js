@@ -7,7 +7,7 @@ export default function (app) {
     // The image is stored using the composable secret VCC, so the value
     // actually written in the file is a keypath that we can query to
     // receive the actual value
-    const { image } = res.locals.koji.general.reveal;
+    const { image } = res.locals.koji.general;
     
     // Use the Keystore to resolve the value of the image from its keypath
     const keystore = new Keystore();

@@ -1,10 +1,8 @@
 {
     "general": {
-      "reveal": {
-        "image": "$revealImage",
-        "unlockText": "See my premium image",
-        "price": "5"
-      }
+      "image": "$revealImage",
+      "unlockText": "See my premium image",
+      "price": "5"
     },
     "@@editor": [
       {
@@ -13,31 +11,22 @@
         "icon": "📚",
         "source": "general.json",
         "fields": [
-          {
-            "key": "reveal",
-            "name": "Reveal item",
-            "type": "object<Reveal>",
-            "typeOptions": {
-              "Reveal": {
-                "image": {
-                  "key": "image",
-                  "name": "Reveal image",
-                  "description": "Reveal image",
-                  "type": "secret<image>"
-                },
-                "price": {
-                  "key": "price",
-                  "name": "Reveal price (USD)",
-                  "type": "text"
-                },
-                "unlockText": {
-                  "key": "unlockText",
-                  "name": "Image description",
-                  "type": "text"
-                }
-              }
+            {
+                "key": "image",
+                "name": "Reveal image",
+                "description": "Reveal image",
+                "type": "secret<image>"
+            },
+            {
+                "key": "price",
+                "name": "Reveal price (USD)",
+                "type": "text"
+            },
+            {
+                "key": "unlockText",
+                "name": "Image description",
+                "type": "text"
             }
-          }
         ]
       }
     ]

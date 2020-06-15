@@ -87,8 +87,8 @@ class SceneRouter extends React.PureComponent {
       isPurchasing: false,
       isUnlocked: false,
       imageUrl: null,
-      unlockText: this.instantRemixing.get(['general', 'reveal', 'unlockText']),
-      price: this.instantRemixing.get(['general', 'reveal', 'price']),
+      unlockText: this.instantRemixing.get(['general', 'unlockText']),
+      price: this.instantRemixing.get(['general', 'price']),
     };
   }
 

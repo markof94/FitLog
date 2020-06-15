@@ -100,17 +100,19 @@ class SceneRouter extends React.PureComponent {
 
     this.state = {
       imageUrl: null,
-      price: this.instantRemixing.get(['general', 'reveal', 'price']),
-      unlockText: this.instantRemixing.get(['general', 'reveal', 'unlockText']),
+      price: this.instantRemixing.get(['general', 'price']),
+      unlockText: this.instantRemixing.get(['general', 'unlockText']),
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
-      const { price, image, unlockText } = newValue;
-      this.setState({
-        price,
-        imageUrl: image,
-        unlockText,
-      });
+      console.log('changed', path, newValue);
+
+    //   const { price, image, unlockText } = newValue;
+    //   this.setState({
+    //     price,
+    //     imageUrl: image,
+    //     unlockText,
+    //   });
     });
 
     this.instantRemixing.ready();
@@ -137,7 +139,7 @@ class SceneRouter extends React.PureComponent {
               value={unlockText}
               onChange={(e) => {
                 const { value } = e.target;
-                this.instantRemixing.onSetValue(['general', 'reveal', 'unlockText'], value);
+                this.instantRemixing.onSetValue(['general', 'unlockText'], value);
               }}
             />
           </Label>
@@ -147,17 +149,17 @@ class SceneRouter extends React.PureComponent {
             <TextInput
               type="number"
               placeholder="Price (USD)..."
-              value={`\$${price}`}
+              value={price}
               onChange={(e) => {
                 const { value } = e.target;
-                this.instantRemixing.onSetValue(['general', 'reveal', 'price'], value.replace('$', ''));
+                this.instantRemixing.onSetValue(['general', 'price'], value.replace('$', ''));
               }}
             />
           </Label>
 
           <Label>
             <div>Image</div>
-            <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'reveal', 'image'])}>
+            <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}>
               <Image src={blurredImageUrl} />
               <Image src={imageUrl} />
             </ImageContainer>
