@@ -99,26 +99,24 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      imageUrl: null,
+      image: null,
       price: this.instantRemixing.get(['general', 'price']),
       unlockText: this.instantRemixing.get(['general', 'unlockText']),
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
       console.log('changed', path, newValue);
-      if (path[1] === 'image') {
-          this.setState({
-              imageUrl: newValue,
-          });
-      }
+      this.setState({
+        [path[1]]: newValue,
+      });
     });
 
     this.instantRemixing.ready();
   }
 
   render() {
-    let { imageUrl } = this.state;
-    const blurredImageUrl = imageUrl ? `${imageUrl}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=30` : null;
+    let { image } = this.state;
+    const blurredImage = image ? `${image}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=30` : null;
 
     const {
       unlockText,
@@ -158,8 +156,8 @@ class SceneRouter extends React.PureComponent {
           <Label>
             <div>Image</div>
             <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}>
-              <Image src={blurredImageUrl} />
-              <Image src={imageUrl} />
+              <Image src={blurredImage} />
+              <Image src={image} />
             </ImageContainer>
           </Label>
         </FormArea>
