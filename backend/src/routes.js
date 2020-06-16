@@ -35,6 +35,7 @@ export default function (app) {
 
     // Set the content type, so the browser knows to display an image
     res.header('Content-Type', 'image/jpeg');
+    res.header('X-Koji-Project-Id', process.env.KOJI_PROJECT_ID);
 
     // Use a custom header to let the frontend know whether or not the image
     // it is receiving is the blurred image or the unlocked image. The backend
