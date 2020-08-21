@@ -14,7 +14,7 @@ const Container = styled.div`
   width: 100vw;
   position: relative;
   overflow: hidden;
-  background: black;
+  background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
 `;
 
 const Image = styled.img`
@@ -60,7 +60,7 @@ const BounceAnimation = keyframes`
 const PurchaseButton = styled.div`
   padding: 12px 32px;
   border-radius: 100px;
-  background-color: #00ba01;
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);;
   color: white;
   font-weight: bold;
   font-size: 24px;
