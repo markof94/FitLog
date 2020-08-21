@@ -24,6 +24,10 @@ const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: contain;
+
+  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
+  transition: opacity 0.2s ease-in-out;
+  will-change: opacity;
 `;
 
 const UnlockOverlay = styled.div`
@@ -37,15 +41,6 @@ const UnlockOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 3;
-`;
-
-const UnlockText = styled.div`
-  color: white;
-  font-weight: bold;
-  font-size: 2rem;
-  line-height: 1.2;
-  text-align: center;
-  padding: 24px;
 `;
 
 const BounceAnimation = keyframes`
@@ -63,11 +58,12 @@ const BounceAnimation = keyframes`
 `;
 
 const PurchaseButton = styled.div`
-  padding: 8px 22px;
+  padding: 12px 32px;
   border-radius: 100px;
   background-color: #00ba01;
   color: white;
-  font-weight: normal;
+  font-weight: bold;
+  font-size: 24px;
   box-shadow: 0px 0px 12px 6px rgba(0,0,0,0.1);
   border: 2px solid rgba(0,0,0,0.1);
 
@@ -83,11 +79,11 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      isLoading: true,
+      isLoading: false,
       isPurchasing: false,
       isUnlocked: false,
-      imageUrl: null,
-      unlockText: this.instantRemixing.get(['general', 'unlockText']),
+      previewImage: null,
+      unlockedImage: null,
       price: this.instantRemixing.get(['general', 'price']),
     };
   }
@@ -108,11 +104,21 @@ class SceneRouter extends React.PureComponent {
 
     const image = await request.blob();
     const url = URL.createObjectURL(image);
-    this.setState({
-      imageUrl: url,
-      isLoading: false,
-      isUnlocked: request.headers.get('x-koji-payment-required') === 'false',
-    });
+    const isUnlocked = request.headers.get('x-koji-payment-required') === 'false';
+
+    if (isUnlocked) {
+      this.setState({
+        isUnlocked: true,
+        unlockedImage: url,
+        isLoading: false,
+      });
+    } else {
+      this.setState({
+        isUnlocked: false,
+        previewImage: url,
+        isLoading: false,
+      });
+    }
   }
 
   // Use the IAP framework to prompt the user to purchase the `image`. See
@@ -147,22 +153,19 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     const {
-      imageUrl,
-      unlockText,
+      previewImage,
+      unlockedImage,
+
       price,
       isLoading,
       isPurchasing,
       isUnlocked,
     } = this.state;
 
-    let image = null;
-    if (imageUrl) {
-      image = <Image src={imageUrl} />;
-    }
-
     return (
       <Container>
-        {image}
+        <Image src={previewImage} isVisible={!!previewImage} />
+        <Image src={unlockedImage} isVisible={!!unlockedImage} />
 
         {(isLoading || isPurchasing) && (
           <LoadingIndicator />
@@ -170,7 +173,6 @@ class SceneRouter extends React.PureComponent {
 
         {!isLoading && !isUnlocked && !isPurchasing && (
           <UnlockOverlay>
-            {unlockText && <UnlockText>{unlockText}</UnlockText>}
             <PurchaseButton onClick={() => this.promptPurchase()}>
               Unlock for ${price}
             </PurchaseButton>

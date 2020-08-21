@@ -1,33 +1,27 @@
 {
-    "general": {
-      "image": "$revealImage",
-      "unlockText": "See my premium image",
-      "price": "5"
-    },
-    "@@editor": [
-      {
-        "key": "general",
-        "name": "General",
-        "icon": "📚",
-        "source": "general.json",
-        "fields": [
-            {
-                "key": "image",
-                "name": "Reveal image",
-                "description": "Reveal image",
-                "type": "secret<image>"
-            },
-            {
-                "key": "price",
-                "name": "Reveal price (USD)",
-                "type": "text"
-            },
-            {
-                "key": "unlockText",
-                "name": "Image description",
-                "type": "text"
-            }
-        ]
-      }
-    ]
-  }
+  "general": {
+    "image": "$revealImage",
+    "price": "5"
+  },
+  "@@editor": [
+    {
+      "key": "general",
+      "name": "General",
+      "icon": "📚",
+      "source": "general.json",
+      "fields": [
+        {
+          "key": "image",
+          "name": "Reveal image",
+          "description": "Reveal image",
+          "type": "secret<image>"
+        },
+        {
+          "key": "price",
+          "name": "Reveal price (USD)",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}

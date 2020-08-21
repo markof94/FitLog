@@ -10,7 +10,7 @@ const Container = styled.div`
   width: 100vw;
   position: relative;
   overflow: hidden;
-  background: black;
+  background: #111;
 `;
 
 const FormArea = styled.div`
@@ -26,27 +26,19 @@ const FormArea = styled.div`
   color: white;
 `;
 
-const Title = styled.h1`
-  padding: 0;
-  margin: 0;
-  font-size: 24px;
-  line-height: 1.2;
-  text-align: left;
-  font-weight: bold;
-  width: 100%;
-`;
-
 const Label = styled.label`
   display: flex;
   flex-direction: column;
-  margin: 10px 0;
+  margin: 0;
+  margin-bottom: 24px;
   width: 100%;
 
   & > div:first-child {
     width: 100%;
     font-weight: bold;
     font-size: 16px;
-    padding: 8px 0;
+    padding: 0;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
   }
@@ -56,9 +48,10 @@ const TextInput = styled.input`
   border: 1px solid rgba(255,255,255,0.1);
 
   width: 100%;
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 2px;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 8px;
 
   outline: none;
   background-color: white;
@@ -72,24 +65,27 @@ const TextInput = styled.input`
 
 const ImageContainer = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  border-radius: 12px;
+  border: 2px dashed rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.1);
+`;
+
+const HelpText = styled.div`
+  padding: 48px;
+  font-weight: bold;
+  font-size: 16px;
 `;
 
 const Image = styled.img`
   object-fit: contain;
-  width: 50%;
-  height: 220px;
-  border-radius: 4px;
-  border: 1px solid rgba(255,255,255,0.6);
-  background-color: rgba(255,255,255,0.4);
-  background-size: 33px 33px;
-  background-image: linear-gradient(to right,rgba(255,255,255,0.15) 2px,transparent 2px), linear-gradient(to bottom,rgba(255,255,255,0.15) 2px,transparent 2px);
-
-  margin-right: 6px;
-  &:last-of-type {
-    margin-right: 0;
-  }
+  width: 100%;
+  height: 100%;
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -100,12 +96,10 @@ class SceneRouter extends React.PureComponent {
 
     this.state = {
       image: null,
-      price: this.instantRemixing.get(['general', 'price']),
-      unlockText: this.instantRemixing.get(['general', 'unlockText']),
+      price: Number(this.instantRemixing.get(['general', 'price']) || 0).toFixed(2),
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
-      console.log('changed', path, newValue);
       this.setState({
         [path[1]]: newValue,
       });
@@ -116,32 +110,16 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     let { image } = this.state;
-    const blurredImage = image ? `${image}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=30` : null;
 
     const {
-      unlockText,
       price,
     } = this.state;
 
     return (
       <Container>
         <FormArea>
-          <Title>Premium image post</Title>
           <Label>
-            <div>Image description</div>
-            <TextInput
-              type="text"
-              placeholder="Text..."
-              value={unlockText}
-              onChange={(e) => {
-                const { value } = e.target;
-                this.instantRemixing.onSetValue(['general', 'unlockText'], value);
-              }}
-            />
-          </Label>
-
-          <Label>
-            <div>Price</div>
+            <div>Unlock price (USD)</div>
             <TextInput
               type="number"
               placeholder="Price (USD)..."
@@ -150,16 +128,20 @@ class SceneRouter extends React.PureComponent {
                 const { value } = e.target;
                 this.instantRemixing.onSetValue(['general', 'price'], value.replace('$', ''));
               }}
+              onBlur={() => {
+                const parsedValue = Number(price).toFixed(2);
+                this.instantRemixing.onSetValue(['general', 'price'], parsedValue);
+              }}
             />
           </Label>
 
-          <Label>
-            <div>Image</div>
-            <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}>
-              <Image src={blurredImage} />
+          <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}>
+            {image ? (
               <Image src={image} />
-            </ImageContainer>
-          </Label>
+            ) : (
+              <HelpText>Tap to choose image...</HelpText>
+            )}
+          </ImageContainer>
         </FormArea>
       </Container>
     );
