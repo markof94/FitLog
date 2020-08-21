@@ -25,6 +25,7 @@ const Image = styled.img`
   height: 100%;
   object-fit: contain;
 
+  background-color: black;
   opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
   transition: opacity 0.2s ease-in-out;
   will-change: opacity;
