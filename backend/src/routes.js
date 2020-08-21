@@ -14,7 +14,7 @@ export default function (app) {
     const resolvedImage = await keystore.resolveValue(image);
 
     // Use CDN params to create both the revealed image and the blurred image
-    const revealedImage = `${resolvedImage}?width=363&height=619&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5`;
+    const revealedImage = `${resolvedImage}?width=1089&height=1857&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5`;
     const blurredImage = `${revealedImage}&blur=30`;
 
     // Use the IAP callback token to see if we can find a receipt matching the SKU of
