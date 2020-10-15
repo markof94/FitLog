@@ -9,10 +9,10 @@ export default function (app) {
     const keystore = new Keystore();
     const resolvedImage = await keystore.resolveValue(image);
 
-    const image = `${resolvedImage}?width=1089&height=1857&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=30`;
+    const blurredImage = `${resolvedImage}?width=1089&height=1857&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=70`;
 
     res.header('Content-Type', 'image/jpeg');
-    fetch(image)
+    fetch(blurredImage)
       .then((imageRes) => imageRes.body.pipe(res));
   });
 
@@ -49,7 +49,8 @@ export default function (app) {
     res.header('Content-Type', 'image/jpeg');
 
     if (hasPurchased) {
-      fetch(revealedImage).then((imageRes) => imageRes.body.pipe(res));
+      fetch(revealedImage)
+        .then((imageRes) => imageRes.body.pipe(res));
     } else {
       res.sendStatus(401);
     }
