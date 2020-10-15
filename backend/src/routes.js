@@ -4,24 +4,19 @@ import { Keystore } from '@withkoji/vcc';
 
 export default function (app) {
   app.get('/preview', async (req, res) => {
-    const now = Math.floor(Date.now() / 1000);
-    console.log('got preview request');
     const { image } = res.locals.koji.general;
     
     const keystore = new Keystore();
     const resolvedImage = await keystore.resolveValue(image);
     if (!resolvedImage) {
-      console.log('no image found');
       res.sendStatus(404);
       return;
     }
 
-    console.log('resolved image value', (Date.now() / 1000) - now);
     const blurredImage = `${resolvedImage}?format=jpg&optimize=medium&blur=70`;
 
     res.header('Content-Type', 'image/jpeg');
     const request = await fetch(blurredImage);
-    console.log('fetched image', (Date.now() / 1000) - now);
     request.body.pipe(res);
   });
 
