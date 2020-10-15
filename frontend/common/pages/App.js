@@ -109,7 +109,6 @@ class SceneRouter extends React.PureComponent {
     this.state = {
       isLoading: true,
       isPurchasing: false,
-      isUnlocked: false,
 
       previewImage: null,
       previewImageIsVisible: false,
@@ -199,7 +198,6 @@ class SceneRouter extends React.PureComponent {
       priceString,
       isLoading,
       isPurchasing,
-      isUnlocked,
     } = this.state;
 
     let button = (
@@ -233,7 +231,7 @@ class SceneRouter extends React.PureComponent {
           <LoadingIndicator />
         )}
 
-        <Overlay isVisible={!isUnlocked}>
+        <Overlay isVisible={!unlockedImage}>
           <PurchaseArea>
             <PurchaseLabel>Unlock this photo for {priceString}</PurchaseLabel>
             {button}
