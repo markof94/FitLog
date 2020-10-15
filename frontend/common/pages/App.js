@@ -110,25 +110,12 @@ class SceneRouter extends React.PureComponent {
       isLoading: true,
       isPurchasing: false,
 
-      previewImage: null,
       previewImageIsVisible: false,
       unlockedImage: null,
       unlockedImageIsVisible: false,
 
       priceString: this.instantRemixing.get(['general', 'priceString']),
     };
-  }
-
-  async getPreviewImage() {
-    try {
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/preview`;
-      const request = await fetch(remoteUrl);
-      const image = await request.blob();
-      const url = URL.createObjectURL(image);
-      this.setState({ previewImage: url });
-    } catch (err) {
-      //
-    }
   }
 
   async attemptGetUnlockedImage(token) {
@@ -174,9 +161,6 @@ class SceneRouter extends React.PureComponent {
   }
 
   componentDidMount() {
-    // Load the preview image from the backend
-    this.getPreviewImage();
-
     // Get the IAP callback token and use it to fetch the appropriate
     // image from this project's backend
     this.iap.getToken((token) => {
@@ -190,7 +174,6 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     const {
-      previewImage,
       previewImageIsVisible,
       unlockedImage,
       unlockedImageIsVisible,
@@ -217,7 +200,7 @@ class SceneRouter extends React.PureComponent {
     return (
       <Container>
         <Image
-          src={previewImage}
+          src={`${this.instantRemixing.get(['serviceMap', 'backend'])}/preview`}
           onLoad={() => this.setState({ previewImageIsVisible: true })}
           isVisible={previewImageIsVisible}
         />

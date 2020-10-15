@@ -8,17 +8,11 @@ export default function (app) {
     
     const keystore = new Keystore();
     const resolvedImage = await keystore.resolveValue(image);
-
     const blurredImage = `${resolvedImage}?format=jpg&optimize=medium&blur=70`;
 
-
     res.header('Content-Type', 'image/jpeg');
-    console.time('a');
     const request = await fetch(blurredImage);
-    console.timeEnd('a');
     request.body.pipe(res);
-    // fetch(blurredImage).pipe(res);
-    //   .then((imageRes) => imageRes.body.pipe(res));
   });
 
   app.get('/unlocked', async (req, res) => {
@@ -54,8 +48,8 @@ export default function (app) {
     res.header('Content-Type', 'image/jpeg');
 
     if (hasPurchased) {
-      fetch(revealedImage)
-        .then((imageRes) => imageRes.body.pipe(res));
+      const request = await fetch(revealedImage);
+      request.body.pipe(res);
     } else {
       res.sendStatus(401);
     }

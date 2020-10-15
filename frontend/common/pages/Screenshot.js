@@ -1,4 +1,5 @@
 import React from 'react';
+import { InstantRemixing } from '@withkoji/vcc';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -19,46 +20,14 @@ const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: contain;
-
-  background-color: black;
-  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
-  transition: opacity 0.2s ease-in-out;
-  will-change: opacity;
 `;
 
 class SceneRouter extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      previewImage: null,
-    };
-  }
-
-  async getPreviewImage() {
-    try {
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/preview`;
-      const request = await fetch(remoteUrl);
-      const image = await request.blob();
-      const url = URL.createObjectURL(image);
-      this.setState({ previewImage: url });
-    } catch (err) {
-      //
-    }
-  }
-
-  componentDidMount() {
-    // Load the preview image from the backend
-    this.getPreviewImage();
-  }
-
   render() {
-    const {
-      previewImage,
-    } = this.state;
-
+    const instantRemixing = new InstantRemixing();
     return (
       <Container>
-        <Image src={previewImage} />
+        <Image src={`${instantRemixing.get(['serviceMap', 'backend'])}/preview`} />
       </Container>
     );
   }
