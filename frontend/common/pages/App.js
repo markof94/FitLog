@@ -231,7 +231,7 @@ class SceneRouter extends React.PureComponent {
           <LoadingIndicator />
         )}
 
-        <Overlay isVisible={!unlockedImage}>
+        <Overlay isVisible={!unlockedImageIsVisible}>
           <PurchaseArea>
             <PurchaseLabel>Unlock this photo for {priceString}</PurchaseLabel>
             {button}
