@@ -121,6 +121,19 @@ class SceneRouter extends React.PureComponent {
       this.setState({
         [path[1]]: newValue,
       });
+
+      // If we're changing the image, preload the blurred and optimized variants so it's
+      // faster to request them on publish, and hopefully the screenshotter can keep up...
+      if (path[1] === 'image') {
+          const preloadUrl = `${newValue}?format=jpg&optimize=medium&blur=70`;
+          const preloadUrlBlur = `${newValue}?format=jpg&optimize=medium`;
+          try {
+              fetch(preloadUrl);
+              fetch(preloadUrlBlur);
+          } catch (err) {
+              //
+          }
+      }
     });
 
     this.instantRemixing.ready();

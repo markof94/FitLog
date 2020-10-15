@@ -9,11 +9,16 @@ export default function (app) {
     const keystore = new Keystore();
     const resolvedImage = await keystore.resolveValue(image);
 
-    const blurredImage = `${resolvedImage}?width=1089&height=1857&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5&blur=70`;
+    const blurredImage = `${resolvedImage}?format=jpg&optimize=medium&blur=70`;
+
 
     res.header('Content-Type', 'image/jpeg');
-    fetch(blurredImage)
-      .then((imageRes) => imageRes.body.pipe(res));
+    console.time('a');
+    const request = await fetch(blurredImage);
+    console.timeEnd('a');
+    request.body.pipe(res);
+    // fetch(blurredImage).pipe(res);
+    //   .then((imageRes) => imageRes.body.pipe(res));
   });
 
   app.get('/unlocked', async (req, res) => {
@@ -27,7 +32,7 @@ export default function (app) {
     const resolvedImage = await keystore.resolveValue(image);
 
     // Use CDN params to create both the revealed image and the blurred image
-    const revealedImage = `${resolvedImage}?width=1089&height=1857&fit=bounds&format=jpg&optimize=low&bg-color=255,255,255,0.5`;
+    const revealedImage = `${resolvedImage}?format=jpg&optimize=medium`;
 
     // Use the IAP callback token to see if we can find a receipt matching the SKU of
     // the image. If a receipt exists for the SKU, then we know the user has purchased
