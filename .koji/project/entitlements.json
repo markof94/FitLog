@@ -11,6 +11,6 @@
         }
       ]
     },
-    "FeedEvents": false
+    "FeedEvents": true
   }
 }
