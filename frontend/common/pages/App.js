@@ -200,7 +200,7 @@ class SceneRouter extends React.PureComponent {
     return (
       <Container>
         <Image
-          src={`${this.instantRemixing.get(['serviceMap', 'backend'])}/preview`}
+          src={`${this.instantRemixing.get(['serviceMap', 'backend'])}/preview.jpg`}
           onLoad={() => this.setState({ previewImageIsVisible: true })}
           isVisible={previewImageIsVisible}
         />
@@ -210,7 +210,7 @@ class SceneRouter extends React.PureComponent {
           isVisible={unlockedImageIsVisible}
         />
 
-        {(isLoading || isPurchasing) && (
+        {(isLoading || isPurchasing || !previewImageIsVisible) && (
           <LoadingIndicator />
         )}
 

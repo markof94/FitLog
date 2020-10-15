@@ -3,7 +3,7 @@ import Iap from '@withkoji/iap';
 import { Keystore } from '@withkoji/vcc';
 
 export default function (app) {
-  app.get('/preview', async (req, res) => {
+  app.get('/preview.jpg', async (req, res) => {
     const { image } = res.locals.koji.general;
     
     const keystore = new Keystore();
@@ -39,7 +39,9 @@ export default function (app) {
         process.env.KOJI_PROJECT_TOKEN,
       );
       const receipts = await iap.resolveReceipts(token);
-      hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
+      if (receipts && receipts.length > 0) {
+        hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
+      }
     } catch (err) {
       console.log(err);
     }
