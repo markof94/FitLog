@@ -3,7 +3,7 @@ import Iap from '@withkoji/iap';
 import { Keystore } from '@withkoji/vcc';
 
 export default function (app) {
-  app.get('/preview.jpg', async (req, res) => {
+  app.get('/preview', async (req, res) => {
     const { image } = res.locals.koji.general;
     
     const keystore = new Keystore();
