@@ -1,7 +1,8 @@
 {
   "general": {
     "image": "$revealImage",
-    "price": "5"
+    "price": "1.00",
+    "priceString": "$1.00"
   },
   "@@editor": [
     {

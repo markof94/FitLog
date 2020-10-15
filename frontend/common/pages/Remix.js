@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
+import CurrencyInput from 'react-currency-format';
+
+import AddIcon from '../images/add-icon.svg';
 
 const Container = styled.div`
   padding: 0;
@@ -10,82 +13,96 @@ const Container = styled.div`
   width: 100vw;
   position: relative;
   overflow: hidden;
-  background: #111;
+  background: #0f141e;
 `;
 
-const FormArea = styled.div`
+const ImageArea = styled.div`
+  position: relative;
   width: 100%;
-  max-width: 500px;
   margin: 0 auto;
   height: 100%;
-  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;
+  ${({ backgroundImage }) => backgroundImage && `background-image: url(${backgroundImage});`}
+  background-position: center;
+  background-size: cover;
 `;
 
-const Label = styled.label`
+const ImageLabel = styled.div`
+  font-size: 18px;
   display: flex;
   flex-direction: column;
-  margin: 0;
-  margin-bottom: 24px;
-  width: 100%;
+  justify-content: center;
+  align-items: center;
 
-  & > div:first-child {
-    width: 100%;
-    font-weight: bold;
-    font-size: 16px;
+  img {
+    margin-top: -9em;
+  }
+
+  p {
     padding: 0;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
+    margin: 0;
+    margin-top: 6px;
   }
 `;
 
-const TextInput = styled.input`
-  border: 1px solid rgba(255,255,255,0.1);
-
+const PriceOverlay = styled.div`
+  position: absolute;
+  bottom: 80px;
+  left: 0;
   width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 8px;
-
-  outline: none;
-  background-color: white;
-  color: black;
-
-  &:focus {
-    outline: none;
-    border: 1px solid #358aeb;
-  }
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+`;
 
+const PriceArea = styled.label`
+  max-width: 180px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  color: #333;
   border-radius: 12px;
-  border: 2px dashed rgba(255,255,255,0.8);
-  background-color: rgba(255,255,255,0.1);
-`;
+  box-shadow: 0px 0px 12px 2px rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
 
-const HelpText = styled.div`
-  padding: 48px;
-  font-weight: bold;
-  font-size: 16px;
-`;
+  margin: 0;
+  padding: 14px;
 
-const Image = styled.img`
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
+  & > div:first-child {
+    width: 100%;
+    font-size: 18px;
+    color: #333;
+    padding: 0;
+    margin-bottom: 14px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .price-input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border-radius: 8px;
+    text-align: center;
+
+    outline: none;
+    border: 1px solid transparent;
+    background-color: rgba(0,0,0,0.15);
+    color: #333;
+
+    font-variant-numeric: tabular-nums;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #358aeb;
+    }
+  }
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -95,8 +112,9 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      image: null,
-      price: Number(this.instantRemixing.get(['general', 'price']) || 0).toFixed(2),
+      image: this.instantRemixing.get(['general', 'image']),
+      priceString: this.instantRemixing.get(['general', 'priceString']),
+      price: this.instantRemixing.get(['general', 'price']),
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
@@ -109,40 +127,58 @@ class SceneRouter extends React.PureComponent {
   }
 
   render() {
-    let { image } = this.state;
-
     const {
-      price,
+      image,
+      priceString,
     } = this.state;
 
     return (
       <Container>
-        <FormArea>
-          <Label>
-            <div>Unlock price (USD)</div>
-            <TextInput
-              type="number"
-              placeholder="Price (USD)..."
-              value={price}
-              onChange={(e) => {
-                const { value } = e.target;
-                this.instantRemixing.onSetValue(['general', 'price'], value.replace('$', ''));
-              }}
-              onBlur={() => {
-                const parsedValue = Number(price).toFixed(2);
-                this.instantRemixing.onSetValue(['general', 'price'], parsedValue);
-              }}
-            />
-          </Label>
-
-          <ImageContainer onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}>
+        <ImageArea
+          backgroundImage={image}
+          onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}
+        >
+          <ImageLabel>
+            <img src={AddIcon} />
             {image ? (
-              <Image src={image} />
+              <p>Tap to change image</p>
             ) : (
-              <HelpText>Tap to choose image...</HelpText>
+              <p>Tap to choose image</p>
             )}
-          </ImageContainer>
-        </FormArea>
+          </ImageLabel>
+        </ImageArea>
+
+        <PriceOverlay>
+          <PriceArea>
+              <div>Price to unlock</div>
+              <CurrencyInput
+                className="price-input"
+                prefix="$"
+                min="0.01"
+                max={100000}
+                allowNegative={false}
+                decimalScale={2}
+                fixedDecimalScale={true}
+                isAllowed={(values) => {
+                  if (values.formattedValue.length > 9){
+                    return false;
+                  }
+                  return true;
+                }}
+                placeholder="Price..."
+                value={priceString}
+                onValueChange={({ value, formattedValue }) => {
+                  console.log(value, formattedValue);
+                  this.setState({
+                    price: value,
+                    priceString: formattedValue,
+                  });
+                  this.instantRemixing.onSetValue(['general', 'priceString'], formattedValue, true);
+                  this.instantRemixing.onSetValue(['general', 'price'], value, true);
+                }}
+              />
+            </PriceArea>
+          </PriceOverlay>
       </Container>
     );
   }

@@ -14,7 +14,7 @@ const Container = styled.div`
   width: 100vw;
   position: relative;
   overflow: hidden;
-  background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+  background: #0f141e;
 `;
 
 const Image = styled.img`
@@ -31,17 +31,44 @@ const Image = styled.img`
   will-change: opacity;
 `;
 
-const UnlockOverlay = styled.div`
+const Overlay = styled.div`
   position: absolute;
-  top: 0;
+  bottom: 80px;
   left: 0;
   width: 100%;
-  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 3;
+
+  transition: opacity 0.2s ease-in-out;
+  will-change: opacity;
+  opacity: ${({ isVisible }) => isVisible ? '1' : '0'};
+`;
+
+const PurchaseArea = styled.div`
+  max-width: 180px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  color: #333;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px 2px rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+
+  margin: 0;
+  padding: 14px;
+`;
+
+const PurchaseLabel = styled.div`
+  width: 100%;
+  font-size: 18px;
+  color: #333;
+  padding: 0;
+  margin-bottom: 14px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.25;
 `;
 
 const BounceAnimation = keyframes`
@@ -59,14 +86,14 @@ const BounceAnimation = keyframes`
 `;
 
 const PurchaseButton = styled.div`
-  padding: 12px 32px;
-  border-radius: 100px;
-  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);;
+  padding: 14px 18px;
+  border-radius: 8px;
   color: white;
+  text-align: center;
   font-weight: bold;
-  font-size: 24px;
-  box-shadow: 0px 0px 12px 6px rgba(0,0,0,0.1);
-  border: 2px solid rgba(0,0,0,0.1);
+  font-size: 12px;
+  text-transform: uppercase;
+  background-color: #00aff0;
 
   will-change: transform;
   animation: ${BounceAnimation} 1.4s ease-in-out infinite;
@@ -80,46 +107,53 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      isLoading: false,
+      isLoading: true,
       isPurchasing: false,
       isUnlocked: false,
+
       previewImage: null,
+      previewImageIsVisible: false,
       unlockedImage: null,
-      price: this.instantRemixing.get(['general', 'price']),
+      unlockedImageIsVisible: false,
+
+      priceString: this.instantRemixing.get(['general', 'priceString']),
     };
   }
 
-  // Make a request to the backend route using our IAP callback
-  // token. This route will either return a blurred image, or an
-  // unlocked image. We can use the result header to understand which image
-  // is being returned. There are many ways of accomplishing this, of which
-  // using a custom header is only one.
-  async fetchRemoteContent(token) {
-    const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/image`;
-    const request = await fetch(remoteUrl, {
-      method: 'GET',
-      headers: {
-        'X-Koji-Iap-Callback-Token': token,
-      },
-    });
-
-    const image = await request.blob();
-    const url = URL.createObjectURL(image);
-    const isUnlocked = request.headers.get('x-koji-payment-required') === 'false';
-
-    if (isUnlocked) {
-      this.setState({
-        isUnlocked: true,
-        unlockedImage: url,
-        isLoading: false,
-      });
-    } else {
-      this.setState({
-        isUnlocked: false,
-        previewImage: url,
-        isLoading: false,
-      });
+  async getPreviewImage() {
+    try {
+      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/preview`;
+      const request = await fetch(remoteUrl);
+      const image = await request.blob();
+      const url = URL.createObjectURL(image);
+      this.setState({ previewImage: url });
+    } catch (err) {
+      //
     }
+  }
+
+  async attemptGetUnlockedImage(token) {
+    try {
+      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/unlocked`;
+      const request = await fetch(remoteUrl, {
+        method: 'GET',
+        headers: {
+          'X-Koji-Iap-Callback-Token': token,
+        },
+      });
+
+      const image = await request.blob();
+      const url = URL.createObjectURL(image);
+      this.setState({
+        unlockedImage: url,
+      })
+    } catch (err) {
+      //
+    }
+
+    this.setState({
+      isLoading: false,
+    });
   }
 
   // Use the IAP framework to prompt the user to purchase the `image`. See
@@ -128,23 +162,26 @@ class SceneRouter extends React.PureComponent {
   // published.
   promptPurchase() {
     this.setState({ isPurchasing: true });
+
     this.iap.promptPurchase('image', (success, token) => {
       this.setState({ isPurchasing: false });
       if (success) {
         this.setState({
           isLoading: true,
-          imageUrl: null,
         });
-        this.fetchRemoteContent(token);
+        this.attemptGetUnlockedImage(token);
       }
     });
   }
 
   componentDidMount() {
+    // Load the preview image from the backend
+    this.getPreviewImage();
+
     // Get the IAP callback token and use it to fetch the appropriate
     // image from this project's backend
     this.iap.getToken((token) => {
-      this.fetchRemoteContent(token);
+      this.attemptGetUnlockedImage(token);
     });
 
     // Initialize the FeedSdk
@@ -155,30 +192,53 @@ class SceneRouter extends React.PureComponent {
   render() {
     const {
       previewImage,
+      previewImageIsVisible,
       unlockedImage,
+      unlockedImageIsVisible,
 
-      price,
+      priceString,
       isLoading,
       isPurchasing,
       isUnlocked,
     } = this.state;
 
+    let button = (
+      <PurchaseButton onClick={() => this.promptPurchase()}>
+        Pay now
+      </PurchaseButton>
+    );
+
+    if (isPurchasing || isLoading) {
+      button = (
+        <PurchaseButton>
+          Loading...
+        </PurchaseButton>
+      );
+    }
+
     return (
       <Container>
-        <Image src={previewImage} isVisible={!!previewImage} />
-        <Image src={unlockedImage} isVisible={!!unlockedImage} />
+        <Image
+          src={previewImage}
+          onLoad={() => this.setState({ previewImageIsVisible: true })}
+          isVisible={previewImageIsVisible}
+        />
+        <Image
+          src={unlockedImage}
+          onLoad={() => this.setState({ unlockedImageIsVisible: true })}
+          isVisible={unlockedImageIsVisible}
+        />
 
         {(isLoading || isPurchasing) && (
           <LoadingIndicator />
         )}
 
-        {!isLoading && !isUnlocked && !isPurchasing && (
-          <UnlockOverlay>
-            <PurchaseButton onClick={() => this.promptPurchase()}>
-              Unlock for ${price}
-            </PurchaseButton>
-          </UnlockOverlay>
-        )}
+        <Overlay isVisible={!isUnlocked}>
+          <PurchaseArea>
+            <PurchaseLabel>Unlock this photo for {priceString}</PurchaseLabel>
+            {button}
+          </PurchaseArea>
+        </Overlay>
       </Container>
     );
   }
