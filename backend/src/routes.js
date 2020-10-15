@@ -39,9 +39,7 @@ export default function (app) {
         process.env.KOJI_PROJECT_TOKEN,
       );
       const receipts = await iap.resolveReceipts(token);
-      if (receipts && receipts.length > 0) {
-        hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
-      }
+      hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
     } catch (err) {
       console.log(err);
     }
