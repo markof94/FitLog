@@ -33,7 +33,7 @@ const Image = styled.img`
 
 const Overlay = styled.div`
   position: absolute;
-  bottom: 80px;
+  bottom: 140px;
   left: 0;
   width: 100%;
   display: flex;
