@@ -1,25 +1,29 @@
 {
   "general": {
-    "image": "$revealImage",
-    "price": "1.00",
-    "priceString": "$1.00"
+    "headerImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Adult_Scottish_Fold.jpg/1200px-Adult_Scottish_Fold.jpg",
+    "title": "Ask me anything",
+    "questionPlaceholder": "What do you want to know?"
   },
   "@@editor": [
     {
       "key": "general",
       "name": "General",
-      "icon": "📚",
       "source": "general.json",
       "fields": [
         {
-          "key": "image",
-          "name": "Reveal image",
-          "description": "Reveal image",
-          "type": "secret<image>"
+          "key": "headerImage",
+          "name": "Header image",
+          "description": "Header image",
+          "type": "image"
         },
         {
-          "key": "price",
-          "name": "Reveal price (USD)",
+          "key": "title",
+          "name": "Title",
+          "type": "text"
+        },
+        {
+          "key": "questionPlaceholder",
+          "name": "Question placeholder",
           "type": "text"
         }
       ]

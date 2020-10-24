@@ -1,9 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { InstantRemixing } from '@withkoji/vcc';
-import CurrencyInput from 'react-currency-format';
-
-import AddIcon from '../images/add-icon.svg';
 
 const Container = styled.div`
   padding: 0;
@@ -14,95 +11,81 @@ const Container = styled.div`
   position: relative;
   overflow: hidden;
   background: #0f141e;
+  color: #fafafa;
 `;
 
-const ImageArea = styled.div`
-  position: relative;
+const Header = styled.div`
   width: 100%;
-  margin: 0 auto;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
-  ${({ backgroundImage }) => backgroundImage && `background-image: url(${backgroundImage});`}
-  background-position: center;
-  background-size: cover;
+  padding: 24px;
+  background: rgba(255,255,255,0.08);
 `;
 
-const ImageLabel = styled.div`
-  font-size: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+const HeaderImage = styled.img`
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
 
-  img {
-    margin-top: -9em;
-  }
+  height: 100px;
+  min-height: 100px;
+  max-height: 100px;
 
-  p {
-    padding: 0;
-    margin: 0;
-    margin-top: 6px;
-  }
-`;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  border: 2px solid #666;
+`
 
-const PriceOverlay = styled.div`
-  position: absolute;
-  bottom: 140px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const PriceArea = styled.label`
-  max-width: 180px;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(12px);
-  color: #333;
-  border-radius: 12px;
-  box-shadow: 0px 0px 12px 2px rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-
+const Title = styled.input`
   margin: 0;
-  padding: 14px;
+  padding: 0;
+  line-height: 1.3;
+  padding: 12px 0;
+  font-size: 1.5rem;
 
-  & > div:first-child {
-    width: 100%;
-    font-size: 18px;
-    color: #333;
-    padding: 0;
-    margin-bottom: 14px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
+  width: 100%;
+  margin: 12px 0;
+  font-weight: bold;
+
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  -webkit-appearance: none;
+  border-radius: 6px;
+  padding: 8px;
+  background: rgba(255,255,255,0.2);
+  &::placeholder {
+    color: rgba(255,255,255,0.9);
   }
+  color: white;
+`;
 
-  .price-input {
-    width: 100%;
-    padding: 14px 18px;
-    font-size: 16px;
-    border-radius: 8px;
-    text-align: center;
+const QuestionInput = styled.textarea`
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  -webkit-appearance: none;
 
-    outline: none;
-    border: 1px solid transparent;
-    background-color: rgba(0,0,0,0.15);
-    color: #333;
-
-    font-variant-numeric: tabular-nums;
-
-    &:focus {
-      outline: none;
-      border: 1px solid #358aeb;
-    }
+  width: 100%;
+  height: 6rem;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  padding: 8px;
+  background: rgba(255,255,255,0.2);
+  &::placeholder {
+    color: rgba(255,255,255,0.9);
   }
+  color: white;
+`;
+
+const Info = styled.div`
+  width: 100%;
+  text-align: center;
+  padding: 32px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.3;
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -112,28 +95,15 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      image: this.instantRemixing.get(['general', 'image']),
-      priceString: this.instantRemixing.get(['general', 'priceString']),
-      price: this.instantRemixing.get(['general', 'price']),
+      headerImage: this.instantRemixing.get(['general', 'headerImage']),
+      title: this.instantRemixing.get(['general', 'title']),
+      questionPlaceholder: this.instantRemixing.get(['general', 'questionPlaceholder']),
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
       this.setState({
         [path[1]]: newValue,
       });
-
-      // If we're changing the image, preload the blurred and optimized variants so it's
-      // faster to request them on publish, and hopefully the screenshotter can keep up...
-      if (path[1] === 'image') {
-          const preloadUrl = `${newValue}?format=jpg&optimize=medium&blur=70`;
-          const preloadUrlBlur = `${newValue}?format=jpg&optimize=medium`;
-          try {
-              fetch(preloadUrl);
-              fetch(preloadUrlBlur);
-          } catch (err) {
-              //
-          }
-      }
     });
 
     this.instantRemixing.ready();
@@ -141,57 +111,38 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     const {
-      image,
-      priceString,
+      headerImage,
+      title,
+      questionPlaceholder,
     } = this.state;
 
     return (
       <Container>
-        <ImageArea
-          backgroundImage={image}
-          onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}
-        >
-          <ImageLabel>
-            <img src={AddIcon} />
-            {image ? (
-              <p>Tap to change image</p>
-            ) : (
-              <p>Tap to choose image</p>
-            )}
-          </ImageLabel>
-        </ImageArea>
+        <Header>
+          <HeaderImage
+            src={headerImage}
+            onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}
+          />
+          <Title
+            type="text"
+            placeholder="Title..."
+            onChange={(e) => {
+              this.setState({ title: e.target.value });
+              this.instantRemixing.onSetValue(['general', 'title'], e.target.value, true);
+            }}
+            value={title}
+          />
+          <QuestionInput
+            placeholder="Question placeholder..."
+            onChange={(e) => {
+              this.setState({ questionPlaceholder: e.target.value });
+              this.instantRemixing.onSetValue(['general', 'questionPlaceholder'], e.target.value, true);
+            }}
+            value={questionPlaceholder}
+          />
+        </Header>
 
-        <PriceOverlay>
-          <PriceArea>
-              <div>Price to unlock</div>
-              <CurrencyInput
-                className="price-input"
-                prefix="$"
-                min="0.01"
-                max={100000}
-                allowNegative={false}
-                decimalScale={2}
-                fixedDecimalScale={true}
-                isAllowed={(values) => {
-                  if (values.formattedValue.length > 9){
-                    return false;
-                  }
-                  return true;
-                }}
-                placeholder="Price..."
-                value={priceString}
-                onValueChange={({ value, formattedValue }) => {
-                  console.log(value, formattedValue);
-                  this.setState({
-                    price: value,
-                    priceString: formattedValue,
-                  });
-                  this.instantRemixing.onSetValue(['general', 'priceString'], formattedValue, true);
-                  this.instantRemixing.onSetValue(['general', 'price'], value, true);
-                }}
-              />
-            </PriceArea>
-          </PriceOverlay>
+        <Info>You will be able to answer questions after posting by tapping the Koji button and choosing &quot;Admin&quot;</Info>
       </Container>
     );
   }

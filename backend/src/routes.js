@@ -1,67 +1,140 @@
 import fetch from 'node-fetch';
-import Iap from '@withkoji/iap';
+import uuid from 'uuid';
 import { Keystore } from '@withkoji/vcc';
+import { Database } from '@withkoji/database';
 
 export default function (app) {
-  app.get('/preview', async (req, res) => {
-    const { image } = res.locals.koji.general;
-    
-    const keystore = new Keystore();
-    const resolvedImage = await keystore.resolveValue(image);
-    if (!resolvedImage) {
-      res.sendStatus(404);
-      return;
-    }
-
-    const blurredImage = `${resolvedImage}?format=jpg&optimize=medium&blur=70`;
-
-    res.header('Content-Type', 'image/jpeg');
-    const request = await fetch(blurredImage);
-    request.body.pipe(res);
-  });
-
-  app.get('/unlocked', async (req, res) => {
-    // Use the IAP callback token to see if we can find a receipt matching the SKU of
-    // the image. If a receipt exists for the SKU, then we know the user has purchased
-    // the image.
-    let hasPurchased = false;
+  // Retrieve all answered questions
+  app.get('/questions', async (req, res) => {
     try {
-      const token = req.headers['x-koji-iap-callback-token'];
-      const iap = new Iap(
-        process.env.KOJI_PROJECT_ID,
-        process.env.KOJI_PROJECT_TOKEN,
-      );
-      const receipts = await iap.resolveReceipts(token);
-      hasPurchased = !!(receipts.find(({ product }) => product.sku === 'image'));
+      const db = new Database();
+      const questions = (await db.get('questions'))
+        .filter(({ dateAnswered }) => dateAnswered)
+        .sort((a, b) => a.dateAnswered - b.dateAnswered);
+
+      res.status(200).json({
+        questions,
+      });
     } catch (err) {
       console.log(err);
+      res.sendStatus(500);
     }
+  });
 
-    // Set the content type, so the browser knows to display an image
-    res.header('Content-Type', 'image/jpeg');
+  // Ask a question
+  app.post('/ask', async (req, res) => {
+    try {
+      if (!req.body.question) {
+        res.sendStatus(400);
+        return;
+      }
 
-    if (!hasPurchased) {
-      res.sendStatus(401);
-      return;
+      const insertData = {
+        question: req.body.question,
+        datePosted: Math.floor(Date.now() / 1000),
+        dateAnswered: null,
+      };
+
+      const db = new Database();
+      await db.set('questions', uuid.v4(), insertData);
+
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
     }
+  });
 
-    // The image is stored using the composable secret VCC, so the value
-    // actually written in the file is a keypath that we can query to
-    // receive the actual value
-    const { image } = res.locals.koji.general;
-    
-    // Use the Keystore to resolve the value of the image from its keypath
-    const keystore = new Keystore();
-    const resolvedImage = await keystore.resolveValue(image);
-    if (!resolvedImage) {
-      console.log('no image found');
-      res.sendStatus(404);
-      return;
+  //
+  // Admin routes
+  //
+  // Get all questions, including unanswered questions
+  app.get('/admin/questions', async (req, res) => {
+    try {
+      // Verify admin
+      if (req.headers.authorization !== 'adminToken') {
+        res.sendStatus(401);
+        return;
+      }
+
+      const db = new Database();
+      const questions = (await db.get('questions'))
+        .sort((a, b) => a.datePosted - b.datePosted);
+
+      const unansweredQuestions = questions.filter(({ dateAnswered }) => !dateAnswered);
+      const answeredQuestions = questions.filter(({ dateAnswered }) => dateAnswered);
+
+      res.status(200).json({
+        unansweredQuestions,
+        answeredQuestions,
+      });
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
     }
+  });
 
-    // Use CDN params to create both the revealed image and the blurred image
-    const revealedImage = `${resolvedImage}?format=jpg&optimize=medium`;
-    const request = await fetch(revealedImage);
-    request.body.pipe(res);
+  // Answer a question
+  app.post('/admin/answer', async (req, res) => {
+    try {
+      // Verify admin
+      if (req.headers.authorization !== 'adminToken') {
+        res.sendStatus(401);
+        return;
+      }
+
+      const {
+        questionId,
+        answer,
+      } = req.body;
+
+      if (!questionId || !answer) {
+        res.sendStatus(400);
+        return;
+      }
+
+      const db = new Database();
+      await db.update(
+        'questions',
+        questionId,
+        {
+          answer,
+          dateAnswered: Math.floor(Date.now() / 1000),
+        },
+      );
+
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  });
+
+  // Remove a question
+  app.post('/admin/remove', async (req, res) => {
+    try {
+      // Verify admin
+      if (req.headers.authorization !== 'adminToken') {
+        res.sendStatus(401);
+        return;
+      }
+
+      const {
+        questionId,
+      } = req.body;
+
+      if (!questionId) {
+        res.sendStatus(400);
+        return;
+      }
+
+      const db = new Database();
+      await db.delete('questions', questionId);
+
+      res.sendStatus(200);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
   });
 }
