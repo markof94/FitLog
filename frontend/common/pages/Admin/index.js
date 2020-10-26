@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
+import Auth from '@withkoji/auth';
 
 import AnswerModal from './AnswerModal';
 import DeleteModal from './DeleteModal';
@@ -111,6 +112,7 @@ class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
     this.instantRemixing = new InstantRemixing();
+    this.auth = new Auth();
 
     this.state = {
       isLoading: true,
@@ -126,10 +128,12 @@ class SceneRouter extends React.PureComponent {
     this.setState({ isLoading: true });
     try {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/questions`;
+      const token = await this.auth.getToken();
+
       const request = await fetch(remoteUrl, {
         method: 'GET',
         headers: {
-          authorization: 'adminToken',
+          authorization: token,
         },
       });
 

@@ -1,5 +1,6 @@
 import * as uuid from 'uuid';
 import Database from '@withkoji/database';
+import Auth from '@withkoji/auth';
 
 export default function (app) {
   // Retrieve all answered questions
@@ -33,8 +34,6 @@ export default function (app) {
         dateAnswered: null,
       };
 
-      console.log(insertData);
-
       const db = new Database();
       await db.set('questions', uuid.v4(), insertData);
 
@@ -52,7 +51,12 @@ export default function (app) {
   app.get('/admin/questions', async (req, res) => {
     try {
       // Verify admin
-      if (req.headers.authorization !== 'adminToken') {
+      const auth = new Auth(
+        process.env.KOJI_PROJECT_ID,
+        process.env.KOJI_PROJECT_TOKEN,
+      );
+      const role = await auth.getRole(req.headers.authorization);
+      if (role !== 'admin') {
         res.sendStatus(401);
         return;
       }
@@ -78,7 +82,12 @@ export default function (app) {
   app.post('/admin/answer', async (req, res) => {
     try {
       // Verify admin
-      if (req.headers.authorization !== 'adminToken') {
+      const auth = new Auth(
+        process.env.KOJI_PROJECT_ID,
+        process.env.KOJI_PROJECT_TOKEN,
+      );
+      const role = await auth.getRole(req.headers.authorization);
+      if (role !== 'admin') {
         res.sendStatus(401);
         return;
       }
@@ -114,7 +123,12 @@ export default function (app) {
   app.post('/admin/delete', async (req, res) => {
     try {
       // Verify admin
-      if (req.headers.authorization !== 'adminToken') {
+      const auth = new Auth(
+        process.env.KOJI_PROJECT_ID,
+        process.env.KOJI_PROJECT_TOKEN,
+      );
+      const role = await auth.getRole(req.headers.authorization);
+      if (role !== 'admin') {
         res.sendStatus(401);
         return;
       }

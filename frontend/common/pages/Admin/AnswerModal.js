@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
+import Auth from '@withkoji/auth';
 
 const Background = styled.div`
   position: absolute;
@@ -81,6 +82,8 @@ class AnswerModal extends React.PureComponent {
   constructor(props) {
     super(props);
     this.instantRemixing = new InstantRemixing();
+    this.auth = new Auth();
+
     this.state = {
       isSaving: false,
       answer: null,
@@ -98,11 +101,13 @@ class AnswerModal extends React.PureComponent {
 
     try {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/answer`;
+      const token = await this.auth.getToken();
+
       const result = await fetch(remoteUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          authorization: 'adminToken',
+          authorization: token,
         },
         body: JSON.stringify({
           questionId: this.props.data._id,
