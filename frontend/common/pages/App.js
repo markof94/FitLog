@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import moment from 'moment';
 
 import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
 
@@ -257,7 +258,7 @@ class SceneRouter extends React.PureComponent {
             <Question key={question._id}>
               <Prompt>{question.question}</Prompt>
               <Answer>{question.answer}</Answer>
-              <Date>{question.dateAnswered}</Date>
+              <Date>{moment.unix(question.dateAnswered).fromNow()}</Date>
             </Question>
           ))}
         </Responses>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import moment from 'moment';
 
 import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
 import Auth from '@withkoji/auth';
@@ -195,7 +196,7 @@ class SceneRouter extends React.PureComponent {
         <Question key={question._id}>
           <Prompt>{question.question}</Prompt>
           <Answer>{question.answer}</Answer>
-          <Date>{question.dateAnswered}</Date>
+          <Date>{moment.unix(question.dateAnswered).fromNow()}</Date>
           <Actions>
             <DeleteAction
               onClick={() => this.setState({
@@ -234,7 +235,7 @@ class SceneRouter extends React.PureComponent {
               const newAnswer = {
                 ...this.state.answerQuestion,
                 answer,
-                dateAnswered: Math.floor(Date.now() / 1000),
+                dateAnswered: moment.unix(),
               };
 
               this.setState({
