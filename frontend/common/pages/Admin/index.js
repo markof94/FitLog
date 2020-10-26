@@ -87,10 +87,12 @@ const Actions = styled.div`
 
 const AnswerAction = styled.div`
   color: rgb(0, 122, 255);
+  padding: 0 8px;
 `;
 
 const DeleteAction = styled.div`
   color: red;
+  padding: 0 8px;
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -235,7 +237,7 @@ class SceneRouter extends React.PureComponent {
               const newAnswer = {
                 ...this.state.answerQuestion,
                 answer,
-                dateAnswered: moment.unix(),
+                dateAnswered: moment().unix(),
               };
 
               this.setState({
@@ -244,7 +246,7 @@ class SceneRouter extends React.PureComponent {
                   ...this.state.answeredQuestions,
                 ],
                 unansweredQuestions: this.state.unansweredQuestions
-                  .filter(({ _id }) => _id === this.state.answerQuestion._id),
+                  .filter(({ _id }) => _id !== this.state.answerQuestion._id),
                 answerQuestion: null,
               });
             }}

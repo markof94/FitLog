@@ -77,6 +77,8 @@ class DeleteModal extends React.PureComponent {
   constructor(props) {
     super(props);
     this.instantRemixing = new InstantRemixing();
+    this.auth = new Auth();
+
     this.state = {
       isDeleting: false,
     };
