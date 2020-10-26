@@ -17,29 +17,13 @@ const Container = styled.div`
   overflow: hidden;
   background: #0f141e;
   color: #fafafa;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  background: rgba(255,255,255,0.08);
-  margin-bottom: 24px;
-`;
-
-const Title = styled.h1`
-  margin: 0;
-  padding: 0;
-  line-height: 1.3;
-  font-size: 1.5rem;
+  
 `;
 
 const Responses = styled.div`
   width: 100%;
   padding: 0 24px;
+  padding-top: 24px;
 `;
 
 const ResponsesTitle = styled.h2`
@@ -232,10 +216,6 @@ class SceneRouter extends React.PureComponent {
 
     return (
       <Container>
-        <Header>
-          <Title>Admin area</Title>
-        </Header>
-
         <Responses>
           <ResponsesTitle>Unanswered questions</ResponsesTitle>
           {unansweredQuestions}
