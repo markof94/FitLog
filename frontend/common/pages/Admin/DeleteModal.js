@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
 
 const Background = styled.div`
   position: absolute;
@@ -74,17 +75,13 @@ const CancelButton = styled.button`
 class DeleteModal extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.instantRemixing = new InstantRemixing();
     this.state = {
       isDeleting: false,
-      answer: null,
     };
   }
 
   async deleteQuestion() {
-    if (!this.state.answer) {
-      return;
-    }
-
     this.setState({
       isDeleting: true,
     });
@@ -93,8 +90,12 @@ class DeleteModal extends React.PureComponent {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/delete`;
       const result = await fetch(remoteUrl, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'adminToken',
+        },
         body: JSON.stringify({
-          questionId: this.props.data.id,
+          questionId: this.props.data._id,
         }),
       });
 

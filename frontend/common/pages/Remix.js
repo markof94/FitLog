@@ -121,7 +121,7 @@ class SceneRouter extends React.PureComponent {
         <Header>
           <HeaderImage
             src={headerImage}
-            onClick={() => this.instantRemixing.onPresentControl(['general', 'image'])}
+            onClick={() => this.instantRemixing.onPresentControl(['general', 'headerImage'])}
           />
           <Title
             type="text"

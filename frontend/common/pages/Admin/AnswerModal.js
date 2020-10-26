@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
 
 const Background = styled.div`
   position: absolute;
@@ -79,6 +80,7 @@ const SubmitButton = styled.button`
 class AnswerModal extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.instantRemixing = new InstantRemixing();
     this.state = {
       isSaving: false,
       answer: null,
@@ -98,8 +100,12 @@ class AnswerModal extends React.PureComponent {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/answer`;
       const result = await fetch(remoteUrl, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'adminToken',
+        },
         body: JSON.stringify({
-          questionId: this.props.data.id,
+          questionId: this.props.data._id,
           answer: this.state.answer,
         }),
       });
@@ -137,6 +143,7 @@ class AnswerModal extends React.PureComponent {
           </Title>
           <Question>{question}</Question>
           <Answer
+            autoFocus
             value={this.state.answer}
             onChange={(e) => this.setState({ answer: e.target.value })}
             placeholder="Type your answer..."

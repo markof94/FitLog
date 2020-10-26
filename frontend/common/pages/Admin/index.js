@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-import { FeedSdk } from '@withkoji/vcc';
+import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
 
 import AnswerModal from './AnswerModal';
 import DeleteModal from './DeleteModal';
@@ -110,6 +110,7 @@ const DeleteAction = styled.div`
 class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.instantRemixing = new InstantRemixing();
 
     this.state = {
       isLoading: true,
@@ -125,7 +126,13 @@ class SceneRouter extends React.PureComponent {
     this.setState({ isLoading: true });
     try {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/questions`;
-      const request = await fetch(remoteUrl);
+      const request = await fetch(remoteUrl, {
+        method: 'GET',
+        headers: {
+          authorization: 'adminToken',
+        },
+      });
+
       const {
         unansweredQuestions,
         answeredQuestions,
@@ -137,7 +144,7 @@ class SceneRouter extends React.PureComponent {
         answeredQuestions,
       });
     } catch (err) {
-      //
+      console.log(err);
     }
   }
 
@@ -244,7 +251,7 @@ class SceneRouter extends React.PureComponent {
 
         {this.state.deleteQuestion && (
           <DeleteModal
-            onRequestClose={() => this.setState({ answerQuestion: null })}
+            onRequestClose={() => this.setState({ deleteQuestion: null })}
             data={this.state.deleteQuestion}
           />
         )}

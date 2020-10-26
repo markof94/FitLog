@@ -159,7 +159,7 @@ class SceneRouter extends React.PureComponent {
       isSaving: false,
       hasSaved: false,
       questions: [],
-      question: null,
+      question: '',
 
       headerImage: this.instantRemixing.get(['general', 'headerImage']),
       title: this.instantRemixing.get(['general', 'title']),
@@ -196,15 +196,19 @@ class SceneRouter extends React.PureComponent {
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/ask`;
       const result = await fetch(remoteUrl, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           question: this.state.question,
         }),
       });
+
       if (result.status === 200) {
         this.setState({
           isSaving: false,
           hasSaved: true,
-          question: null,
+          question: '',
         });
       }
     } catch (err) {

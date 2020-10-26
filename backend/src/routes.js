@@ -1,7 +1,5 @@
-import fetch from 'node-fetch';
-import uuid from 'uuid';
-import { Keystore } from '@withkoji/vcc';
-import { Database } from '@withkoji/database';
+import * as uuid from 'uuid';
+import Database from '@withkoji/database';
 
 export default function (app) {
   // Retrieve all answered questions
@@ -34,6 +32,8 @@ export default function (app) {
         datePosted: Math.floor(Date.now() / 1000),
         dateAnswered: null,
       };
+
+      console.log(insertData);
 
       const db = new Database();
       await db.set('questions', uuid.v4(), insertData);
@@ -111,7 +111,7 @@ export default function (app) {
   });
 
   // Remove a question
-  app.post('/admin/remove', async (req, res) => {
+  app.post('/admin/delete', async (req, res) => {
     try {
       // Verify admin
       if (req.headers.authorization !== 'adminToken') {
