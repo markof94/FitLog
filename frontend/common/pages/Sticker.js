@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-
+import moment from 'moment';
 import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
 
 const Container = styled.div`
@@ -180,7 +180,7 @@ class SceneRouter extends React.PureComponent {
         <Question>
           <Prompt>{question.question}</Prompt>
           <Answer>{question.answer}</Answer>
-          <Date>{question.dateAnswered}</Date>
+          <Date>{moment.unix(question.dateAnswered).fromNow()}</Date>
         </Question>
       );
     }

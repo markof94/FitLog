@@ -15,10 +15,10 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   position: relative;
-  overflow: hidden;
   background: #0f141e;
   color: #fafafa;
-  
+  overflow: auto;
+  padding-bottom: 24px;
 `;
 
 const Responses = styled.div`
