@@ -42,7 +42,11 @@ export default function (app) {
         process.env.KOJI_PROJECT_ID,
         process.env.KOJI_PROJECT_TOKEN,
       );
-      auth.pushNotificationToOwner('Someone asked you a question! Respond now');
+      auth.pushNotificationToOwner({
+          icon: '🙈',
+          appName: 'Ask me anything',
+          message: 'Someone asked you a question! Respond now',
+      });
 
       res.sendStatus(200);
     } catch (err) {
