@@ -12,7 +12,7 @@
       ]
     },
     "FeedEvents": true,
-    "StickerContext": false,
+    "StickerContext": true,
     "AdminContext": true
   }
 }
