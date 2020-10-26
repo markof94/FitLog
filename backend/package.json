@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
-    "@withkoji/auth": "0.0.2",
+    "@withkoji/auth": "0.0.3",
     "@withkoji/database": "^1.0.22",
     "@withkoji/vcc": "^1.1.38",
     "babel-polyfill": "^6.26.0",

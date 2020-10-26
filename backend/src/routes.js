@@ -37,6 +37,13 @@ export default function (app) {
       const db = new Database();
       await db.set('questions', uuid.v4(), insertData);
 
+      // Notify the owner that someone asked them a question
+      const auth = new Auth(
+        process.env.KOJI_PROJECT_ID,
+        process.env.KOJI_PROJECT_TOKEN,
+      );
+      auth.pushNotificationToOwner('Someone asked you a question! Respond now');
+
       res.sendStatus(200);
     } catch (err) {
       console.log(err);
