@@ -101,6 +101,7 @@ const ResponsesTitle = styled.h2`
   padding: 0;
   font-size: 1.25rem;
   margin-bottom: 12px;
+  margin-top: 12px;
 `;
 
 const EmptyState = styled.div`

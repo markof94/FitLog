@@ -146,12 +146,12 @@ class SceneRouter extends React.PureComponent {
         questions,
       });
     } catch (err) {
-      //
+      console.log(err);
     }
   }
 
   componentDidMount() {
-    // this.loadQuestions();
+    this.loadQuestions();
 
     // Initialize the FeedSdk
     const feed = new FeedSdk();
@@ -184,7 +184,7 @@ class SceneRouter extends React.PureComponent {
       );
     }
 
-    if (!isLoading) {
+    if (isLoading) {
       inner = (
         <Responses>
           <Loading>Loading...</Loading>
