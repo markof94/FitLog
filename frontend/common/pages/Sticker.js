@@ -105,7 +105,7 @@ const Date = styled.div`
   color: rgba(255,255,255,0.5);
 `;
 
-const SeeAllButton = styled.div`
+const SeeAllButton = styled.button`
   margin-top: 12px;
   width: 100%;
   border: none;
@@ -198,7 +198,7 @@ class SceneRouter extends React.PureComponent {
         <Inner>
           <Title>{title}</Title>
           {inner}
-          <SeeAllButton onClick={() => this.feed.present('/')}>See all answers</SeeAllButton>
+          <SeeAllButton onClick={() => this.feed.present('#')}>See all answers</SeeAllButton>
         </Inner>
       </Container>
     );
