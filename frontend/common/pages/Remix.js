@@ -37,6 +37,7 @@ const HeaderImage = styled.img`
   background: rgba(255,255,255,0.1);
   overflow: hidden;
   border: 2px solid #666;
+  object-fit: cover;
 `
 
 const Title = styled.input`

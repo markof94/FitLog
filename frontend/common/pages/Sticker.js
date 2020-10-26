@@ -43,6 +43,7 @@ const HeaderImage = styled.img`
   overflow: hidden;
   border: 2px solid #666;
   z-index: 2;
+  object-fit: cover;
 `;
 
 const Title = styled.h1`
