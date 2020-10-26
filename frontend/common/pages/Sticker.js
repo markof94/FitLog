@@ -13,6 +13,36 @@ const Container = styled.div`
   overflow: hidden;
   background: transparent;
   color: #fafafa;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Inner = styled.div`
+  width: calc(100% - 24px);
+  margin: 12px;
+  margin-top: -50px;
+  padding: 12px;
+
+  border-radius: 18px;
+  background: #0f141e;
+`;
+
+const HeaderImage = styled.img`
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+
+  height: 100px;
+  min-height: 100px;
+  max-height: 100px;
+
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  border: 2px solid #666;
+  z-index: 2;
 `;
 
 const Title = styled.h1`
@@ -20,7 +50,9 @@ const Title = styled.h1`
   padding: 0;
   line-height: 1.3;
   padding: 12px 0;
+  padding-top: 48px;
   font-size: 1.5rem;
+  text-align: center;
 `;
 
 const Responses = styled.div`
@@ -73,6 +105,22 @@ const Date = styled.div`
   color: rgba(255,255,255,0.5);
 `;
 
+const SeeAllButton = styled.div`
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  background: rgb(0, 122, 255);
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 18px;
+  border-radius: 12px;
+  text-align: center;
+`;
+
 class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -82,6 +130,7 @@ class SceneRouter extends React.PureComponent {
     this.state = {
       isLoading: true,
       questions: [],
+      headerImage: this.instantRemixing.get(['general', 'headerImage']),
       title: this.instantRemixing.get(['general', 'title']),
     };
   }
@@ -102,7 +151,7 @@ class SceneRouter extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.loadQuestions();
+    // this.loadQuestions();
 
     // Initialize the FeedSdk
     const feed = new FeedSdk();
@@ -114,6 +163,7 @@ class SceneRouter extends React.PureComponent {
       isLoading,
       questions,
       title,
+      headerImage,
     } = this.state;
 
     let inner = null;
@@ -134,7 +184,7 @@ class SceneRouter extends React.PureComponent {
       );
     }
 
-    if (isLoading) {
+    if (!isLoading) {
       inner = (
         <Responses>
           <Loading>Loading...</Loading>
@@ -144,9 +194,12 @@ class SceneRouter extends React.PureComponent {
 
     return (
       <Container>
-        <Title>{title}</Title>
-        {inner}
-        <div>See all answers</div>
+        <HeaderImage src={headerImage} />
+        <Inner>
+          <Title>{title}</Title>
+          {inner}
+          <SeeAllButton>See all answers</SeeAllButton>
+        </Inner>
       </Container>
     );
   }

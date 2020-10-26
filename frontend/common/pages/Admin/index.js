@@ -246,6 +246,23 @@ class SceneRouter extends React.PureComponent {
           <AnswerModal
             onRequestClose={() => this.setState({ answerQuestion: null })}
             data={this.state.answerQuestion}
+            onAnswer={(answer) => {
+              const newAnswer = {
+                ...this.state.answerQuestion,
+                answer,
+                dateAnswered: Math.floor(Date.now() / 1000),
+              };
+
+              this.setState({
+                answeredQuestions: [
+                  newAnswer,
+                  ...this.state.answeredQuestions,
+                ],
+                unansweredQuestions: this.state.unansweredQuestions
+                  .filter(({ _id }) => _id === this.state.answerQuestion._id),
+                answerQuestion: null,
+              });
+            }}
           />
         )}
 
@@ -253,6 +270,15 @@ class SceneRouter extends React.PureComponent {
           <DeleteModal
             onRequestClose={() => this.setState({ deleteQuestion: null })}
             data={this.state.deleteQuestion}
+            onDelete={() => {
+              this.setState({
+                answeredQuestions: this.state.answeredQuestions
+                  .filter(({ _id }) => _id !== this.state.deleteQuestion._id),
+                unansweredQuestions: this.state.unansweredQuestions
+                  .filter(({ _id }) => _id !== this.state.deleteQuestion._id),
+                deleteQuestion: null,
+              });
+            }}
           />
         )}
       </Container>

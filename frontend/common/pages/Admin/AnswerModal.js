@@ -111,7 +111,7 @@ class AnswerModal extends React.PureComponent {
       });
 
       if (result.status === 200) {
-        this.props.onRequestClose();
+        this.props.onAnswer(this.state.answer);
       }
     } catch (err) {
       console.log(err);

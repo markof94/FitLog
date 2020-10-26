@@ -11,6 +11,8 @@
         }
       ]
     },
-    "FeedEvents": true
+    "FeedEvents": true,
+    "StickerContext": true,
+    "AdminContext": true
   }
 }

@@ -100,7 +100,7 @@ class DeleteModal extends React.PureComponent {
       });
 
       if (result.status === 200) {
-        this.props.onRequestClose();
+        this.props.onDelete();
       }
     } catch (err) {
       console.log(err);
