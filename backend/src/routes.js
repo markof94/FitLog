@@ -9,7 +9,7 @@ export default function (app) {
       const db = new Database();
       const questions = (await db.get('questions'))
         .filter(({ dateAnswered }) => dateAnswered)
-        .sort((a, b) => a.dateAnswered - b.dateAnswered);
+        .sort((a, b) => b.dateAnswered - a.dateAnswered);
 
       res.status(200).json({
         questions,
@@ -63,7 +63,7 @@ export default function (app) {
 
       const db = new Database();
       const questions = (await db.get('questions'))
-        .sort((a, b) => a.datePosted - b.datePosted);
+        .sort((a, b) => b.datePosted - a.datePosted);
 
       const unansweredQuestions = questions.filter(({ dateAnswered }) => !dateAnswered);
       const answeredQuestions = questions.filter(({ dateAnswered }) => dateAnswered);
