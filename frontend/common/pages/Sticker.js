@@ -154,8 +154,8 @@ class SceneRouter extends React.PureComponent {
     this.loadQuestions();
 
     // Initialize the FeedSdk
-    const feed = new FeedSdk();
-    feed.load();
+    this.feed = new FeedSdk();
+    this.feed.load();
   }
 
   render() {
@@ -198,7 +198,7 @@ class SceneRouter extends React.PureComponent {
         <Inner>
           <Title>{title}</Title>
           {inner}
-          <SeeAllButton>See all answers</SeeAllButton>
+          <SeeAllButton onClick={() => this.feed.present('/')}>See all answers</SeeAllButton>
         </Inner>
       </Container>
     );
