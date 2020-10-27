@@ -86,13 +86,20 @@ const Actions = styled.div`
 `;
 
 const AnswerAction = styled.div`
+  cursor: pointer;
   color: rgb(0, 122, 255);
-  padding: 0 8px;
+
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-weight: 500;
+    font-size: 16px;
+  margin-left: auto;
 `;
 
-const DeleteAction = styled.div`
+const DeleteAction = styled(AnswerAction)`
   color: red;
-  padding: 0 8px;
+  margin-left 6px;
 `;
 
 class SceneRouter extends React.PureComponent {

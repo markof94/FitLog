@@ -46,6 +46,7 @@ export default function (app) {
           icon: '🙈',
           appName: 'Ask me anything',
           message: 'Someone asked you a question! Respond now',
+          ref: '?context=admin',
       });
 
       res.sendStatus(200);
