@@ -39,8 +39,8 @@ export default function (app) {
 
       // Notify the owner that someone asked them a question
       const auth = new Auth(
-        process.env.KOJI_PROJECT_ID,
-        process.env.KOJI_PROJECT_TOKEN,
+        res.locals.KOJI_PROJECT_ID,
+        res.locals.KOJI_PROJECT_TOKEN,
       );
       auth.pushNotificationToOwner({
           icon: '🙈',
@@ -64,8 +64,8 @@ export default function (app) {
     try {
       // Verify admin
       const auth = new Auth(
-        process.env.KOJI_PROJECT_ID,
-        process.env.KOJI_PROJECT_TOKEN,
+        res.locals.KOJI_PROJECT_ID,
+        res.locals.KOJI_PROJECT_TOKEN,
       );
       const role = await auth.getRole(req.headers.authorization);
       if (role !== 'admin') {
@@ -95,8 +95,8 @@ export default function (app) {
     try {
       // Verify admin
       const auth = new Auth(
-        process.env.KOJI_PROJECT_ID,
-        process.env.KOJI_PROJECT_TOKEN,
+        res.locals.KOJI_PROJECT_ID,
+        res.locals.KOJI_PROJECT_TOKEN,
       );
       const role = await auth.getRole(req.headers.authorization);
       if (role !== 'admin') {
@@ -136,8 +136,8 @@ export default function (app) {
     try {
       // Verify admin
       const auth = new Auth(
-        process.env.KOJI_PROJECT_ID,
-        process.env.KOJI_PROJECT_TOKEN,
+        res.locals.KOJI_PROJECT_ID,
+        res.locals.KOJI_PROJECT_TOKEN,
       );
       const role = await auth.getRole(req.headers.authorization);
       if (role !== 'admin') {
