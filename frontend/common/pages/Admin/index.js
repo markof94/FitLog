@@ -1,12 +1,8 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import moment from 'moment';
 
 import { FeedSdk, InstantRemixing } from '@withkoji/vcc';
 import Auth from '@withkoji/auth';
-
-import AnswerModal from './AnswerModal';
-import DeleteModal from './DeleteModal';
 
 const Container = styled.div`
   padding: 0;
@@ -18,28 +14,12 @@ const Container = styled.div`
   background: #0f141e;
   color: #fafafa;
   overflow: auto;
-  padding-bottom: 24px;
-`;
+  padding: 24px;
 
-const Responses = styled.div`
-  width: 100%;
-  padding: 0 24px;
-  padding-top: 24px;
-`;
-
-const ResponsesTitle = styled.h2`
-  margin: 0;
-  padding: 0;
-  font-size: 1.25rem;
-  margin-bottom: 12px;
-`;
-
-const EmptyState = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 32px 0;
-  font-size: 18px;
-  color: rgba(255,255,255,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Loading = styled.div`
@@ -50,57 +30,60 @@ const Loading = styled.div`
   color: rgba(255,255,255,0.8);
 `;
 
-const Question = styled.div`
-  margin: 3px 0;
-  background: rgba(255,255,255,0.1);
+const Title = styled.h1`
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+`;
+
+const SelectButton = styled.button`
+    margin-top: 12px;
+  width: 100%;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  background: rgb(0, 122, 255);
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+  line-height: 1;
   padding: 12px;
   border-radius: 6px;
 `;
 
-const Prompt = styled.div`
-  line-height: 1.25;
-`;
-
-const Answer = styled.div`
+const DownloadButton = styled.a`
+    margin-top: 12px;
   width: 100%;
-  margin-top: 6px;
-  line-height: 1.25;
-  font-size: 14px;
-  font-style: italic;
-  text-align: right;
-`;
-
-const Date = styled.div`
-  width: 100%;
-  text-align: right;
-  font-size: 12px;
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  background: rgb(0, 122, 255);
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
   line-height: 1;
-  margin-top: 6px;
-  color: rgba(255,255,255,0.5);
-`;
-
-const Actions = styled.div`
+  padding: 12px;
+  border-radius: 6px;
+  display: block;
   width: 100%;
-  display: flex;
-  align-items: center;
+  text-align: center;
+  text-decoration: none;
 `;
 
-const AnswerAction = styled.div`
-  cursor: pointer;
-  color: rgb(0, 122, 255);
-
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
-    padding: 4px 12px;
-    font-weight: 500;
-    font-size: 16px;
-  margin-left: auto;
-`;
-
-const DeleteAction = styled(AnswerAction)`
-  color: red;
-  margin-left 6px;
-`;
+function sanitizeCsv(value) {
+  try {
+    return String(value || '').replace(/"/g, '""');
+  } catch (err) {
+    return '';
+  }
+}
 
 class SceneRouter extends React.PureComponent {
   constructor(props) {
@@ -110,18 +93,17 @@ class SceneRouter extends React.PureComponent {
 
     this.state = {
       isLoading: true,
-      unansweredQuestions: [],
-      answeredQuestions: [],
-
-      answerQuestion: null,
-      deleteQuestion: null,
+      responses: [],
+      
+      isPicking: false,
+      winner: null,
     };
   }
 
-  async loadQuestions() {
+  async load() {
     this.setState({ isLoading: true });
     try {
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/questions`;
+      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/admin/list`;
       const token = await this.auth.getToken();
 
       const request = await fetch(remoteUrl, {
@@ -132,14 +114,12 @@ class SceneRouter extends React.PureComponent {
       });
 
       const {
-        unansweredQuestions,
-        answeredQuestions,
+        responses,
       } = await request.json();
 
       this.setState({
         isLoading: false,
-        unansweredQuestions,
-        answeredQuestions,
+        responses,
       });
     } catch (err) {
       console.log(err);
@@ -147,134 +127,78 @@ class SceneRouter extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.loadQuestions();
+    this.load();
 
     // Initialize the FeedSdk
     const feed = new FeedSdk();
     feed.load();
   }
 
+  pickWinner() {
+      this.setState({
+          isPicking: true,
+          winner: null,
+      });
+
+      const winner = this.state.responses[Math.floor(Math.random() * this.state.responses.length)];
+      setTimeout(() => this.setState({ isPicking: false, winner }), 1000);
+  }
+
   render() {
     const {
       isLoading,
+      responses,
     } = this.state;
 
-    let unansweredQuestions = null;
-    if (this.state.unansweredQuestions.length === 0) {
-      unansweredQuestions = (
-        <EmptyState>No new questions</EmptyState>
-      );
-    } else {
-      unansweredQuestions = this.state.unansweredQuestions.map((question) => (
-        <Question key={question._id}>
-          <Prompt>{question.question}</Prompt>
-          <Answer>{question.answer}</Answer>
-          <Date>{question.dateAnswered}</Date>
-          <Actions>
-            <AnswerAction
-              onClick={() => this.setState({
-                answerQuestion: question,
-              })}
-            >
-              Answer
-            </AnswerAction>
-            <DeleteAction
-              onClick={() => this.setState({
-                deleteQuestion: question,
-              })}
-            >
-              Delete
-            </DeleteAction>
-          </Actions>
-        </Question>
-      ));
-    }
     if (isLoading) {
-      unansweredQuestions = (
-        <Loading>Loading...</Loading>
+      return (
+          <Container>
+            <Loading>Loading...</Loading>
+        </Container>
       );
     }
 
-    let answeredQuestions = null;
-    if (this.state.answeredQuestions.length === 0) {
-      answeredQuestions = (
-        <EmptyState>No questions</EmptyState>
-      );
-    } else {
-      answeredQuestions = this.state.answeredQuestions.map((question) => (
-        <Question key={question._id}>
-          <Prompt>{question.question}</Prompt>
-          <Answer>{question.answer}</Answer>
-          <Date>{moment.unix(question.dateAnswered).fromNow()}</Date>
-          <Actions>
-            <DeleteAction
-              onClick={() => this.setState({
-                deleteQuestion: question,
-              })}
-            >
-              Delete
-            </DeleteAction>
-          </Actions>
-        </Question>
-      ));
+    if (responses.length === 0) {
+        return (
+            <Container>
+                <Loading>No entries yet</Loading>
+            </Container>
+        );
     }
-    if (isLoading) {
-      answeredQuestions = (
-        <Loading>Loading...</Loading>
-      );
+
+    const csvObject = [
+      ...responses.map(({ value }) => `"${sanitizeCsv(value)}"`),
+    ];
+    const blob = new Blob([csvObject.join('\n')], { type: 'text/csv' });
+    const csvUrl = window.URL.createObjectURL(blob);
+
+    let title = (
+        <Title>{responses.length} {responses.length !== 1 ? 'entries' : 'entry'}</Title>
+    );
+    if (this.state.isPicking) {
+        title = (
+            <Title>Picking...</Title>
+        );
+    }
+    if (this.state.winner) {
+        title = (
+            <Title>{this.state.winner.value}</Title>
+        );
     }
 
     return (
       <Container>
-        <Responses>
-          <ResponsesTitle>Unanswered questions</ResponsesTitle>
-          {unansweredQuestions}
-        </Responses>
+        {title}
 
-        <Responses>
-          <ResponsesTitle>Answered questions</ResponsesTitle>
-          {answeredQuestions}
-        </Responses>
-
-        {this.state.answerQuestion && (
-          <AnswerModal
-            onRequestClose={() => this.setState({ answerQuestion: null })}
-            data={this.state.answerQuestion}
-            onAnswer={(answer) => {
-              const newAnswer = {
-                ...this.state.answerQuestion,
-                answer,
-                dateAnswered: moment().unix(),
-              };
-
-              this.setState({
-                answeredQuestions: [
-                  newAnswer,
-                  ...this.state.answeredQuestions,
-                ],
-                unansweredQuestions: this.state.unansweredQuestions
-                  .filter(({ _id }) => _id !== this.state.answerQuestion._id),
-                answerQuestion: null,
-              });
-            }}
-          />
-        )}
-
-        {this.state.deleteQuestion && (
-          <DeleteModal
-            onRequestClose={() => this.setState({ deleteQuestion: null })}
-            data={this.state.deleteQuestion}
-            onDelete={() => {
-              this.setState({
-                answeredQuestions: this.state.answeredQuestions
-                  .filter(({ _id }) => _id !== this.state.deleteQuestion._id),
-                unansweredQuestions: this.state.unansweredQuestions
-                  .filter(({ _id }) => _id !== this.state.deleteQuestion._id),
-                deleteQuestion: null,
-              });
-            }}
-          />
-        )}
+        <SelectButton onClick={() => this.pickWinner()}>
+            {this.state.winner ? 'Pick again' : 'Pick a winner'}
+        </SelectButton>
+        <DownloadButton
+            href={csvUrl}
+            download="results.csv"
+        >
+            Download all data (csv)
+        </DownloadButton>
       </Container>
     );
   }

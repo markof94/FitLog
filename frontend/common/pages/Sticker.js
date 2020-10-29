@@ -22,88 +22,32 @@ const Container = styled.div`
 const Inner = styled.div`
   width: calc(100% - 24px);
   margin: 12px;
-  margin-top: -50px;
   padding: 12px;
 
   border-radius: 18px;
-  background: #0f141e;
-`;
-
-const HeaderImage = styled.img`
-  width: 100px;
-  min-width: 100px;
-  max-width: 100px;
-
-  height: 100px;
-  min-height: 100px;
-  max-height: 100px;
-
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-  overflow: hidden;
-  border: 2px solid #666;
-  z-index: 2;
-  object-fit: cover;
+  background: rgb(250, 250, 250);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 4px;
 `;
 
 const Title = styled.h1`
-  margin: 0;
-  padding: 0;
-  line-height: 1.3;
-  padding: 12px 0;
-  padding-top: 48px;
-  font-size: 1.5rem;
-  text-align: center;
+  font-size: 1.65em;
+  font-weight: bold;
+  margin-top: 0px;
+  line-height: 1.3em;
+  margin-bottom: 0.4em;
+  text-align: left;
+  font-family: "PT Sans", sans-serif;
+  color: ${({ color }) => color || 'rgb(45, 47, 48)'};
 `;
 
-const Responses = styled.div`
-  width: 100%;
-  padding: 0 24px;
-`;
-
-const EmptyState = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 32px 0;
-  font-size: 18px;
-  color: rgba(255,255,255,0.8);
-`;
-
-const Loading = styled.div`
-  width: 100%;
-  text-align: center;
-  padding: 32px 0;
-  font-size: 18px;
-  color: rgba(255,255,255,0.8);
-`;
-
-const Question = styled.div`
-  margin: 3px 0;
-  background: rgba(255,255,255,0.1);
-  padding: 12px;
-  border-radius: 6px;
-`;
-
-const Prompt = styled.div`
-  line-height: 1.25;
-`;
-
-const Answer = styled.div`
-  width: 100%;
-  margin-top: 6px;
-  line-height: 1.25;
-  font-size: 14px;
-  font-style: italic;
-  text-align: right;
-`;
-
-const Date = styled.div`
-  width: 100%;
-  text-align: right;
-  font-size: 12px;
-  line-height: 1;
-  margin-top: 6px;
-  color: rgba(255,255,255,0.5);
+const Description = styled.div`
+  font-size: 1.2em;
+  margin-top: 0px;
+  line-height: 1.3em;
+  margin-bottom: 0.4em;
+  text-align: left;
+  font-family: "PT Sans", sans-serif;
+  color: ${({ color }) => color || 'rgb(45, 47, 48)'};
 `;
 
 const SeeAllButton = styled.button`
@@ -120,6 +64,17 @@ const SeeAllButton = styled.button`
   padding: 18px;
   border-radius: 12px;
   text-align: center;
+
+  ${({ name, color }) => {
+    if (name === 'rainbow1') {
+      return `background: url(${Rainbow1Tile}) 50% 50% no-repeat;`;
+    }
+    if (name === 'rainbow2') {
+      return `background: url(${Rainbow2Tile}) 50% 50% no-repeat;`;
+    }
+    return `background: ${color};`;
+  }}
+  background-size: cover;
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -129,31 +84,13 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      isLoading: true,
-      questions: [],
-      headerImage: this.instantRemixing.get(['general', 'headerImage']),
       title: this.instantRemixing.get(['general', 'title']),
+      description: this.instantRemixing.get(['general', 'description']),
+      theme: this.instantRemixing.get(['general', 'theme']),
     };
   }
 
-  async loadQuestions() {
-    this.setState({ isLoading: true });
-    try {
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/questions`;
-      const request = await fetch(remoteUrl);
-      const { questions } = await request.json();
-      this.setState({
-        isLoading: false,
-        questions,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   componentDidMount() {
-    this.loadQuestions();
-
     // Initialize the FeedSdk
     this.feed = new FeedSdk();
     this.feed.load();
@@ -161,45 +98,34 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     const {
-      isLoading,
-      questions,
       title,
-      headerImage,
+      description,
+      theme,
     } = this.state;
 
-    let inner = null;
-    if (questions.length === 0) {
-      inner = (
-        <Responses>
-          <EmptyState>No answers yet</EmptyState>
-        </Responses>
-      );
-    } else {
-      const [question] = questions;
-      inner = (
-        <Question>
-          <Prompt>{question.question}</Prompt>
-          <Answer>{question.answer}</Answer>
-          <Date>{moment.unix(question.dateAnswered).fromNow()}</Date>
-        </Question>
-      );
-    }
-
-    if (isLoading) {
-      inner = (
-        <Responses>
-          <Loading>Loading...</Loading>
-        </Responses>
-      );
-    }
+    let themeColors = {
+      'default': '#2D2F30',
+      'red': '#EB5757',
+      'orange': '#F2994A',
+      'yellow': '#FCBA04',
+      'green': '#27AE60',
+      'blue': '#2D9CDB',
+      'violet': '#BB6BD9',
+      'rainbow1': '#9063F4',
+      'rainbow2': '#938DCE'
+    };
+    const color = theme ? themeColors[theme] : '#2D2F30'
 
     return (
       <Container>
-        <HeaderImage src={headerImage} />
-        <Inner>
-          <Title>{title}</Title>
-          {inner}
-          <SeeAllButton onClick={() => this.feed.present('#')}>See all answers</SeeAllButton>
+        <Inner
+            themeColor={color}
+        >
+          <Title color={color}>{title || 'Title'}</Title>
+            {description && (
+                <Description color={color}>{description}</Description>
+            )}
+          <SeeAllButton color={color} onClick={() => this.feed.present('#')}>Enter</SeeAllButton>
         </Inner>
       </Container>
     );

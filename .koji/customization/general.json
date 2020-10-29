@@ -1,8 +1,11 @@
 {
   "general": {
-    "headerImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Adult_Scottish_Fold.jpg/1200px-Adult_Scottish_Fold.jpg",
-    "title": "Ask me anything",
-    "questionPlaceholder": "What do you want to know?"
+    "video": "",
+    "photo": "",
+    "title": "Enter my contest",
+    "description": "I'm having a contest and you can be in it if you give me ur email!",
+    "fieldName": "Your email address",
+    "theme": "default"
   },
   "@@editor": [
     {
@@ -11,19 +14,39 @@
       "source": "general.json",
       "fields": [
         {
-          "key": "headerImage",
-          "name": "Header image",
-          "description": "Header image",
-          "type": "image"
-        },
-        {
           "key": "title",
           "name": "Title",
+          "description": "Title",
           "type": "text"
         },
         {
-          "key": "questionPlaceholder",
-          "name": "Question placeholder",
+          "key": "description",
+          "name": "Description",
+          "description": "Description",
+          "type": "text"
+        },
+        {
+          "key": "fieldName",
+          "name": "Field title",
+          "description": "What you want to collect from people when they submit the form",
+          "type": "text"
+        },
+        {
+          "key": "video",
+          "name": "Video",
+          "description": "Video background",
+          "type": "video"
+        },
+        {
+          "key": "photo",
+          "name": "Photo",
+          "description": "Photo background",
+          "type": "image"
+        },
+        {
+          "key": "theme",
+          "name": "Theme Color",
+          "description": "For internal use only",
           "type": "text"
         }
       ]
