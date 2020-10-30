@@ -33,7 +33,7 @@ const Inner = styled.div`
     margin: 0 2px;
     line-height: 1;
     font-variant: tabular-nums;
-    font-size: 32px;
+    font-size: 18vw;
     font-weight: bold;
     padding: 12px;
     border-radius: 4px;
@@ -45,6 +45,8 @@ const Inner = styled.div`
 class SceneRouter extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    window.kojiScreenshotReady = false;
 
     this.instantRemixing = new InstantRemixing();
 
@@ -82,6 +84,8 @@ class SceneRouter extends React.PureComponent {
     } catch (err) {
       console.log(err);
     }
+
+    window.kojiScreenshotReady = true;
   }
 
   async hit() {
