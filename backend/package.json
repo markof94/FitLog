@@ -8,14 +8,12 @@
     "start": "NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
-    "@withkoji/auth": "0.0.6",
     "@withkoji/database": "^1.0.22",
     "@withkoji/vcc": "^1.1.39",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
-    "express": "4.16.3",
-    "uuid": "^8.3.1"
+    "express": "4.16.3"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",

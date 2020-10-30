@@ -1,13 +1,11 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import moment from 'moment';
+import styled from 'styled-components';
 import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
 
 const Container = styled.div`
   padding: 0;
   margin: auto;
   max-width: 100vw;
-  height: 100vh;
   width: 100vw;
   position: relative;
   overflow: hidden;
@@ -24,57 +22,24 @@ const Inner = styled.div`
   margin: 12px;
   padding: 12px;
 
-  border-radius: 18px;
-  background: rgb(250, 250, 250);
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 4px;
-`;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-const Title = styled.h1`
-  font-size: 1.65em;
-  font-weight: bold;
-  margin-top: 0px;
-  line-height: 1.3em;
-  margin-bottom: 0.4em;
-  text-align: left;
-  font-family: "PT Sans", sans-serif;
-  color: ${({ color }) => color || 'rgb(45, 47, 48)'};
-`;
+  opacity: ${({ hasLoaded }) => hasLoaded ? '1' : '0'};
+  transition: opacity 0.2s ease-in-out;
 
-const Description = styled.div`
-  font-size: 1.2em;
-  margin-top: 0px;
-  line-height: 1.3em;
-  margin-bottom: 0.4em;
-  text-align: left;
-  font-family: "PT Sans", sans-serif;
-  color: ${({ color }) => color || 'rgb(45, 47, 48)'};
-`;
-
-const SeeAllButton = styled.button`
-  margin-top: 12px;
-  width: 100%;
-  border: none;
-  outline: none;
-  -webkit-appearance: none;
-  background: rgb(0, 122, 255);
-  color: white;
-  font-weight: bold;
-  font-size: 1.25rem;
-  line-height: 1;
-  padding: 18px;
-  border-radius: 12px;
-  text-align: center;
-
-  ${({ name, color }) => {
-    if (name === 'rainbow1') {
-      return `background: url(${Rainbow1Tile}) 50% 50% no-repeat;`;
-    }
-    if (name === 'rainbow2') {
-      return `background: url(${Rainbow2Tile}) 50% 50% no-repeat;`;
-    }
-    return `background: ${color};`;
-  }}
-  background-size: cover;
+  div {
+    margin: 0 2px;
+    line-height: 1;
+    font-variant: tabular-nums;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 4px;
+    color: white;
+    background-color: ${({ themeColor }) => themeColor};
+  }
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -84,9 +49,9 @@ class SceneRouter extends React.PureComponent {
     this.instantRemixing = new InstantRemixing();
 
     this.state = {
-      title: this.instantRemixing.get(['general', 'title']),
-      description: this.instantRemixing.get(['general', 'description']),
       theme: this.instantRemixing.get(['general', 'theme']),
+      isLoading: true,
+      hits: 0,
     };
   }
 
@@ -94,12 +59,43 @@ class SceneRouter extends React.PureComponent {
     // Initialize the FeedSdk
     this.feed = new FeedSdk();
     this.feed.load();
+
+    // Load hits
+    this.loadHits();
+
+    // Trigger a hit
+    this.hit();
+  }
+
+  async loadHits() {
+    try {
+      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hits`;
+      const result = await fetch(remoteUrl);
+      const { hits } = await result.json();
+
+      if (result.status === 200) {
+        this.setState({
+          isLoading: false,
+          hits,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async hit() {
+    try {
+      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hit`;
+      await fetch(remoteUrl, { method: 'POST' });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {
     const {
-      title,
-      description,
+      hits,
       theme,
     } = this.state;
 
@@ -116,16 +112,17 @@ class SceneRouter extends React.PureComponent {
     };
     const color = theme ? themeColors[theme] : '#2D2F30'
 
+    const splitHits = `${hits}`.split('').map((int, i) => (
+      <div key={i}>{int}</div>
+    ))
+
     return (
       <Container>
         <Inner
             themeColor={color}
+            hasLoaded={!this.state.isLoading}
         >
-          <Title color={color}>{title || 'Title'}</Title>
-            {description && (
-                <Description color={color}>{description}</Description>
-            )}
-          <SeeAllButton color={color} onClick={() => this.feed.present('#')}>Enter</SeeAllButton>
+          {splitHits}
         </Inner>
       </Container>
     );

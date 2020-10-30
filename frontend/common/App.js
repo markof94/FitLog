@@ -4,8 +4,6 @@ import { InstantRemixing } from '@withkoji/vcc';
 
 import App from './pages/App';
 import Remix from './pages/Remix';
-import Screenshot from './pages/Screenshot';
-import Admin from './pages/Admin';
 import Sticker from './pages/Sticker';
 
 class SceneRouter extends React.PureComponent {
@@ -23,16 +21,9 @@ class SceneRouter extends React.PureComponent {
 
   render() {
     const searchParams = qs.parse(window.location.search.replace('?', ''));
-    if (searchParams['koji-screenshot']) {
-      return <Screenshot />;
-    }
 
     if (searchParams.context == 'sticker') {
       return <Sticker />;
-    }
-
-    if (searchParams.context === 'admin') {
-      return <Admin />;
     }
 
     if (this.state.isRemixing) {

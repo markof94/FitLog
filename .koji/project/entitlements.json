@@ -1,18 +1,7 @@
 {
   "entitlements": {
     "InstantRemixing": true,
-    "InAppPurchases": {
-      "enabled": true,
-      "products": [
-        {
-          "sku": "image",
-          "name": "Image reveal",
-          "price": "{{general.price}}"
-        }
-      ]
-    },
     "FeedEvents": true,
-    "StickerContext": true,
-    "AdminContext": true
+    "StickerContext": true
   }
 }
