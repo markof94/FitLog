@@ -1,4 +1,5 @@
 import Database from '@withkoji/database';
+import Dispatch from '@withkoji/dispatch';
 
 export default function (app) {
   app.get('/hits', async (req, res) => {
@@ -28,14 +29,27 @@ export default function (app) {
         projectId: res.locals.KOJI_PROJECT_ID || process.env.KOJI_PROJECT_ID,
         projectToken: res.locals.KOJI_PROJECT_TOKEN || process.env.KOJI_PROJECT_TOKEN,
       });
-      let numHits = 0;
+      let newHits = 0;
       try {
         const hits = await db.get('hits', 'hits');
-        numHits = hits.hits;
+        newHits = hits.hits;
       } catch (err) {
         //
       }
-      await db.set('hits', 'hits', { hits: numHits + 1 });
+      newHits += 1;
+      await db.set('hits', 'hits', { hits: newHits });
+
+      // Notify anyone listening
+      const dispatch = new Dispatch({
+        projectId: res.locals.KOJI_PROJECT_ID || process.env.KOJI_PROJECT_ID,
+        options: {
+          projectToken: res.locals.KOJI_PROJECT_TOKEN || process.env.KOJI_PROJECT_TOKEN,
+        },
+      });
+      await dispatch.connect();
+      console.log('sending', newHits);
+      await dispatch.emitEvent('hits_updated', { newHits });
+
       res.sendStatus(200);
     } catch (err) {
       console.log(err);
