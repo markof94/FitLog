@@ -47,6 +47,7 @@ export default function (app) {
         },
       });
       await dispatch.connect();
+      await new Promise((resolve) => setTimeout(() => resolve(), 1000));
       await dispatch.emitEvent('hits_updated', { newHits });
       await dispatch.disconnect();
 

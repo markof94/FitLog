@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@withkoji/database": "^1.0.22",
-    "@withkoji/dispatch": "0.0.14",
+    "@withkoji/dispatch": "0.0.15",
     "@withkoji/vcc": "^1.1.40",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.3",
