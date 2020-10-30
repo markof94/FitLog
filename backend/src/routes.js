@@ -47,9 +47,10 @@ export default function (app) {
         },
       });
       await dispatch.connect();
-      console.log('sending', newHits);
       await dispatch.emitEvent('hits_updated', { newHits });
+      await dispatch.disconnect();
 
+      // Send a result
       res.sendStatus(200);
     } catch (err) {
       console.log(err);

@@ -53,8 +53,8 @@ class SceneRouter extends React.PureComponent {
     this.dispatch = new Dispatch({
       projectId: this.instantRemixing.get(['metadata', 'projectId']),
     });
-    this.dispatch.on('hits_updated', (data) => {
-      console.log(data);
+    this.dispatch.on('hits_updated', ({ newHits }) => {
+      this.setState({ hits: newHits });
     });
     this.dispatch.connect();
 
