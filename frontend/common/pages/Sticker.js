@@ -38,7 +38,7 @@ const LikeButton = styled.div`
   justify-content: center;
 
   padding: 4px 4vw;
-  border-radius: 6px;
+  border-radius: 6vw;
   
   svg{
     margin-right: 6px;
