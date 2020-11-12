@@ -1,46 +1,55 @@
-import React from 'react';
-import styled from 'styled-components';
-import { InstantRemixing, FeedSdk } from '@withkoji/vcc';
-import Dispatch from '@withkoji/dispatch';
+import React from 'react'
+import styled from 'styled-components'
+import { InstantRemixing, FeedSdk } from '@withkoji/vcc'
+import Dispatch from '@withkoji/dispatch'
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
+import FavoriteIcon from '@material-ui/icons/Favorite'
 
 const Container = styled.div`
   padding: 0;
   margin: auto;
   max-width: 100vw;
   width: 100vw;
+  height: 100vh;
   position: relative;
   overflow: hidden;
   background: transparent;
   color: #fafafa;
 
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  user-select: none;
 `;
 
-const Inner = styled.div`
-  width: calc(100% - 24px);
-  margin: 12px;
-  padding: 12px;
+
+const LikeButton = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  font-size: 20vw;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: ${({ themeColor }) => themeColor};
+  opacity: ${({ hasLoaded }) => hasLoaded ? '1' : '0'};
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  opacity: ${({ hasLoaded }) => hasLoaded ? '1' : '0'};
-  transition: opacity 0.2s ease-in-out;
-
-  div {
-    margin: 0 2px;
-    line-height: 1;
-    font-variant: tabular-nums;
-    font-size: 18vw;
-    font-weight: bold;
-    padding: 12px;
-    border-radius: 4px;
-    color: white;
-    background-color: ${({ themeColor }) => themeColor};
+  padding: 4px 4vw;
+  border-radius: 6px;
+  
+  svg{
+    margin-right: 6px;
+    font-size: 22vw;
+    animation: heart-entrance 0.5s cubic-bezier(.075,.82,.165,1.000);
   }
+
+  ${props => props.hasHit && `
+    animation: jello-horizontal 0.5s cubic-bezier(.075,.82,.165,1.000);
+  `}
+
 `;
 
 class SceneRouter extends React.PureComponent {
@@ -62,6 +71,7 @@ class SceneRouter extends React.PureComponent {
       theme: this.instantRemixing.get(['general', 'theme']),
       isLoading: true,
       hits: 0,
+      hasHit: false
     };
   }
 
@@ -72,9 +82,6 @@ class SceneRouter extends React.PureComponent {
 
     // Load hits
     this.loadHits();
-
-    // Trigger a hit
-    this.hit();
   }
 
   async loadHits() {
@@ -97,7 +104,10 @@ class SceneRouter extends React.PureComponent {
   }
 
   async hit() {
+    if (this.state.hasHit) return;
+
     try {
+      this.setState({ hasHit: true })
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hit`;
       await fetch(remoteUrl, { method: 'POST' });
     } catch (err) {
@@ -124,18 +134,24 @@ class SceneRouter extends React.PureComponent {
     };
     const color = theme ? themeColors[theme] : '#2D2F30'
 
-    const splitHits = `${hits}`.split('').map((int, i) => (
-      <div key={i}>{int}</div>
-    ))
+    const formattedHits = hits.toLocaleString();
 
     return (
-      <Container>
-        <Inner
-            themeColor={color}
-            hasLoaded={!this.state.isLoading}
+      <Container
+        onClick={() => this.hit()}
+      >
+        <LikeButton
+          themeColor={color}
+          hasLoaded={!this.state.isLoading}
+          hasHit={this.state.hasHit}
         >
-          {splitHits}
-        </Inner>
+          {this.state.hasHit ?
+            <FavoriteIcon />
+            :
+            <FavoriteBorderIcon />
+          }
+          <div>{formattedHits}</div>
+        </LikeButton>
       </Container>
     );
   }
