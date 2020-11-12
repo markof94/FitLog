@@ -1,6 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { InstantRemixing } from '@withkoji/vcc';
+import React from 'react'
+import styled from 'styled-components'
+import { InstantRemixing } from '@withkoji/vcc'
+import FavoriteIcon from '@material-ui/icons/Favorite'
 
 const transparencyGrid = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity="0.1" >
   <rect x="200" width="200" height="200" />
@@ -46,25 +47,29 @@ const ThemeBubble = styled.div`
   ${({ isActive }) => isActive && 'border-color: #007AFF;'}
 `;
 
-const HitBox = styled.div`
-  width: calc(100% - 24px);
-  margin: 12px;
-  padding: 12px;
+const LikeButton = styled.div`
+  position: relative;
+  cursor: pointer;
+  width: 86px;
+  margin: auto;
+  margin-top: 16px;
+
+  font-size: 24px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: ${({ themeColor }) => themeColor};
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  div {
-    margin: 0 2px;
-    line-height: 1;
-    font-variant: tabular-nums;
-    font-size: 32px;
-    font-weight: bold;
-    padding: 12px;
-    border-radius: 4px;
-    color: white;
-    background-color: ${({ themeColor }) => themeColor};
+  padding: 4px 8px;
+  border-radius: 10px;
+  
+  svg{
+    margin-right: 6px;
+    font-size: 20px;
+    animation: heart-entrance 0.5s cubic-bezier(.075,.82,.165,1.000);
   }
 `;
 
@@ -83,7 +88,7 @@ class SceneRouter extends React.Component {
       }
 
       this.setState({
-          [path[1]]: newValue,
+        [path[1]]: newValue,
       });
     });
   }
@@ -108,25 +113,24 @@ class SceneRouter extends React.Component {
         <ThemeControls>
           {Object.keys(themeColors).map((name) => (
             <ThemeBubble
-            key={name}
-            name={name}
-            color={themeColors[name]}
-            onClick={() => {
+              key={name}
+              name={name}
+              color={themeColors[name]}
+              onClick={() => {
                 this.setState({ theme: name })
                 this.instantRemixing.onSetValue(['general', 'theme'], name);
-            }}
-            isActive={theme === name}
+              }}
+              isActive={theme === name}
             />
           ))}
         </ThemeControls>
 
-        <HitBox themeColor={themeColors[theme]}>
-          <div>1</div>
-          <div>2</div>
-          <div>3</div>
-          <div>4</div>
-          <div>5</div>
-        </HitBox>
+        <LikeButton
+          themeColor={themeColors[theme]}
+        >
+          <FavoriteIcon />
+          <div>{50}</div>
+        </LikeButton>
       </Container>
     );
   }
