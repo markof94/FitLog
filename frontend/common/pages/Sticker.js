@@ -106,8 +106,10 @@ class SceneRouter extends React.PureComponent {
   async hit() {
     if (this.state.hasHit) return;
 
+    const currentHits = this.state.hits;
+
     try {
-      this.setState({ hasHit: true })
+      this.setState({ hasHit: true, hits: currentHits + 1 })
       const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hit`;
       await fetch(remoteUrl, { method: 'POST' });
     } catch (err) {
