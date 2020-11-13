@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Sticker from './Sticker';
 
 const Container = styled.div`
-  background-color: #111;
+  background-color: transparent;
 
   height: 100vh;
   color: #2D2F30;
