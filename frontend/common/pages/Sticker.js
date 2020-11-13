@@ -1,14 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { InstantRemixing, FeedSdk } from '@withkoji/vcc'
-import Dispatch from '@withkoji/dispatch'
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder'
-import FavoriteIcon from '@material-ui/icons/Favorite'
 
 const Container = styled.div`
   padding: 0;
   margin: auto;
   max-width: 100vw;
+  max-height: 100vh;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -22,104 +20,131 @@ const Container = styled.div`
   user-select: none;
 `;
 
-
-const LikeButton = styled.div`
+const Wrapper = styled.div`
   position: relative;
-  cursor: pointer;
+  width: 95%;
+  height: 95%;
 
-  font-size: 20vw;
-  font-weight: bold;
-  color: #FFFFFF;
-  background-color: ${({ themeColor }) => themeColor};
-  opacity: ${({ hasLoaded }) => hasLoaded ? '1' : '0'};
-
+  border: 2px solid ${props => props.color};
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 4px 5vw;
-  border-radius: 6vw;
-  
-  svg{
-    margin-right: 6px;
-    font-size: 22vw;
-    animation: heart-entrance 0.5s cubic-bezier(.075,.82,.165,1.000);
-  }
-
-  ${props => props.hasHit && `
-    animation: jello-horizontal 0.5s cubic-bezier(.075,.82,.165,1.000);
-  `}
-
+  flex-direction: column;
+  justify-content: flex-end;
 `;
 
-class SceneRouter extends React.PureComponent {
-  constructor(props) {
-    super(props);
+const MessageWrapper = styled.div`  
+    position: relative;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+`;
 
-    window.kojiScreenshotReady = false;
+const Message = styled.div`
+  width: 100%;
+  padding: 0 12px;
+  margin: 8px 0;
+  font-size: 14px;
+`;
 
-    this.instantRemixing = new InstantRemixing();
-    this.dispatch = new Dispatch({
-      projectId: this.instantRemixing.get(['metadata', 'projectId']),
-    });
-    this.dispatch.on('hits_updated', ({ newHits }) => {
-      this.setState({ hits: newHits });
-    });
-    this.dispatch.connect();
+const Body = styled.div`
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.1;
+`;
 
-    this.state = {
-      theme: this.instantRemixing.get(['general', 'theme']),
-      isLoading: true,
-      hits: 0,
-      hasHit: false
-    };
+const Name = styled.div`
+    font-weight: bold;
+`;
+
+const InputWrapper = styled.div`
+    position: relative;
+    outline: none;
+    border: 0;
+    
+    width: 100%;
+    border-top: 2px solid ${props => props.color};
+
+    form{
+      display: flex;
+    }
+    
+    input{
+      border: 0;
+      outline: none;
+      width: 100%;
+      padding: 0 8px;
+      font-size: 18px;
+    }
+
+    button{
+      outline: none;
+      border: 0;
+      color: #FFFFFF;
+      background-color: ${props => props.color};
+      font-size: 18px;
+      height: 100%;
+      width: auto;
+      padding: 8px 16px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.1s ease;
+
+      &:active{
+        transform: translateY(4px);
+      }
+    }
+`;
+
+class SceneRouter extends React.Component {
+  instantRemixing = new InstantRemixing();
+  dispatch = this.props.dispatch;
+  messagesEnd = React.createRef();
+
+  state = {
+    theme: this.instantRemixing.get(['general', 'theme']),
+    isLoading: true,
+    message: "",
+    name: "Anon"
   }
+
 
   componentDidMount() {
     // Initialize the FeedSdk
     this.feed = new FeedSdk();
     this.feed.load();
-
-    // Load hits
-    this.loadHits();
   }
 
-  async loadHits() {
-    try {
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hits`;
-      const result = await fetch(remoteUrl);
-      const { hits } = await result.json();
-
-      if (result.status === 200) {
-        this.setState({
-          isLoading: false,
-          hits,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-
-    window.kojiScreenshotReady = true;
+  scrollToBottom = () => {
+    this.messagesEnd.current.scrollIntoView({ behavior: "smooth" })
   }
 
-  async hit() {
-    if (this.state.hasHit) return;
+  onChange = (e) => {
+    this.setState({ message: e.target.value })
+  }
 
-    const currentHits = this.state.hits;
+  onSubmit = (e) => {
+    e.preventDefault();
 
-    try {
-      this.setState({ hasHit: true, hits: currentHits + 1 })
-      const remoteUrl = `${this.instantRemixing.get(['serviceMap', 'backend'])}/hit`;
-      await fetch(remoteUrl, { method: 'POST' });
-    } catch (err) {
-      console.log(err);
+    if (this.state.message === "") return;
+
+    const message = {
+      text: this.state.message,
+      name: this.state.name
     }
+
+    this.dispatch.emitEvent('new_message', (message));
+
+    this.setState({ message: "" })
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom()
   }
 
   render() {
     const {
-      hits,
       theme,
     } = this.state;
 
@@ -136,24 +161,56 @@ class SceneRouter extends React.PureComponent {
     };
     const color = theme ? themeColors[theme] : '#2D2F30'
 
-    const formattedHits = hits.toLocaleString();
-
     return (
       <Container
-        onClick={() => this.hit()}
+
       >
-        <LikeButton
-          themeColor={color}
-          hasLoaded={!this.state.isLoading}
-          hasHit={this.state.hasHit}
+        <Wrapper
+          color={color}
         >
-          {this.state.hasHit ?
-            <FavoriteIcon />
-            :
-            <FavoriteBorderIcon />
-          }
-          <div>{formattedHits}</div>
-        </LikeButton>
+
+          <MessageWrapper
+
+          >
+            {this.props.messages.map((message, i) => {
+              return (
+                <Message
+                  key={i}
+                >
+                  <Name>{message.name}:</Name>
+                  <Body>{message.text}</Body>
+                </Message>
+              )
+            })}
+
+            <div ref={this.messagesEnd} />
+          </MessageWrapper>
+
+
+
+
+          <InputWrapper
+            color={color}
+          >
+            <form
+              onSubmit={(e) => this.onSubmit(e)}
+            >
+              <input
+                value={this.state.message}
+                onChange={(e) => this.onChange(e)}
+              />
+              <button
+                onClick={(e) => this.onSubmit(e)}
+              >
+                {"Send"}
+              </button>
+            </form>
+          </InputWrapper>
+
+
+
+        </Wrapper>
+
       </Container>
     );
   }

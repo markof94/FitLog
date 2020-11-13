@@ -4,11 +4,6 @@
       "path": "frontend",
       "port": 8080,
       "startCommand": "npm start"
-    },
-    "backend": {
-      "path": "backend",
-      "port": 3333,
-      "startCommand": "npm run start-dev"
     }
   }
 }
