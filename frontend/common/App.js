@@ -13,7 +13,7 @@ class SceneRouter extends React.PureComponent {
 
     this.state = {
       isRemixing: false,
-      messages: [{ text: "hey", name: "Pete" }, { text: "hi!!!!1", name: "Anon" }],
+      messages: [{text: "Welcome to the chat!", name: "Koji"}],
       usersOnline: 0
     };
 
@@ -30,8 +30,10 @@ class SceneRouter extends React.PureComponent {
     });
 
     this.dispatch.on('new_message', (message) => {
-      const messages = [...this.state.messages];
+      let messages = [...this.state.messages];
       messages.push(message);
+      const maxLength = 50;
+      messages = messages.slice(Math.max(messages.length - maxLength, 0))
       this.setState({ messages });
     });
 

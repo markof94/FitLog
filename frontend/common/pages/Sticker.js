@@ -77,8 +77,43 @@ const InputWrapper = styled.div`
       padding: 0 8px;
       font-size: 18px;
     }
+`;
 
-    button{
+const NameInputContainer = styled.div`
+    position: absolute; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const NameInputWrapper = styled.div`
+    div{
+      font-size: 20px;
+      color: #FFFFFF;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    input{
+        margin-bottom: 4px;
+        border: 0;
+        outline: none;
+        width: 100%;
+        padding: 0 8px;
+        font-size: 18px;
+        border-radius: 4px;
+        padding: 8px;
+    }
+
+
+`;
+
+const Button = styled.div`
       outline: none;
       border: 0;
       color: #FFFFFF;
@@ -90,23 +125,27 @@ const InputWrapper = styled.div`
       white-space: nowrap;
       cursor: pointer;
       transition: all 0.1s ease;
+      border-radius: 4px;
+      text-align: center;
 
       &:active{
         transform: translateY(4px);
       }
-    }
 `;
 
 class SceneRouter extends React.Component {
   instantRemixing = new InstantRemixing();
   dispatch = this.props.dispatch;
   messagesEnd = React.createRef();
+  nameInput = React.createRef();
 
   state = {
     theme: this.instantRemixing.get(['general', 'theme']),
     isLoading: true,
     message: "",
-    name: "Anon"
+    name: "Anonymous",
+    showNameInput: false,
+    hasSetName: false
   }
 
 
@@ -186,9 +225,6 @@ class SceneRouter extends React.Component {
             <div ref={this.messagesEnd} />
           </MessageWrapper>
 
-
-
-
           <InputWrapper
             color={color}
           >
@@ -199,19 +235,65 @@ class SceneRouter extends React.Component {
                 value={this.state.message}
                 onChange={(e) => this.onChange(e)}
               />
-              <button
+              <Button
                 onClick={(e) => this.onSubmit(e)}
+                color={color}
               >
                 {"Send"}
-              </button>
+              </Button>
             </form>
           </InputWrapper>
 
+          {
+            !this.state.hasSetName &&
+            <Button
+              color={color}
+              onClick={() => { this.setState({ showNameInput: true }, () => this.nameInput.current.select()) }}
+              style={{
+                position: 'absolute',
+                right: '0',
+                top: '0',
+                bottom: 'auto',
+                height: 'auto',
+                borderRadius: '4px'
+              }}
+            >
+              {"Set Name"}
+            </Button>
+          }
 
+          {
+            this.state.showNameInput &&
+            <NameInputContainer>
+              <NameInputWrapper>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    this.setState({ showNameInput: false, hasSetName: true })
+                  }}
+                >
+                  <input
+                    value={this.state.name}
+                    onChange={(e) => this.setState({ name: e.target.value })}
+                    ref={this.nameInput}
+                  />
+                  <Button
+                    color={color}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      this.setState({ showNameInput: false, hasSetName: true })
+                    }}
+                  >
+                    {"Set Name"}
+                  </Button>
+                </form>
 
+              </NameInputWrapper>
+            </NameInputContainer>
+          }
         </Wrapper>
 
-      </Container>
+      </Container >
     );
   }
 }
