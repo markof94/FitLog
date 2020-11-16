@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { InstantRemixing } from '@withkoji/vcc'
 import FavoriteIcon from '@material-ui/icons/Favorite'
+import Chatbox from '../Components/Chatbox'
 
 const transparencyGrid = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity="0.1" >
   <rect x="200" width="200" height="200" />
@@ -9,21 +10,29 @@ const transparencyGrid = `<svg xmlns="http://www.w3.org/2000/svg" width="400" he
 </svg>`;
 
 const Container = styled.div`
+   padding: 0;
+  margin: auto;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
   height: 100vh;
-  color: #2D2F30;
-  font-size: calc(10px + 2vmin);
-  margin: 0 auto;
-  text-align: center;
   position: relative;
   overflow: hidden;
+  background: transparent;
+  color: #fafafa;
 
-  background: #fff url('data:image/svg+xml,${transparencyGrid}');
-  background-size: 18px 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 
-  padding-top: 50px;
+  animation: fade-in 1s ease;
 `;
 
 const ThemeControls = styled.div`
+  position: absolute;
+  left: 0;
+  top: 24px;
   margin-top: 0;
   padding: 1em 0.8em;
   display: flex;
@@ -31,6 +40,7 @@ const ThemeControls = styled.div`
   width: 100%;
   justify-content: space-between;
   transition: opacity 0.5s;
+  z-index: 20;
 `;
 
 const ThemeBubble = styled.div`
@@ -45,32 +55,6 @@ const ThemeBubble = styled.div`
   ${({ color }) => `background: ${color};`}
   background-size: cover;
   ${({ isActive }) => isActive && 'border-color: #007AFF;'}
-`;
-
-const LikeButton = styled.div`
-  position: relative;
-  cursor: pointer;
-  width: 86px;
-  margin: auto;
-  margin-top: 16px;
-
-  font-size: 24px;
-  font-weight: bold;
-  color: #FFFFFF;
-  background-color: ${({ themeColor }) => themeColor};
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 4px 8px;
-  border-radius: 10px;
-  
-  svg{
-    margin-right: 6px;
-    font-size: 20px;
-    animation: heart-entrance 0.5s cubic-bezier(.075,.82,.165,1.000);
-  }
 `;
 
 class SceneRouter extends React.Component {
@@ -93,6 +77,10 @@ class SceneRouter extends React.Component {
     });
   }
 
+  onSet = (key, value) => {
+    this.instantRemixing.onSetValue(['general', key], value);
+  }
+
   render() {
     const {
       theme,
@@ -107,6 +95,14 @@ class SceneRouter extends React.Component {
       'blue': '#2D9CDB',
       'violet': '#BB6BD9',
     };
+
+
+    const dummyMessages = [
+      {
+        text: "This is an example message!",
+        name: "Koji"
+      }
+    ]
 
     return (
       <Container>
@@ -125,12 +121,13 @@ class SceneRouter extends React.Component {
           ))}
         </ThemeControls>
 
-        <LikeButton
-          themeColor={themeColors[theme]}
-        >
-          <FavoriteIcon />
-          <div>{50}</div>
-        </LikeButton>
+        <Chatbox
+          messages={dummyMessages}
+          theme={theme}
+          dispatch={null}
+          isRemix
+          onSet={this.onSet}
+        />
       </Container>
     );
   }

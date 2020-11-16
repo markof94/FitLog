@@ -23,6 +23,7 @@
     "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-simple-linkify": "^1.0.3",
     "sanitize.css": "^11.0.0",
     "styled-components": "^5.1.0",
     "svg-url-loader": "^5.0.0",

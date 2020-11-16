@@ -5,7 +5,9 @@
     "title": "Enter my contest",
     "description": "I'm having a contest and you can be in it if you give me ur email!",
     "fieldName": "Your email address",
-    "theme": "red"
+    "theme": "orange",
+    "welcomeName": "",
+    "welcomeMessage": "Welcome to the chat!"
   },
   "@@editor": [
     {
@@ -26,22 +28,16 @@
           "type": "text"
         },
         {
-          "key": "fieldName",
-          "name": "Field title",
-          "description": "What you want to collect from people when they submit the form",
+          "key": "welcomeName",
+          "name": "Welcome Name",
+          "description": "",
           "type": "text"
         },
         {
-          "key": "video",
-          "name": "Video",
-          "description": "Video background",
-          "type": "video"
-        },
-        {
-          "key": "photo",
-          "name": "Photo",
-          "description": "Photo background",
-          "type": "image"
+          "key": "welcomeMessage",
+          "name": "Welcome Message",
+          "description": "",
+          "type": "text"
         },
         {
           "key": "theme",

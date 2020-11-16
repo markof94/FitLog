@@ -1,27 +1,31 @@
 import React from 'react';
-import qs from 'qs';
 import { InstantRemixing } from '@withkoji/vcc';
 import Dispatch, { DISPATCH_EVENT } from '@withkoji/dispatch';
 
-import App from './pages/App';
 import Remix from './pages/Remix';
 import Sticker from './pages/Sticker';
 
-class SceneRouter extends React.PureComponent {
-  constructor(props) {
-    super(props);
+class SceneRouter extends React.Component {
+  state = {
+    isRemixing: false,
+    usersOnline: 0,
+    messages: [],
+    hasInitializedValues: false
+  }
 
-    this.state = {
-      isRemixing: false,
-      messages: [{text: "Welcome to the chat!", name: "Koji"}],
-      usersOnline: 0
-    };
+  instantRemixing = new InstantRemixing();
+  dispatch = null;
 
-    this.instantRemixing = new InstantRemixing();
+  componentDidMount() {
+    this.initializeInstantRemixing();
+    this.initializeDispatch();
+    this.initializeValues();
+  }
+
+  initializeInstantRemixing() {
+
     this.instantRemixing.onSetRemixing((isRemixing) => this.setState({ isRemixing }));
     this.instantRemixing.ready();
-
-    this.initializeDispatch();
   }
 
   initializeDispatch() {
@@ -30,11 +34,12 @@ class SceneRouter extends React.PureComponent {
     });
 
     this.dispatch.on('new_message', (message) => {
-      let messages = [...this.state.messages];
-      messages.push(message);
-      const maxLength = 50;
-      messages = messages.slice(Math.max(messages.length - maxLength, 0))
-      this.setState({ messages });
+      this.addMessage(message);
+    });
+
+    this.dispatch.on('name_change', (names) => {
+      if (names.oldName === names.newName) return;
+      this.addMessage({ text: `${names.oldName} changed name to ${names.newName}` });
     });
 
     this.dispatch.on(DISPATCH_EVENT.CONNECTED_CLIENTS_CHANGED, ({ connectedClients }) => {
@@ -45,22 +50,45 @@ class SceneRouter extends React.PureComponent {
     this.dispatch.connect();
   }
 
+  addMessage = (message) => {
+    let messages = [...this.state.messages];
+    const newMessage = message;
+    if (!newMessage.name) newMessage.name = "";
+    messages.push(message);
+    const maxLength = 50;
+    messages = messages.slice(Math.max(messages.length - maxLength, 0))
+    this.setState({ messages });
+  }
+
+  initializeValues = () => {
+    this.setState({
+      messages: [
+        {
+          name: this.instantRemixing.get(['general', 'welcomeName']),
+          text: this.instantRemixing.get(['general', 'welcomeMessage'])
+        }
+      ],
+      hasInitializedValues: true
+    })
+  }
+
   componentWillUnmount() {
     if (this.dispatch) this.dispatch.disconnect();
   }
 
   render() {
-    const searchParams = qs.parse(window.location.search.replace('?', ''));
-
-    if (searchParams.context == 'sticker') {
-      return <Sticker messages={this.state.messages} dispatch={this.dispatch} />;
-    }
+    if (!this.state.hasInitializedValues) return null;
 
     if (this.state.isRemixing) {
       return <Remix />;
     }
 
-    return <Sticker messages={this.state.messages} dispatch={this.dispatch} />;
+    return <Sticker
+      messages={this.state.messages}
+      dispatch={this.dispatch}
+      usersOnline={this.state.usersOnline}
+
+    />;
   }
 }
 
