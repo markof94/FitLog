@@ -47,6 +47,7 @@ const Name = styled.div`
     opacity: 0.65;
     font-size: 15px;
     line-height: 1.1;
+    margin-bottom: 2px;
 
     ${props => props.isCurrentUser && `
       color: ${props.color};
