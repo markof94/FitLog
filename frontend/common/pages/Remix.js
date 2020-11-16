@@ -67,6 +67,7 @@ class SceneRouter extends React.Component {
     };
 
     this.instantRemixing.onValueChanged((path, newValue) => {
+      this.props.updateWelcomeMessage();
       if (this.state[path[1]] === newValue) {
         return;
       }
@@ -79,6 +80,7 @@ class SceneRouter extends React.Component {
 
   onSet = (key, value) => {
     this.instantRemixing.onSetValue(['general', key], value);
+    this.forceUpdate();
   }
 
   render() {
@@ -95,14 +97,6 @@ class SceneRouter extends React.Component {
       'blue': '#2D9CDB',
       'violet': '#BB6BD9',
     };
-
-
-    const dummyMessages = [
-      {
-        text: "This is an example message!",
-        name: "Koji"
-      }
-    ]
 
     return (
       <Container>
@@ -122,11 +116,11 @@ class SceneRouter extends React.Component {
         </ThemeControls>
 
         <Chatbox
-          messages={dummyMessages}
           theme={theme}
           dispatch={null}
           isRemix
           onSet={this.onSet}
+          messages={this.props.messages}
         />
       </Container>
     );

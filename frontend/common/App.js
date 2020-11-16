@@ -72,6 +72,17 @@ class SceneRouter extends React.Component {
     })
   }
 
+  updateWelcomeMessage = () => {
+    this.setState({
+      messages: [
+        {
+          name: this.instantRemixing.get(['general', 'welcomeName']),
+          text: this.instantRemixing.get(['general', 'welcomeMessage'])
+        }
+      ]
+    })
+  }
+
   componentWillUnmount() {
     if (this.dispatch) this.dispatch.disconnect();
   }
@@ -80,7 +91,10 @@ class SceneRouter extends React.Component {
     if (!this.state.hasInitializedValues) return null;
 
     if (this.state.isRemixing) {
-      return <Remix />;
+      return <Remix
+        messages={this.state.messages}
+        updateWelcomeMessage={this.updateWelcomeMessage}
+      />;
     }
 
     return <Sticker
