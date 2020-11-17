@@ -237,7 +237,6 @@ class Chatbox extends React.Component {
     if (isStorageAvailable) {
       const storageName = localStorage.getItem("name");
       if (storageName && storageName !== "") name = storageName;
-      console.log(storageName)
     }
 
     this.setState({
