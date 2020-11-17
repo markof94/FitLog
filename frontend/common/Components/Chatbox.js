@@ -198,6 +198,19 @@ const OnlineLabel = styled.div`
   }
 `;
 
+function isLocalStorageAvailable() {
+  const test = 'test';
+  try {
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+let isStorageAvailable = false;
+
 class Chatbox extends React.Component {
   instantRemixing = new InstantRemixing();
   dispatch = this.props.dispatch;
@@ -216,12 +229,21 @@ class Chatbox extends React.Component {
     welcomeMessage: ""
   }
 
-
   componentDidMount() {
-    // Initialize the FeedSdk
+    isStorageAvailable = isLocalStorageAvailable();
+
+    let name = "Anonymous";
+
+    if (isStorageAvailable) {
+      const storageName = localStorage.getItem("name");
+      if (storageName && storageName !== "") name = storageName;
+      console.log(storageName)
+    }
+
     this.setState({
       welcomeName: this.instantRemixing.get(['general', 'welcomeName']),
-      welcomeMessage: this.instantRemixing.get(['general', 'welcomeMessage'])
+      welcomeMessage: this.instantRemixing.get(['general', 'welcomeMessage']),
+      name
     })
   }
 
@@ -275,6 +297,8 @@ class Chatbox extends React.Component {
 
     this.setState({ showNameInput: false, hasSetName: true, name })
     this.dispatch.emitEvent('name_change', ({ oldName, newName: name }))
+
+    if (isStorageAvailable) localStorage.setItem("name", name)
   }
 
   render() {
